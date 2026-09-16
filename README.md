@@ -2,7 +2,7 @@
 ### Sovereign, Non-Autoregressive Edge Intelligence via 24-Dimensional Topological Cartridges, Zero-Multiplication Subtractive Meshes, and Predictive B-Frames
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22800741.svg)](https://doi.org/10.5281/zenodo.22800741)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License: BSL 1.1](https://img.shields.io/badge/License-BSL%201.1%20(Free%20Research%20%2F%20Commercial%20Paid)-orange.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://bananamilk.vercel.app)
 [![Inference Cost](https://img.shields.io/badge/Cloud%20Inference%20Cost-%240.00-success)](#)
 
@@ -98,7 +98,10 @@ If you build upon or reference Project Brahmaand in your research, please cite t
 
 ---
 
-## ⚖️ License
+## ⚖️ License & Commercial Rights
 
-* **Code & Software**: Apache License 2.0
-* **Research Paper & Documentation**: Creative Commons Attribution 4.0 International (CC-BY-4.0)
+* **Code & Software**: **[Business Source License 1.1 (BSL 1.1)](LICENSE)**
+  * **Free & Open**: Free for academic research, education, evaluation, non-commercial use, and local experimentation.
+  * **Commercial Use**: Commercial production SaaS, proprietary forks, or enterprise deployments require a commercial license from [Dr. Changmaulee Labs](mailto:yellowbridgeconnections@gmail.com).
+  * **Change Date**: Transitions to Apache 2.0 on `2030-01-01`.
+* **Research Paper & Documentation**: [Creative Commons Attribution 4.0 International (CC-BY-4.0)](https://creativecommons.org/licenses/by/4.0/)

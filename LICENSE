@@ -1,17 +1,45 @@
-Apache License
-Version 2.0, January 2004
-http://www.apache.org/licenses/
+Business Source License 1.1
 
-Copyright 2026 Chandramouli (Dr. Changmaulee Labs)
+Parameters:
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Licensor: 
+    Chandramouli (Dr. Changmaulee Labs)
+    Contact: yellowbridgeconnections@gmail.com
+    Website: https://drchangmauleelabs.com
 
-    http://www.apache.org/licenses/LICENSE-2.0
+Licensed Work: 
+    Project Brahmaand (including C++ core engine, Python meshes, binary cartridges, and web harness)
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Additional Use Grant:
+    You are permitted to use the Licensed Work for educational, evaluation, academic research,
+    and non-production personal testing purposes at $0.00 cost.
+    Commercial production use, hosted commercial cloud SaaS deployment, or proprietary redistribution
+    requires a commercial enterprise license from the Licensor.
+
+Change Date: 
+    2030-01-01
+
+Change License: 
+    Apache License, Version 2.0
+
+----------------------------------------------------------------------
+
+Terms:
+
+The Licensor hereby grants you the right to copy, modify, create derivative works,
+redistribute, and make non-production, evaluation, and academic research use of the
+Licensed Work, subject to the Additional Use Grant above.
+
+Any use of the Licensed Work that does not comply with the Additional Use Grant is
+a violation of this License and an infringement of the Licensor's copyright.
+
+Effective on the Change Date, or the fourth anniversary of the first public release
+of this version of the Licensed Work (whichever is earlier), the Licensor hereby
+grants you rights under the terms of the Change License for this version.
+
+You must not remove, alter, or obscure any copyright notices, licensing notices,
+patent notices, or DOI attribution (10.5281/zenodo.22800741) in the Licensed Work.
+
+THE LICENSED WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
