@@ -1,0 +1,369 @@
+{
+  "cardiology": {
+    "id": "cardiology",
+    "name": "Clinical Cardiology",
+    "icon": "\ud83e\ude7a",
+    "domain": "Cardiovascular Medicine & Pharmacology",
+    "keywords": [
+      "heart",
+      "cardio",
+      "beta",
+      "blocker",
+      "blood",
+      "pressure",
+      "ace",
+      "inhibitor",
+      "hypertension",
+      "angioedema",
+      "bradycardia",
+      "infarction",
+      "dil",
+      "seena",
+      "dawa"
+    ],
+    "entities": {
+      "beta_blockers": {
+        "name": "Beta-Blockers",
+        "keywords": [
+          "beta",
+          "blocker",
+          "metoprolol",
+          "atenolol",
+          "propranolol",
+          "bisoprolol",
+          "rebound",
+          "heart rate",
+          "pulse"
+        ],
+        "slots": {
+          "DEFINITION": "A class of pharmaceutical agents that competitively inhibit beta-adrenergic receptors to reduce heart rate, lower myocardial contractility, and decrease blood pressure.",
+          "MECHANISM": "Competitively antagonizes beta-1 adrenergic receptors in cardiac tissue (SA node & myocardium), decreasing cAMP production, calcium influx, and sinoatrial firing rate.",
+          "MISCONCEPTIONS": "Myth: 'Beta-blockers can be abruptly stopped once blood pressure is normal.' Fact: Abrupt cessation triggers dangerous rebound tachycardia, severe hypertension, and acute myocardial ischemia due to beta-receptor upregulation.",
+          "RISKS_SAFETY": "Absolute Contraindications: Severe sinus bradycardia (<50 bpm), cardiogenic shock, second/third-degree AV block, and decompensated heart failure. Caution in Asthma/COPD due to bronchospasm from beta-2 blockade.",
+          "APPLICATIONS": "Secondary prevention post-myocardial infarction, heart failure with reduced ejection fraction (HFrEF), systemic hypertension, and rate control in atrial fibrillation."
+        }
+      },
+      "ace_inhibitors": {
+        "name": "ACE Inhibitors",
+        "keywords": [
+          "ace",
+          "inhibitor",
+          "lisinopril",
+          "ramipril",
+          "enalapril",
+          "cough",
+          "angiotensin",
+          "potassium",
+          "hyperkalemia",
+          "khasi"
+        ],
+        "slots": {
+          "DEFINITION": "Medications that inhibit Angiotensin-Converting Enzyme to prevent conversion of Angiotensin I to Angiotensin II.",
+          "MECHANISM": "Decreases systemic vascular resistance via arterial vasodilation and lowers aldosterone secretion, reducing renal sodium and water retention.",
+          "RISKS_SAFETY": "Adverse effects: Persistent dry cough (bradykinin accumulation), hyperkalemia, and rare life-threatening angioedema. Absolutely contraindicated in pregnancy.",
+          "APPLICATIONS": "First-line pharmacotherapy for hypertension, diabetic nephropathy, and heart failure."
+        }
+      }
+    }
+  },
+  "boeing737": {
+    "id": "boeing737",
+    "name": "Boeing 737 Avionics",
+    "icon": "\u2708\ufe0f",
+    "domain": "Commercial Aircraft Systems & Maintenance",
+    "keywords": [
+      "boeing",
+      "737",
+      "aircraft",
+      "plane",
+      "flight",
+      "hydraulics",
+      "hydraulic",
+      "engine",
+      "psi",
+      "skydrol",
+      "flaps",
+      "rudder",
+      "reversion",
+      "cfm56",
+      "hawai",
+      "jahaj"
+    ],
+    "entities": {
+      "hydraulics": {
+        "name": "B737 Hydraulic System",
+        "keywords": [
+          "hydraulic",
+          "hydraulics",
+          "psi",
+          "skydrol",
+          "pressure",
+          "reversion",
+          "standby",
+          "pump",
+          "edp",
+          "emdp",
+          "cables",
+          "fluid"
+        ],
+        "slots": {
+          "DEFINITION": "A 3,000 PSI triple-redundant fluid power transmission system consisting of System A, System B, and Standby System.",
+          "MECHANISM": "Engine-Driven Pumps (EDPs) and AC Electric Motor-Driven Pumps (EMDPs) circulate Skydrol fluid at 3,000 PSI to actuate primary flight controls, flaps, landing gear, and thrust reversers.",
+          "MISCONCEPTIONS": "Myth: 'Total hydraulic loss renders flight controls impossible to move.' Fact: Manual Reversion mode uses mechanical steel cables connected directly to elevator and aileron tabs with increased pilot control force.",
+          "RISKS_SAFETY": "Dual System A and B failure activates Standby System specifically for the rudder and leading edge devices. Landing distance increases by up to 70% in manual reversion."
+        }
+      },
+      "cfm56_engine": {
+        "name": "CFM56-7B Turbofan Engine",
+        "keywords": [
+          "engine",
+          "turbofan",
+          "thrust",
+          "fan",
+          "turbine",
+          "compressor",
+          "fadec",
+          "cfm56",
+          "motor"
+        ],
+        "slots": {
+          "DEFINITION": "A dual-rotor, high-bypass ratio turbofan engine producing 19,500 to 27,300 lbf of takeoff thrust.",
+          "MECHANISM": "Single-stage fan and 3-stage LP booster driven by a 4-stage LP turbine; 9-stage HP compressor driven by a single-stage HP turbine with dual-channel FADEC control.",
+          "PROPERTIES": "Bypass ratio: 5.1 to 5.5; Overall pressure ratio: 32.7; Fan diameter: 61 inches."
+        }
+      }
+    }
+  },
+  "python_mastery": {
+    "id": "python_mastery",
+    "name": "Python Programming",
+    "icon": "\ud83d\udcbb",
+    "domain": "Computer Science, CPython VM & Software Architecture",
+    "keywords": [
+      "python",
+      "code",
+      "programming",
+      "cpython",
+      "memory",
+      "gc",
+      "garbage",
+      "collector",
+      "gil",
+      "syntax",
+      "alu",
+      "bitwise",
+      "mro",
+      "dict",
+      "asyncio",
+      "del"
+    ],
+    "entities": {
+      "cpython_internals": {
+        "name": "CPython VM & Memory Management",
+        "keywords": [
+          "cpython",
+          "memory",
+          "gc",
+          "garbage",
+          "collector",
+          "gil",
+          "del",
+          "refcount",
+          "ob_refcnt",
+          "pymalloc",
+          "arena",
+          "pool",
+          "block"
+        ],
+        "slots": {
+          "DEFINITION": "The underlying C runtime architecture and memory management subsystem of CPython, comprising PyObject headers, PyMalloc allocators, and dual-engine memory reclamation (refcounting + cyclic GC).",
+          "MECHANISM": "PyMalloc allocates memory in 256KB Arenas, 4KB Pools, and 8-to-512 byte quantized Blocks. Python uses immediate reference counting (ob_refcnt) supplemented by a 3-generation cyclic garbage collector for double-linked circular references.",
+          "MISCONCEPTIONS": "Myth: 'del x deletes the object from memory.' Fact: 'del x' only unbinds the variable name and decrements ob_refcnt by 1. The object is only deallocated when refcount reaches 0. Myth: 'The GIL prevents application race conditions.' Fact: The GIL only protects CPython's internal C state; user threads still require threading.Lock().",
+          "PROPERTIES": "Small integer caching: [-5, 256] pre-allocated. Arena size: 256 KB. GC Generation 0 threshold: 700 allocations."
+        }
+      },
+      "syntax_alu": {
+        "name": "Python Bitwise ALU & Syntax Mechanics",
+        "keywords": [
+          "syntax",
+          "alu",
+          "bitwise",
+          "binary",
+          "and",
+          "or",
+          "xor",
+          "shift",
+          "adder",
+          "precedence",
+          "complement",
+          "is",
+          "=="
+        ],
+        "slots": {
+          "DEFINITION": "Foundational Python syntax, arbitrary-precision integer representations, and hardware Arithmetic Logic Unit (ALU) bitwise operations (&, |, ^, ~, <<, >>).",
+          "MECHANISM": "Two's complement emulation: Python treats negative integers as infinite leading 1s, meaning ~x == (-x) - 1 (~0 == -1, ~5 == -6). 1-bit full adder logic: Sum = A ^ B ^ Cin; Cout = (A & B) | (Cin & (A ^ B)).",
+          "MISCONCEPTIONS": "Myth: 'is and == are interchangeable.' Fact: 'is' checks memory pointer identity; '==' checks value equality.",
+          "APPLICATIONS": "Embedded MicroPython GPIO control, high-speed cryptographic permutations, binary packet decoding (struct), and hardware logic emulation."
+        }
+      },
+      "oop_mro": {
+        "name": "OOP & Metaprogramming Architecture",
+        "keywords": [
+          "oop",
+          "class",
+          "mro",
+          "c3",
+          "descriptor",
+          "metaclass",
+          "__get__",
+          "__set__",
+          "inheritance"
+        ],
+        "slots": {
+          "DEFINITION": "Object-oriented design and runtime metaprogramming structures in Python.",
+          "MECHANISM": "Method Resolution Order (MRO) is computed via C3 Superpermutation Linearization. Descriptors intercept attribute access via __get__, __set__, and __delete__ protocol methods.",
+          "APPLICATIONS": "Custom ORMs, validation frameworks (Pydantic), property decorators, and dynamic class synthesis."
+        }
+      }
+    }
+  },
+  "music_mastery": {
+    "id": "music_mastery",
+    "name": "Universal Music Theory",
+    "icon": "\ud83c\udfb5",
+    "domain": "Acoustic Physics, Indian Classical & Global Music Systems",
+    "keywords": [
+      "music",
+      "raga",
+      "tala",
+      "carnatic",
+      "hindustani",
+      "harmony",
+      "chord",
+      "scale",
+      "shruti",
+      "melakarta",
+      "maqam",
+      "counterpoint",
+      "audio",
+      "daw",
+      "gaana",
+      "raag",
+      "sangeet"
+    ],
+    "entities": {
+      "indian_classical": {
+        "name": "Indian Classical Music (Hindustani & Carnatic)",
+        "keywords": [
+          "indian",
+          "classical",
+          "carnatic",
+          "hindustani",
+          "raga",
+          "tala",
+          "shruti",
+          "melakarta",
+          "swara",
+          "gamaka",
+          "raag"
+        ],
+        "slots": {
+          "DEFINITION": "Ancient microtonal modal music traditions of the Indian subcontinent rooted in the Natya Shastra and Sangeeta Ratnakara.",
+          "MECHANISM": "Built on 22 Shrutis (microtonal intervals), 7 basic Swaras (Sa, Ri, Ga, Ma, Pa, Dha, Ni), 72 parent Melakarta ragas (Carnatic) / 10 Thaats (Hindustani), and 35 Talas (cyclic rhythmic frameworks) with continuous Gamaka oscillations.",
+          "MISCONCEPTIONS": "Myth: 'Ragas are just Western scales.' Fact: A raga is a dynamic living melodic framework with specific ascending/descending rules (Arohana/Avarohana), characteristic phrases (Pakar/Chalan), and temporal mood associations (Rasa/Prahar).",
+          "PROPERTIES": "22 Shrutis derived via Sa-Pa (3:2 fifths) and Sa-Ma (4:3 fourths) Pythagorean cycles. 72 Melakarta system organized into 12 Chakras of 6 ragas each."
+        }
+      },
+      "western_harmony": {
+        "name": "Western Classical Theory & Harmony",
+        "keywords": [
+          "western",
+          "harmony",
+          "chord",
+          "counterpoint",
+          "scale",
+          "major",
+          "minor",
+          "diatonic",
+          "voice leading",
+          "fux"
+        ],
+        "slots": {
+          "DEFINITION": "Tonal harmonic systems based on equal temperament (12-TET), diatonic major/minor scales, functional chord progressions, and species counterpoint.",
+          "MECHANISM": "Chords built in stacked thirds (triads and 7ths) with functional tension-resolution cycles (Tonic I -> Subdominant IV -> Dominant V7 -> Tonic I). Strict voice leading avoids parallel 5ths and 8ths to maintain voice independence.",
+          "APPLICATIONS": "Orchestral composition, jazz harmony (tritone substitutions, chord extensions), film scoring, and modern audio engineering."
+        }
+      },
+      "acoustics_production": {
+        "name": "Acoustic Physics & DAW Audio Engineering",
+        "keywords": [
+          "acoustic",
+          "frequency",
+          "hz",
+          "overtone",
+          "harmonic",
+          "daw",
+          "mixing",
+          "compressor",
+          "eq",
+          "nyquist",
+          "lufs"
+        ],
+        "slots": {
+          "DEFINITION": "The physical science of sound propagation, harmonic series, and digital signal processing (DSP) in Digital Audio Workstations.",
+          "MECHANISM": "Harmonic series follows integer multiples of the fundamental frequency (f, 2f, 3f, 4f...). Equal temperament frequency formula: f_n = f_0 * 2^(n/12). Nyquist-Shannon theorem requires sample rate >= 2 * highest frequency (44.1 kHz for 20 kHz human hearing).",
+          "PROPERTIES": "Speed of sound in dry air at 20C: 343 m/s. Dynamic range of 24-bit audio: ~144 dB."
+        }
+      }
+    }
+  },
+  "egg_biology": {
+    "id": "egg_biology",
+    "name": "Egg Biology & Bio-Math",
+    "icon": "\ud83e\udd5a",
+    "domain": "Avian Biology, Biochemistry & Nutrition",
+    "keywords": [
+      "egg",
+      "eggs",
+      "protein",
+      "yolk",
+      "albumen",
+      "shell",
+      "caco3",
+      "chalazae",
+      "white",
+      "brown",
+      "nutrition",
+      "boil",
+      "ande",
+      "anda"
+    ],
+    "entities": {
+      "egg_structure": {
+        "name": "Chicken Egg Structure & Protein Math",
+        "keywords": [
+          "egg",
+          "eggs",
+          "protein",
+          "yolk",
+          "albumen",
+          "shell",
+          "caco3",
+          "chalazae",
+          "brown",
+          "white",
+          "nutritious",
+          "grams",
+          "calculate"
+        ],
+        "slots": {
+          "DEFINITION": "An organic vessel produced by female avian species to nourish and protect a developing embryo, serving as a complete biological protein benchmark.",
+          "COMPONENTS": "Shell (95% calcium carbonate CaCO3 with 17,000 respiratory pores), Albumen (Ovalbumin, Ovotransferrin, Lysozyme), Yolk (lipids, vitellin, lecithin, cholesterol), Chalazae (protein cords centering the yolk).",
+          "PROPERTIES": "Average mass: 50g; Protein density: 12.6% by weight (exactly 6.3g protein per standard 50g egg); Coagulation temp: 60C to 65C.",
+          "MECHANISM": "Thermal denaturation: Heating above 60C breaks hydrogen bonds, unfolding globular protein chains which cross-link into an irreversible hydrophobic hydrogel mesh.",
+          "MISCONCEPTIONS": "Myth: 'Brown eggs are healthier and more nutritious than white eggs.' Fact: Shell color is determined strictly by hen breed genetics (e.g. Leghorn vs Rhode Island Red); nutritional value is identical."
+        }
+      }
+    }
+  }
+}
