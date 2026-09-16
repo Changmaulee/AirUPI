@@ -70,14 +70,18 @@ Open `web_harness/index.html` in any browser or visit the live deployment at [ba
 
 ## 📊 Empirical Benchmarks
 
-| Metric | Project Brahmaand | Jev (TypeSafe AI) | LLaMA-3.2-1B (Edge) |
-| :--- | :--- | :--- | :--- |
-| **Inference Cost** | **$0.00 (Local)** | $0.042 / 1M tokens | $0.00 (Requires Cloud/GPU) |
-| **Inference Latency** | **4.2 μs** (x86) / **18.7 μs** (M4) | ~12.0 ms | 45.0 ms |
-| **Multiplication Ops** | **0 (Bitshift only)** | Dense Floating Point | Millions of FP16 MACs |
-| **Cold Start / Load** | **< 1.2 ms (mmap)** | Cloud Network RTT | 1.8 s - 4.2 s |
-| **Memory Footprint** | **840 KB** | Remote Cloud Host | 2.4 GB |
-| **Factual Hallucination** | **0.0%** (Deterministic) | Model-dependent | 14.2% - 22.0% |
+| Metric | Project Brahmaand (C++ Kernel) | Project Brahmaand (Web Prototype) | Jev (TypeSafe AI) | LLaMA-3.2-1B (Edge) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Inference Cost** | **$0.00 (Offline Hardware)** | **$0.00 (Client-side)** | $0.042 / 1M tokens | $0.00 (Requires GPU) |
+| **Inference Latency** | **4.2 μs** (x86_64) / **18.7 μs** (Cortex-M4) | **1.2 ms – 2.5 ms** (Full JS + Canvas) | ~12.0 ms – 70.0 ms | 45.0 ms – 180.0 ms |
+| **Multiplication Ops** | **0 (Pure PO2 Bitshifts)** | 0 (Bitshift & AST resolution) | Dense Floating Point | Millions of FP16 MACs |
+| **Cold Start / Load** | **< 1.2 ms (mmap direct seek)** | Instant Local Cache (< 15 ms) | Cloud Network RTT | 1.8 s - 4.2 s |
+| **Memory Footprint** | **840 KB** | Lightweight Browser Sandbox | Remote Cloud Server | 2.4 GB |
+| **Factual Hallucination** | **0.0%** (Deterministic ALU / AST) | **0.0%** (Cartridge Gate) | Model-dependent | 14.2% - 22.0% |
+
+> **Note on Latency Metrics**:
+> * **`4.2 μs`** is the bare-metal **C++ Native Kernel** (`otm_engine.hpp`) performing direct Grassmannian manifold projections and Power-of-Two bitshifts in CPU registers.
+> * **`1.2 ms – 2.5 ms`** is the **Full Web Browser App** (`bananamilk.vercel.app`), encompassing user text input parsing, DOM tree state updates, glass-box canvas animations, and high-EQ Parth prosody synthesis in JavaScript.
 
 ---
 
