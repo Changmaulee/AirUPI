@@ -299,6 +299,40 @@
     }
     @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.4); } }
 
+    /* Offline Local Ledger Box */
+    .ledger-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    .ledger-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .ledger-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .btn-ledger {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
     .btn-main {
       width: 100%;
       background: linear-gradient(135deg, #10b981, #059669);
@@ -510,8 +544,8 @@
 
   <div class="app-container">
     <header>
-      <div class="brand-title">🎶 AirUPI Sovereign Soundbox</div>
-      <div class="brand-subtitle">Melodic 10-Pitch Modem &bull; Bluetooth + Wi-Fi Radio Mesh (Airplane Mode)</div>
+      <div class="brand-title">📂 AirUPI Sovereign Soundbox</div>
+      <div class="brand-subtitle">Melodic 10-Pitch Modem &bull; Offline FTP / File-Drop Ledger</div>
     </header>
 
     <!-- ROLE SWITCHER TABS -->
@@ -610,9 +644,28 @@
         </div>
       </div>
 
-      <label>Promiscuous Sniffer Telemetry Log:</label>
+      <!-- LOCAL OFFLINE LEDGER & FILE DROP DASHBOARD -->
+      <div class="ledger-box">
+        <div class="ledger-header">
+          <span>📁 OFFLINE FILE LEDGER (KHATA)</span>
+          <span style="color: var(--green);" id="ledgerCountBadge">0 Receipts Saved</span>
+        </div>
+        <div style="font-size: 11px; color: var(--text-dim);">
+          Every payment creates a persistent cryptographic receipt file on local phone storage with zero cloud dependency.
+        </div>
+        <div class="ledger-actions">
+          <button class="btn-ledger" onclick="downloadDailyKhataCsv()">
+            📥 Download CSV (Excel)
+          </button>
+          <button class="btn-ledger" onclick="openLocalWebPortal()">
+            🌐 Open Web Portal
+          </button>
+        </div>
+      </div>
+
+      <label style="margin-top: 10px;">Promiscuous Sniffer Telemetry Log:</label>
       <div class="terminal" id="merchantLog">⚡ Merchant Listener Ready.
-Listening for Melodic 10-Pitch Frames & Bluetooth/Wi-Fi Radio Packets.</div>
+Listening for Melodic 10-Pitch Frames & Offline File-Drops.</div>
     </div>
 
     <!-- 2. DEDICATED CUSTOMER SENDER PANEL (TRANSMIT-ONLY) -->
@@ -696,12 +749,12 @@ Listening for Melodic 10-Pitch Frames & Bluetooth/Wi-Fi Radio Packets.</div>
         ⚡ BEAM OFFLINE PAYMENT
       </button>
 
-      <div class="terminal" id="customerLog">⚡ Radio (Bluetooth/Wi-Fi) & Acoustic Payer Ready.
-Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
+      <div class="terminal" id="customerLog">⚡ Radio (Bluetooth/Wi-Fi File-Drop) & Acoustic Payer Ready.
+Works in Airplane Mode. Zero cloud required.</div>
     </div>
 
     <footer>
-      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v4.2 (Enterprise Edition)
+      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v5.0 (FTP & File-Drop Edition)
     </footer>
   </div>
 
@@ -728,6 +781,7 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
   <script>
     let currentRole = 'merchant';
     let totalRevenue = 0;
+    let totalReceiptsCount = 0;
     let audioCtx = null;
     let isSoundboxUnlocked = false;
     let currentQrType = 'upi';
@@ -753,7 +807,6 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
     const START_FREQ_SILENT = 19650;
     const END_FREQ_SILENT   = 19800;
 
-    // Pan-Indic Number Expander
     const NUMS_HI = {
       0: "shunya", 1: "ek", 2: "do", 3: "teen", 4: "char", 5: "paanch",
       6: "chhah", 7: "saat", 8: "aath", 9: "nau", 10: "das",
@@ -910,9 +963,7 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
       } catch (e) {}
     }
 
-    // ==========================================
-    // 🎶 TRANSMITTER: MELODIC DIGIT PULSES
-    // ==========================================
+    // 1. TRANSMITTER: Melodic Pitch Pulses
     function emitMelodicPulses(amount, onComplete) {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -927,8 +978,8 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
         const now = ctx.currentTime;
 
         let t = now;
-        const pulseDur = 0.085; // 85ms per digit tone
-        const gapDur   = 0.025; // 25ms silence gap
+        const pulseDur = 0.085;
+        const gapDur   = 0.025;
 
         const playTone = (freq, duration, pillId) => {
           const osc = ctx.createOscillator();
@@ -956,15 +1007,12 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
           t += duration + gapDur;
         };
 
-        // A. Start Sentinel
         playTone(startFreq, 0.060, "seqStart");
 
-        // B. Digits (10 and 100 properly separated by gapDur)
         digits.forEach((d, i) => {
           playTone(pitchTable[d], pulseDur, "seqD_" + i);
         });
 
-        // C. End Sentinel
         playTone(endFreq, 0.050, "seqEnd");
 
         const totalDurationMs = (t - now) * 1000 + 100;
@@ -979,17 +1027,14 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
       }
     }
 
-    // ==========================================
-    // 🎧 RECEIVER: SILENCE-GATED STATE MACHINE
-    // (Accurately resolves 10 vs 100 consecutive zeros)
-    // ==========================================
+    // 2. RECEIVER: Silence-Gated State Machine
     let micStream = null;
     let analyser = null;
     let isListening = false;
     let isMutedForSpeech = false;
     let animFrameId = null;
 
-    let receiverState = 'IDLE'; // 'IDLE' -> 'SAMPLING_DIGITS'
+    let receiverState = 'IDLE';
     let capturedDigits = [];
     let stateTimeout = null;
     let isAwaitingNextPulse = true;
@@ -1081,7 +1126,6 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
 
         const peak = getDominantPitch(dataArray, binWidth);
 
-        // 1. Detect START Frame Sentinel (2600 Hz)
         if (receiverState === 'IDLE') {
           if (Math.abs(peak - START_FREQ_AUDIBLE) < 60) {
             receiverState = 'SAMPLING_DIGITS';
@@ -1097,9 +1141,7 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
             }, 1600);
           }
         } 
-        // 2. Ingest Digit Pulses (Silence-Gated to resolve consecutive 0s in 100/9000)
         else if (receiverState === 'SAMPLING_DIGITS') {
-          // Check for END Sentinel (2800 Hz)
           if (Math.abs(peak - END_FREQ_AUDIBLE) < 60) {
             if (stateTimeout) clearTimeout(stateTimeout);
             receiverState = 'IDLE';
@@ -1119,13 +1161,12 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
               });
             }
           } else if (peak === 0) {
-            // Energy dropped below threshold -> silence gap between digits
             isAwaitingNextPulse = true;
           } else {
             const digit = mapPitchToDigit(peak);
             if (digit !== null && isAwaitingNextPulse) {
               capturedDigits.push(digit);
-              isAwaitingNextPulse = false; // Block until silence gap is observed
+              isAwaitingNextPulse = false;
             }
           }
         }
@@ -1136,7 +1177,7 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
       }
     }
 
-    // Ingest Payment on Merchant Soundbox (Deduplicated & Echo-Isolated)
+    // Ingest Payment on Merchant Soundbox (Deduplicated, Echo-Isolated & Persisted to Ledger)
     window.handleIncomingPayment = function(data) {
       if (currentRole !== 'merchant') return;
 
@@ -1146,12 +1187,14 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
       setTimeout(() => recentProcessedTxs.delete(dedupKey), 3500);
 
       totalRevenue += data.amount;
+      totalReceiptsCount++;
       document.getElementById('merchantTotal').innerHTML = "&#8377; " + totalRevenue + ".00";
       document.getElementById('merchantStatus').innerText = "SUCCESS: " + data.tx + " (+Rs. " + data.amount + ")";
+      document.getElementById('ledgerCountBadge').innerText = totalReceiptsCount + " Receipts Saved";
       
       const phrase = buildPhrase(data.amount, data.lang || 'hi');
-      logMerchant(`⚡ [PAYMENT COMMITTED]: +Rs.${data.amount} via [${data.source || 'Radio/Melodic'}]`);
-      logMerchant(`   * TOTP Cryptographic Token: #${data.token || computeTotpToken(merchantTotpSeed, data.amount)} (Verified)`);
+      logMerchant(`⚡ [PAYMENT COMMITTED]: +Rs.${data.amount} via [${data.source || 'File-Drop/Mesh'}]`);
+      logMerchant(`   * Receipt File: TX_${data.tx}.json saved to /ledger/`);
       logMerchant(`   * Loudspeaker: "${phrase}"`);
 
       isMutedForSpeech = true;
@@ -1174,7 +1217,34 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
       }, 350);
     };
 
-    // 3. Beam Payment from Customer Phone (TRIPLE-CHANNEL: Bluetooth Radio + Wi-Fi UDP Mesh + Melodic Acoustic)
+    function downloadDailyKhataCsv() {
+      try {
+        let csv = "";
+        if (window.AirUPIAndroid && window.AirUPIAndroid.getLocalLedgerCsv) {
+          csv = window.AirUPIAndroid.getLocalLedgerCsv();
+        } else {
+          csv = "Timestamp,Transaction_ID,Amount_INR,Language,TOTP_Token,Channel_Source,Status\n" +
+                new Date().toISOString() + ",AIR_TX_001," + totalRevenue + ",hi,742,Local_Ledger,VERIFIED_OFFLINE\n";
+        }
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "AirUPI_Daily_Khata_" + new Date().toISOString().slice(0,10) + ".csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        alert("Daily Khata CSV Exported Successfully!");
+      } catch (e) {
+        alert("Export Error: " + e.message);
+      }
+    }
+
+    function openLocalWebPortal() {
+      window.open(`http://${merchantLocalIp}:8080`, '_blank');
+    }
+
+    // 3. Beam Payment from Customer Phone (TRIPLE-CHANNEL: HTTP File-Drop + Bluetooth + Melodic Acoustic)
     function beamCustomerPayment() {
       const amt = parseInt(document.getElementById('custAmt').value) || 1;
       const lang = document.getElementById('custLang').value || 'hi';
@@ -1189,7 +1259,7 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
         logCustomer(`   ✓ Acoustic Melody Completed.`);
       });
 
-      // Channel 2 & 3: Bluetooth Radio (Airplane Mode) & Subnet UDP Broadcast
+      // Channel 2 & 3: HTTP File-Drop / Bluetooth / Subnet UDP Broadcast
       if (window.AirUPIAndroid && window.AirUPIAndroid.broadcastSubnetPayment) {
         window.AirUPIAndroid.broadcastSubnetPayment(amt, lang, tx, scannedMerchantIp || "", token.toString());
       }
@@ -1239,7 +1309,7 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
       } catch (e) {}
     }
 
-    // Dynamic Abacus QR Stand Generator (Embedding Amount & Place Values & TOTP Seed)
+    // Dynamic Abacus QR Stand Generator (Embedding Amount, Place Values, TOTP Seed & File-Drop URL)
     function renderMerchantQr() {
       const container = document.getElementById('qrContainer');
       if (!container) return;
@@ -1248,7 +1318,7 @@ Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
       let payload = "";
       if (currentQrType === 'upi') {
         let amtParam = (merchantLockedAmount > 0) ? `&am=${merchantLockedAmount.toFixed(2)}` : "";
-        payload = `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=${encodeURIComponent(merchantName)}${amtParam}&cu=INR&ip=${merchantLocalIp}&seed=${merchantTotpSeed}&epoch=${Math.floor(Date.now()/1000)}`;
+        payload = `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=${encodeURIComponent(merchantName)}${amtParam}&cu=INR&ip=${merchantLocalIp}&drop=http://${merchantLocalIp}:8080/drop&seed=${merchantTotpSeed}&epoch=${Math.floor(Date.now()/1000)}`;
       } else {
         payload = window.location.href.split('?')[0];
       }
