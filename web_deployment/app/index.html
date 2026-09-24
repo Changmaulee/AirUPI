@@ -60,7 +60,7 @@
       margin-top: 2px;
     }
 
-    /* Mode Switcher Tabs */
+    /* Dedicated Mode Switcher Tabs */
     .mode-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -74,7 +74,7 @@
       border: none;
       color: var(--text-dim);
       padding: 12px 8px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       border-radius: 8px;
       cursor: pointer;
@@ -101,6 +101,28 @@
       display: none;
     }
     .panel.active { display: block; }
+
+    /* Role Badge */
+    .role-banner {
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .role-banner.merchant {
+      background: #022c22;
+      border: 1px solid #059669;
+      color: #34d399;
+    }
+    .role-banner.customer {
+      background: #082f49;
+      border: 1px solid #0284c7;
+      color: #38bdf8;
+    }
 
     /* Merchant QR Stand */
     .qr-stand-box {
@@ -218,7 +240,7 @@
       border: none;
       border-radius: 10px;
       padding: 14px;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
       margin-bottom: 12px;
     }
@@ -237,7 +259,7 @@
     }
     .quick-chips {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 6px;
       margin-top: 6px;
     }
@@ -253,6 +275,29 @@
       cursor: pointer;
     }
     .chip:active { background: #1e293b; }
+
+    .carrier-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .carrier-btn {
+      background: #020617;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 8px;
+      padding: 10px 4px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+    }
+    .carrier-btn.active {
+      background: #082f49;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
 
     .terminal {
       background: #020617;
@@ -349,34 +394,39 @@
       <div class="brand-subtitle">Offline Layer-2 Wireless UPI &bull; Zero-Cloud Audio</div>
     </header>
 
-    <!-- MODE SWITCHER -->
+    <!-- DEDICATED ROLE SWITCHER -->
     <div class="mode-tabs">
-      <button class="tab-btn active" id="tabMerchant" onclick="switchMode('merchant')">
-        🏪 Merchant Soundbox
+      <button class="tab-btn active" id="tabMerchant" onclick="switchDedicatedRole('merchant')">
+        🏪 Merchant (LISTENER ONLY)
       </button>
-      <button class="tab-btn" id="tabCustomer" onclick="switchMode('customer')">
-        📱 Customer Payer
+      <button class="tab-btn" id="tabCustomer" onclick="switchDedicatedRole('customer')">
+        📱 Customer (SENDER ONLY)
       </button>
     </div>
 
-    <!-- 1. MERCHANT SOUNDBOX PANEL -->
+    <!-- 1. DEDICATED MERCHANT SOUNDBOX PANEL (RECEIVE-ONLY) -->
     <div class="panel active" id="panelMerchant">
       
+      <div class="role-banner merchant">
+        <span>🎧 ROLE: DEDICATED SOUNDBOX LISTENER</span>
+        <span>✓ ZERO-ECHO MUTE</span>
+      </div>
+
       <!-- DYNAMIC QR STAND -->
       <div class="qr-stand-box">
         <div style="display: flex; justify-content: space-between; width: 100%; font-size: 11px;">
           <span style="color: #fff; font-weight: 700;" id="displayMerchantName">🏪 Chandramouli</span>
-          <span style="color: var(--green); font-weight: 700;">✓ Live QR Stand</span>
+          <span style="color: var(--green); font-weight: 700;">✓ Live Stand</span>
         </div>
 
         <div class="qr-canvas-container" id="qrContainer"></div>
 
         <div class="qr-type-selector">
           <div class="qr-type-btn active" id="qrTypeUpi" onclick="setQrType('upi')">
-            💳 Standard UPI (Amazon Pay / GPay)
+            💳 Standard UPI (GPay / PhonePe)
           </div>
           <div class="qr-type-btn" id="qrTypeHtml" onclick="setQrType('html')">
-            ⚡ App-Free Web UI (Camera / Lens)
+            ⚡ App-Free Web (Camera / Lens)
           </div>
         </div>
 
@@ -393,13 +443,13 @@
       </div>
 
       <button class="btn-unlock" id="btnSoundboxActivate" onclick="activatePhoneSoundbox()">
-        🔊 Tap to Activate Phone Soundbox Speaker & Mic Sniffer
+        🔊 Start Dedicated Merchant Listener & Mic Sniffer
       </button>
 
       <div class="lcd-screen">
         <div style="font-size: 11px; color: #a7f3d0; font-weight: 700; letter-spacing: 1px;">TOTAL REVENUE RECEIVED</div>
         <div class="lcd-amt" id="merchantTotal">&#8377; 0.00</div>
-        <div class="lcd-status" id="merchantStatus">LISTENING FOR OFFLINE BEACONS & CHIRPS...</div>
+        <div class="lcd-status" id="merchantStatus">LISTENING FOR OVER-THE-AIR CHIRPS...</div>
         
         <div class="speaker-grille">
           <div class="spk-dot" id="spk1"></div>
@@ -411,13 +461,18 @@
       </div>
 
       <label>Promiscuous Sniffer Telemetry Log:</label>
-      <div class="terminal" id="merchantLog">⚡ Virtual Sovereign Soundbox Daemon Active on Phone.
-Listening for 45-byte Over-the-Air Sound Chirps & Action Frames • Zero Cloud Calls</div>
+      <div class="terminal" id="merchantLog">⚡ Merchant Listener Ready.
+Listening for Digital Base-10 Acoustic Frames & Action Frames • Zero Cloud Calls</div>
     </div>
 
-    <!-- 2. CUSTOMER MODE PANEL -->
+    <!-- 2. DEDICATED CUSTOMER SENDER PANEL (TRANSMIT-ONLY) -->
     <div class="panel" id="panelCustomer">
       
+      <div class="role-banner customer">
+        <span>⚡ ROLE: DEDICATED PAYER SENDER</span>
+        <span>🔇 MIC DISABLED</span>
+      </div>
+
       <!-- REAL CAMERA SCANNER BUTTONS -->
       <button class="btn-main" onclick="startRealCameraScanner()" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); margin-bottom: 8px; padding: 14px; font-size: 15px;">
         📷 Open Live Camera & Scan Shop QR
@@ -432,15 +487,16 @@ Listening for 45-byte Over-the-Air Sound Chirps & Action Frames • Zero Cloud C
         <label>SCANNED MERCHANT TARGET</label>
         <input type="text" id="custMerchant" value="changmaulee@icici" style="color: var(--accent); font-family: monospace; font-weight: 700;">
         <div style="font-size: 11px; color: var(--green); margin-top: 4px;" id="custLockStatus">
-          [STAND TARGET: changmaulee@icici]
+          [TARGET LOCKED: changmaulee@icici]
         </div>
       </div>
 
       <div class="field-group">
-        <label>PAYMENT AMOUNT (&#8377; INR)</label>
-        <input type="number" id="custAmt" value="1" placeholder="Enter amount">
+        <label>PAYMENT AMOUNT (&#8377; EXACT INR)</label>
+        <input type="number" id="custAmt" value="1" placeholder="Enter any amount (e.g. 1, 6, 250)">
         <div class="quick-chips">
           <div class="chip" onclick="setAmt(1)">&#8377;1</div>
+          <div class="chip" onclick="setAmt(6)">&#8377;6</div>
           <div class="chip" onclick="setAmt(50)">&#8377;50</div>
           <div class="chip" onclick="setAmt(100)">&#8377;100</div>
           <div class="chip" onclick="setAmt(250)">&#8377;250</div>
@@ -461,12 +517,22 @@ Listening for 45-byte Over-the-Air Sound Chirps & Action Frames • Zero Cloud C
         </select>
       </div>
 
+      <label>PHYSICAL CARRIER MODE</label>
+      <div class="carrier-toggle">
+        <div class="carrier-btn active" id="carrierAudible" onclick="setCarrier('audible')">
+          🔊 Audible Chirp
+        </div>
+        <div class="carrier-btn" id="carrierSilent" onclick="setCarrier('silent')">
+          🤫 Silent Ultrasonic
+        </div>
+      </div>
+
       <button class="btn-main" onclick="beamCustomerPayment()">
-        ⚡ BEAM OFFLINE PAYMENT (SOUND CHIRP + RADIO)
+        ⚡ BEAM OFFLINE PAYMENT
       </button>
 
       <div class="terminal" id="customerLog">⚡ Radio & Acoustic Payer Transmitter Ready.
-Zero cellular/internet data required.</div>
+Microphone is OFF. Zero self-listening. Zero internet required.</div>
     </div>
 
     <footer>
@@ -495,25 +561,26 @@ Zero cellular/internet data required.</div>
   </div>
 
   <script>
+    let currentRole = 'merchant'; // 'merchant' (receive-only) or 'customer' (transmit-only)
     let totalRevenue = 0;
     let audioCtx = null;
     let isSoundboxUnlocked = false;
     let currentQrType = 'upi';
+    let carrierMode = 'audible'; // 'audible' or 'silent'
     let qrcodeObj = null;
 
     let merchantVpa = "changmaulee@icici";
     let merchantName = "Chandramouli";
-
-    // Cross-tab simulation
-    const airupiChannel = new BroadcastChannel('airupi_beam_channel');
+    let txCounter = 1;
 
     // Pan-Indic Number Expander
     const NUMS_HI = {
       0: "shunya", 1: "ek", 2: "do", 3: "teen", 4: "char", 5: "paanch",
       6: "chhah", 7: "saat", 8: "aath", 9: "nau", 10: "das",
-      11: "gyarah", 12: "barah", 15: "pandrah", 20: "bees", 25: "pachees",
-      30: "tees", 40: "chalis", 50: "pachaas", 60: "saath", 70: "sattar",
-      80: "assi", 90: "nabbe", 100: "ek sau", 150: "ek sau pachaas",
+      11: "gyarah", 12: "barah", 13: "terah", 14: "chaudah", 15: "pandrah",
+      16: "solah", 17: "satrah", 18: "athaarah", 19: "unnees", 20: "bees",
+      25: "pachees", 30: "tees", 40: "chalis", 50: "pachaas", 60: "saath",
+      70: "sattar", 80: "assi", 90: "nabbe", 100: "ek sau", 150: "ek sau pachaas",
       200: "do sau", 250: "do sau pachaas", 300: "teen sau", 500: "paanch sau",
       1000: "ek hazaar", 2000: "do hazaar", 5000: "paanch hazaar"
     };
@@ -546,18 +613,315 @@ Zero cellular/internet data required.</div>
       }
     }
 
+    // ==========================================
+    // DEDICATED ROLE SWITCHING (ZERO SELF-LISTEN)
+    // ==========================================
+    function switchDedicatedRole(role) {
+      currentRole = role;
+      document.getElementById('tabMerchant').classList.toggle('active', role === 'merchant');
+      document.getElementById('tabCustomer').classList.toggle('active', role === 'customer');
+      document.getElementById('panelMerchant').classList.toggle('active', role === 'merchant');
+      document.getElementById('panelCustomer').classList.toggle('active', role === 'customer');
+
+      if (role === 'customer') {
+        // Stop listening on mic completely
+        stopAcousticListener();
+        logCustomer("📱 [CUSTOMER ROLE ACTIVE]: Microphone turned OFF. Sender mode ready.");
+      } else {
+        setTimeout(renderMerchantQr, 100);
+        logMerchant("🏪 [MERCHANT ROLE ACTIVE]: Receiver mode ready.");
+      }
+    }
+
+    function setCarrier(mode) {
+      carrierMode = mode;
+      document.getElementById('carrierAudible').classList.toggle('active', mode === 'audible');
+      document.getElementById('carrierSilent').classList.toggle('active', mode === 'silent');
+    }
+
     function updateMerchantSettings() {
       merchantVpa = document.getElementById('cfgMerchantVpa').value.trim() || "changmaulee@icici";
       merchantName = document.getElementById('cfgMerchantName').value.trim() || "Chandramouli";
       document.getElementById('displayMerchantName').innerText = "🏪 " + merchantName;
       document.getElementById('custMerchant').value = merchantVpa;
-      document.getElementById('custLockStatus').innerText = "[STAND TARGET: " + merchantVpa + "]";
+      document.getElementById('custLockStatus').innerText = "[TARGET LOCKED: " + merchantVpa + "]";
       renderMerchantQr();
     }
 
     // ==========================================
-    // REAL LIVE CAMERA QR CODE SCANNER (jsQR)
+    // DIGITAL BASE-10 FSK ACOUSTIC MODEM (v2.0)
     // ==========================================
+    // Audible Band: 1000 - 2500 Hz | Ultrasonic Band: 18000 - 19500 Hz
+    const FSK_SYNC_AUDIBLE = 2200;
+    const FSK_END_AUDIBLE  = 2450;
+    const FSK_SYNC_SILENT  = 18200;
+    const FSK_END_SILENT   = 19400;
+
+    // Digits 0..9 FSK Frequencies (Audible: 1050..1950 Hz, Silent: 18300..19200 Hz)
+    const DIGIT_FREQS_AUDIBLE = [1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950];
+    const DIGIT_FREQS_SILENT  = [18300, 18400, 18500, 18600, 18700, 18800, 18900, 19000, 19100, 19200];
+
+    const LANG_CODES = { 'hi': 1, 'ta': 2, 'te': 3, 'kn': 4, 'bn': 5, 'mr': 6, 'gu': 7, 'en': 8 };
+    const LANG_REVERSE = { 1: 'hi', 2: 'ta', 3: 'te', 4: 'kn', 5: 'bn', 6: 'mr', 7: 'gu', 8: 'en' };
+
+    // 1. TRANSMITTER: Encodes exact decimal amount + lang digits
+    function emitAcousticChirp(amount, lang) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const isSilent = (carrierMode === 'silent');
+        const syncFreq = isSilent ? FSK_SYNC_SILENT : FSK_SYNC_AUDIBLE;
+        const endFreq  = isSilent ? FSK_END_SILENT  : FSK_END_AUDIBLE;
+        const digitTable = isSilent ? DIGIT_FREQS_SILENT : DIGIT_FREQS_AUDIBLE;
+
+        const amtDigits = amount.toString().split('').map(d => parseInt(d));
+        const langDigit = LANG_CODES[lang] || 1;
+
+        // Sequence: [SYNC 70ms] -> [DIGIT_1 60ms] -> [DIGIT_2 60ms]... -> [LANG 60ms] -> [END 50ms]
+        const symbolDuration = 0.055;
+        const now = ctx.currentTime;
+        let t = now;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+
+        // 1. Sync Leader
+        osc.frequency.setValueAtTime(syncFreq, t);
+        t += 0.07;
+
+        // 2. Amount Digits
+        for (let d of amtDigits) {
+          osc.frequency.setValueAtTime(digitTable[d], t);
+          t += symbolDuration;
+        }
+
+        // 3. Lang code
+        osc.frequency.setValueAtTime(digitTable[langDigit], t);
+        t += symbolDuration;
+
+        // 4. End frame delimiter
+        osc.frequency.setValueAtTime(endFreq, t);
+        t += 0.04;
+
+        // Smooth volume envelope
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.7, now + 0.02);
+        gain.gain.setValueAtTime(0.7, t - 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, t);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(t + 0.01);
+      } catch (e) {
+        console.error("Chirp emit error:", e);
+      }
+    }
+
+    // 2. RECEIVER: Sniffs via microphone with Echo-Mute protection
+    let micStream = null;
+    let analyser = null;
+    let isListening = false;
+    let isMutedForSpeech = false;
+    let isDecodingChirp = false;
+
+    function activatePhoneSoundbox() {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      audioCtx.resume();
+      isSoundboxUnlocked = true;
+      const btn = document.getElementById('btnSoundboxActivate');
+      btn.innerText = "✓ Dedicated Listener & Mic Sniffer Active";
+      btn.style.background = "#059669";
+      btn.style.color = "#ffffff";
+      playChime();
+      startAcousticListener();
+    }
+
+    function startAcousticListener() {
+      if (currentRole !== 'merchant') return;
+      if (isListening) return;
+
+      navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
+        .then(stream => {
+          micStream = stream;
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          const source = audioCtx.createMediaStreamSource(stream);
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 2048;
+          analyser.smoothingTimeConstant = 0.1;
+          source.connect(analyser);
+
+          isListening = true;
+          isMutedForSpeech = false;
+          logMerchant("🎙️ [LISTENER ACTIVE]: Sniffing physical soundwaves. Zero self-feedback.");
+          listenLoop();
+        })
+        .catch(err => {
+          logMerchant("[MIC ERROR]: " + err.message);
+        });
+    }
+
+    function stopAcousticListener() {
+      isListening = false;
+      if (micStream) {
+        micStream.getTracks().forEach(t => t.stop());
+        micStream = null;
+      }
+    }
+
+    function getDominantFreq(analyser, ctx) {
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+
+      const sampleRate = ctx.sampleRate;
+      const binWidth = sampleRate / analyser.fftSize;
+
+      let maxVal = 0;
+      let maxBin = -1;
+
+      // Scan full target range: 900 Hz to 20000 Hz
+      const minBin = Math.floor(900 / binWidth);
+      const maxScanBin = Math.min(bufferLength - 1, Math.floor(20000 / binWidth));
+
+      for (let i = minBin; i <= maxScanBin; i++) {
+        if (dataArray[i] > maxVal && dataArray[i] > 140) {
+          maxVal = dataArray[i];
+          maxBin = i;
+        }
+      }
+
+      if (maxBin === -1) return 0;
+      return maxBin * binWidth;
+    }
+
+    function mapFreqToDigit(freq, isSilent) {
+      const table = isSilent ? DIGIT_FREQS_SILENT : DIGIT_FREQS_AUDIBLE;
+      let bestDigit = 0;
+      let minDiff = 99999;
+      for (let d = 0; d <= 9; d++) {
+        const diff = Math.abs(freq - table[d]);
+        if (diff < minDiff) {
+          minDiff = diff;
+          bestDigit = d;
+        }
+      }
+      return (minDiff < 60) ? bestDigit : null;
+    }
+
+    function listenLoop() {
+      if (!isListening || !analyser || isMutedForSpeech) return;
+
+      const peak = getDominantFreq(analyser, audioCtx);
+
+      const isAudibleSync = Math.abs(peak - FSK_SYNC_AUDIBLE) < 45;
+      const isSilentSync  = Math.abs(peak - FSK_SYNC_SILENT) < 60;
+
+      if (!isDecodingChirp && (isAudibleSync || isSilentSync)) {
+        isDecodingChirp = true;
+        const isSilent = isSilentSync;
+
+        // Sample stream of symbols
+        const capturedDigits = [];
+        let sampleCount = 0;
+        const maxSamples = 8;
+
+        const sampleInterval = setInterval(() => {
+          sampleCount++;
+          const curPeak = getDominantFreq(analyser, audioCtx);
+
+          const isEnd = isSilent ? (Math.abs(curPeak - FSK_END_SILENT) < 70) : (Math.abs(curPeak - FSK_END_AUDIBLE) < 60);
+
+          if (isEnd || sampleCount >= maxSamples) {
+            clearInterval(sampleInterval);
+            isDecodingChirp = false;
+
+            if (capturedDigits.length >= 2) {
+              const langCode = capturedDigits.pop();
+              const amountStr = capturedDigits.join('');
+              const parsedAmt = parseInt(amountStr) || 1;
+              const decodedLang = LANG_REVERSE[langCode] || 'hi';
+
+              const tx = "AIR_" + (txCounter++) + "_" + Math.floor(Math.random()*900+100);
+              const packet = {
+                tx: tx,
+                amount: parsedAmt,
+                lang: decodedLang,
+                merchant: merchantVpa,
+                timestamp: Date.now()
+              };
+
+              logMerchant(`⚡ [OVER-THE-AIR CHIRP DECODED]:`);
+              logMerchant(`   * Exact Amount: +Rs.${parsedAmt} | Lang: ${decodedLang} | Carrier: ${isSilent ? 'Silent' : 'Audible'}`);
+              handleIncomingPayment(packet);
+            }
+          } else {
+            const digit = mapFreqToDigit(curPeak, isSilent);
+            if (digit !== null) {
+              // Avoid back-to-back duplicate sample within same symbol window
+              if (capturedDigits.length === 0 || capturedDigits[capturedDigits.length - 1] !== digit) {
+                capturedDigits.push(digit);
+              }
+            }
+          }
+        }, 45);
+      }
+
+      if (isListening && !isMutedForSpeech) {
+        requestAnimationFrame(listenLoop);
+      }
+    }
+
+    // Ingest Payment on Merchant Soundbox (WITH AUTO ECHO-MUTE)
+    function handleIncomingPayment(data) {
+      if (currentRole !== 'merchant') return; // Only merchant speaks
+
+      totalRevenue += data.amount;
+      document.getElementById('merchantTotal').innerHTML = "&#8377; " + totalRevenue + ".00";
+      document.getElementById('merchantStatus').innerText = "SUCCESS: " + data.tx + " (+Rs. " + data.amount + ")";
+      
+      const phrase = buildPhrase(data.amount, data.lang);
+      logMerchant(`⚡ [INGESTED]: TX=${data.tx} | +Rs.${data.amount} | Total=Rs.${totalRevenue}`);
+      logMerchant(`   * Loudspeaker: "${phrase}"`);
+
+      // 1. AUTO ECHO-MUTE: Temporarily stop mic while speaking so Soundbox NEVER hears itself
+      isMutedForSpeech = true;
+      playChime();
+
+      setTimeout(() => {
+        speakPhrase(phrase, data.lang, () => {
+          // 2. Unmute mic 800ms after speech completely finishes
+          setTimeout(() => {
+            isMutedForSpeech = false;
+            isDecodingChirp = false;
+            if (isListening) requestAnimationFrame(listenLoop);
+          }, 800);
+        });
+      }, 350);
+    }
+
+    // 3. Beam Payment from Customer Phone (TRANSMIT-ONLY)
+    function beamCustomerPayment() {
+      const amt = parseInt(document.getElementById('custAmt').value) || 1;
+      const lang = document.getElementById('custLang').value || 'hi';
+      const targetVpa = document.getElementById('custMerchant').value || merchantVpa;
+      const tx = "TX_" + Math.floor(Math.random()*9000+1000);
+
+      logCustomer(`⚡ [TRANSMITTING]: Beaming Rs.${amt} to ${targetVpa} (${carrierMode})`);
+      
+      // Emit acoustic soundwave (Audible or Silent)
+      emitAcousticChirp(amt, lang);
+
+      // Loopback post
+      fetch('http://192.168.1.174:8000/api/pay?tx=' + tx + '&amt=' + amt + '&lang=' + lang).catch(()=>{});
+    }
+
+    // Real Camera Scanner implementation
     let cameraStream = null;
     let isCameraRunning = false;
 
@@ -565,12 +929,6 @@ Zero cellular/internet data required.</div>
       const modal = document.getElementById('cameraModal');
       const video = document.getElementById('cameraVideo');
       modal.classList.add('active');
-
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("Camera not supported on this device/browser.");
-        stopRealCameraScanner();
-        return;
-      }
 
       navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }
@@ -584,7 +942,7 @@ Zero cellular/internet data required.</div>
         requestAnimationFrame(scanCameraFrame);
       })
       .catch(err => {
-        alert("Camera Permission Error: " + err.message);
+        alert("Camera Error: " + err.message);
         stopRealCameraScanner();
       });
     }
@@ -594,38 +952,28 @@ Zero cellular/internet data required.</div>
       modal.classList.remove('active');
       isCameraRunning = false;
       if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream.getTracks().forEach(t => t.stop());
         cameraStream = null;
       }
     }
 
     function parseScannedPayload(text) {
-      if (!text) return null;
-      // 1. Check if upi://pay?pa=...
+      if (!text) return "changmaulee@icici";
       const matchUpi = text.match(/pa=([^&]+)/i);
-      if (matchUpi && matchUpi[1]) {
-        return decodeURIComponent(matchUpi[1]);
-      }
-      // 2. Check if raw VPA (contains @)
+      if (matchUpi && matchUpi[1]) return decodeURIComponent(matchUpi[1]);
       const matchVpa = text.match(/([a-zA-Z0-9.\-_]+@[a-zA-Z0-9]+)/);
-      if (matchVpa && matchVpa[1]) {
-        return matchVpa[1];
-      }
+      if (matchVpa && matchVpa[1]) return matchVpa[1];
       return text.substring(0, 40);
     }
 
     function onQrSuccessfullyScanned(decodedText) {
       stopRealCameraScanner();
       playChime();
-
       const extractedVpa = parseScannedPayload(decodedText);
       document.getElementById('custMerchant').value = extractedVpa;
       document.getElementById('custLockStatus').innerText = "✓ [LIVE SCANNED: " + extractedVpa + "]";
       document.getElementById('custLockStatus').style.color = "#10b981";
-
-      logCustomer(`📷 [REAL CAMERA SCAN SUCCESS]:`);
-      logCustomer(`   * Raw Decoded: ${decodedText.substring(0, 60)}...`);
-      logCustomer(`   * Locked Target: ${extractedVpa}`);
+      logCustomer(`📷 [SCANNED TARGET]: ${extractedVpa}`);
     }
 
     function scanCameraFrame() {
@@ -638,30 +986,21 @@ Zero cellular/internet data required.</div>
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         if (typeof jsQR !== 'undefined') {
-          const code = jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: "dontInvert",
-          });
-
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
           if (code && code.data) {
             onQrSuccessfullyScanned(code.data);
             return;
           }
         }
       }
-
-      if (isCameraRunning) {
-        requestAnimationFrame(scanCameraFrame);
-      }
+      if (isCameraRunning) requestAnimationFrame(scanCameraFrame);
     }
 
-    // Gallery Image QR upload
     function handleQrImageUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(e) {
         const img = new Image();
@@ -674,11 +1013,8 @@ Zero cellular/internet data required.</div>
           const imageData = ctx.getImageData(0, 0, img.width, img.height);
           if (typeof jsQR !== 'undefined') {
             const code = jsQR(imageData.data, imageData.width, imageData.height);
-            if (code && code.data) {
-              onQrSuccessfullyScanned(code.data);
-            } else {
-              alert("No valid QR code found in this image.");
-            }
+            if (code && code.data) onQrSuccessfullyScanned(code.data);
+            else alert("No QR code found in image.");
           }
         };
         img.src = e.target.result;
@@ -686,314 +1022,7 @@ Zero cellular/internet data required.</div>
       reader.readAsDataURL(file);
     }
 
-    // ==========================================
-    // ACOUSTIC SOUND-WAVE FSK MODEM ENGINE
-    // ==========================================
-    const FSK_LEADER = 2100;
-    const FSK_TAIL   = 2450;
-
-    const AMT_FREQS = [
-      { amt: 1, freq: 1100 },
-      { amt: 5, freq: 1180 },
-      { amt: 10, freq: 1260 },
-      { amt: 20, freq: 1340 },
-      { amt: 50, freq: 1420 },
-      { amt: 100, freq: 1500 },
-      { amt: 150, freq: 1580 },
-      { amt: 200, freq: 1660 },
-      { amt: 250, freq: 1740 },
-      { amt: 500, freq: 1820 },
-      { amt: 1000, freq: 1900 },
-      { amt: 2000, freq: 1980 }
-    ];
-
-    const LANG_FREQS = [
-      { lang: 'hi', freq: 1350 },
-      { lang: 'ta', freq: 1470 },
-      { lang: 'te', freq: 1590 },
-      { lang: 'kn', freq: 1710 },
-      { lang: 'bn', freq: 1830 },
-      { lang: 'mr', freq: 1950 },
-      { lang: 'gu', freq: 2070 },
-      { lang: 'en', freq: 2200 }
-    ];
-
-    function getAmountFreq(amt) {
-      let closest = AMT_FREQS[0];
-      let minDiff = Math.abs(amt - closest.amt);
-      for (let item of AMT_FREQS) {
-        let diff = Math.abs(amt - item.amt);
-        if (diff < minDiff) { minDiff = diff; closest = item; }
-      }
-      return closest.freq;
-    }
-
-    function getAmountFromFreq(freq) {
-      let closest = AMT_FREQS[0];
-      let minDiff = Math.abs(freq - closest.freq);
-      for (let item of AMT_FREQS) {
-        let diff = Math.abs(freq - item.freq);
-        if (diff < minDiff) { minDiff = diff; closest = item; }
-      }
-      return closest.amt;
-    }
-
-    function getLangFreq(lang) {
-      const match = LANG_FREQS.find(l => l.lang === lang);
-      return match ? match.freq : 1350;
-    }
-
-    function getLangFromFreq(freq) {
-      let closest = LANG_FREQS[0];
-      let minDiff = Math.abs(freq - closest.freq);
-      for (let item of LANG_FREQS) {
-        let diff = Math.abs(freq - item.freq);
-        if (diff < minDiff) { minDiff = diff; closest = item; }
-      }
-      return closest.lang;
-    }
-
-    function emitAcousticChirp(amount, lang) {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        if (ctx.state === 'suspended') ctx.resume();
-        const now = ctx.currentTime;
-
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-
-        const fAmt = getAmountFreq(amount);
-        const fLang = getLangFreq(lang);
-
-        osc.frequency.setValueAtTime(FSK_LEADER, now);
-        osc.frequency.setValueAtTime(fAmt, now + 0.06);
-        osc.frequency.setValueAtTime(fLang, now + 0.14);
-        osc.frequency.setValueAtTime(FSK_TAIL, now + 0.22);
-
-        gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.7, now + 0.02);
-        gain.gain.setValueAtTime(0.7, now + 0.24);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(now);
-        osc.stop(now + 0.29);
-      } catch (e) {
-        console.error("Acoustic Chirp Error:", e);
-      }
-    }
-
-    let micStream = null;
-    let analyser = null;
-    let isListening = false;
-    let lastAcousticTxTime = 0;
-    let isDecodingChirp = false;
-
-    function startAcousticListener() {
-      if (isListening) return;
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        logMerchant("[MIC]: WebRTC getUserMedia not supported in this browser.");
-        return;
-      }
-
-      navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
-        .then(stream => {
-          micStream = stream;
-          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          if (audioCtx.state === 'suspended') audioCtx.resume();
-
-          const source = audioCtx.createMediaStreamSource(stream);
-          analyser = audioCtx.createAnalyser();
-          analyser.fftSize = 2048;
-          analyser.smoothingTimeConstant = 0.2;
-          source.connect(analyser);
-
-          isListening = true;
-          logMerchant("🎙️ [ACOUSTIC SNIFFER READY]: Microphone Listening for Over-The-Air Sound Chirps.");
-          listenLoop();
-        })
-        .catch(err => {
-          logMerchant("[MIC PERMISSION ERROR]: " + err.message);
-        });
-    }
-
-    function getPeakFrequency(analyser, ctx) {
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      analyser.getByteFrequencyData(dataArray);
-
-      const sampleRate = ctx.sampleRate;
-      const binWidth = sampleRate / analyser.fftSize;
-
-      let maxVal = 0;
-      let maxBin = -1;
-
-      const minBin = Math.floor(1000 / binWidth);
-      const maxScanBin = Math.floor(2600 / binWidth);
-
-      for (let i = minBin; i <= maxScanBin; i++) {
-        if (dataArray[i] > maxVal && dataArray[i] > 130) {
-          maxVal = dataArray[i];
-          maxBin = i;
-        }
-      }
-
-      if (maxBin === -1) return 0;
-      return maxBin * binWidth;
-    }
-
-    function listenLoop() {
-      if (!isListening || !analyser) return;
-
-      const peak = getPeakFrequency(analyser, audioCtx);
-
-      if (!isDecodingChirp && Math.abs(peak - FSK_LEADER) < 55) {
-        const now = Date.now();
-        if (now - lastAcousticTxTime > 1500) {
-          isDecodingChirp = true;
-          lastAcousticTxTime = now;
-
-          setTimeout(() => {
-            const fAmt = getPeakFrequency(analyser, audioCtx);
-            const decodedAmt = getAmountFromFreq(fAmt);
-
-            setTimeout(() => {
-              const fLang = getPeakFrequency(analyser, audioCtx);
-              const decodedLang = getLangFromFreq(fLang);
-
-              isDecodingChirp = false;
-
-              const tx = "AIR_" + Math.floor(Math.random() * 9000 + 1000);
-              const packet = {
-                tx: tx,
-                amount: decodedAmt,
-                lang: decodedLang,
-                merchant: merchantVpa,
-                timestamp: Date.now()
-              };
-
-              logMerchant(`⚡ [OVER-THE-AIR CHIRP DETECTED]: Received acoustic pulse!`);
-              logMerchant(`   * Ingested: ${tx} | +Rs.${decodedAmt} (${decodedLang}) | Zero Internet`);
-              handleIncomingPayment(packet);
-            }, 80);
-          }, 95);
-        }
-      }
-
-      requestAnimationFrame(listenLoop);
-    }
-
-    // ==========================================
-    // EMBEDDED CUSTOMER WEB UI (APP-FREE)
-    // ==========================================
-    function getEmbeddedCustomerHtml() {
-      return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>AirUPI Pay</title><style>*{box-sizing:border-box}body{background:#030712;color:#f8fafc;font-family:sans-serif;margin:0;padding:16px;display:flex;flex-direction:column;align-items:center}.c{background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:16px;width:100%;max-width:360px}h2{color:#38bdf8;margin:4px 0}input,select{width:100%;background:#020617;border:1px solid #334155;color:#fff;padding:12px;border-radius:8px;font-size:16px;font-weight:700;margin:6px 0}.r{display:flex;gap:6px;margin:8px 0}.k{flex:1;background:#1e293b;color:#38bdf8;border:1px solid #334155;padding:10px 4px;border-radius:6px;font-weight:700;cursor:pointer;text-align:center}.b{width:100%;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px}.s{margin-top:10px;font-size:12px;color:#10b981;text-align:center;font-weight:700}</style></head><body><div class="c"><h2>⚡ AirUPI Instant Pay</h2><div style="font-size:11px;color:#94a3b8;margin-bottom:12px">${merchantName} &bull; ${merchantVpa}</div><div style="font-size:11px;color:#94a3b8">ENTER AMOUNT (₹)</div><input id="a" type="number" value="1"><div class="r"><div class="k" onclick="document.getElementById('a').value=1">₹1</div><div class="k" onclick="document.getElementById('a').value=50">₹50</div><div class="k" onclick="document.getElementById('a').value=100">₹100</div><div class="k" onclick="document.getElementById('a').value=250">₹250</div></div><div style="font-size:11px;color:#94a3b8">SOUNDBOX LANGUAGE</div><select id="l"><option value="hi">Hindi (हिन्दी)</option><option value="ta">Tamil (தமிழ்)</option><option value="te">Telugu (తెలుగు)</option><option value="kn">Kannada (ಕನ್ನಡ)</option><option value="bn">Bengali (বাংলা)</option><option value="mr">Marathi (मराठी)</option><option value="gu">Gujarati (ગુજરાતી)</option><option value="en">English</option></select><button class="b" onclick="p()">⚡ BEAM PAYMENT (CHIRP)</button><div class="s" id="st">Ready • 0 App Download</div></div><script>
-const AMT_MAP=[{amt:1,f:1100},{amt:50,f:1420},{amt:100,f:1500},{amt:250,f:1740}];
-const LANG_MAP=[{l:'hi',f:1350},{l:'ta',f:1470},{l:'te',f:1590},{l:'kn',f:1710},{l:'bn',f:1830},{l:'mr',f:1950},{l:'gu',f:2070},{l:'en',f:2200}];
-function getF(a){let c=AMT_MAP[0];for(let x of AMT_MAP)if(Math.abs(a-x.amt)<Math.abs(a-c.amt))c=x;return c.f;}
-function getLF(l){let m=LANG_MAP.find(x=>x.l===l);return m?m.f:1350;}
-function p(){
-  const a=parseInt(document.getElementById('a').value)||1;
-  const l=document.getElementById('l').value||'hi';
-  const t='TX_'+Math.floor(Math.random()*9000+1000);
-  try{
-    const cx=new (window.AudioContext||window.webkitAudioContext)();
-    if(cx.state==='suspended')cx.resume();
-    const nw=cx.currentTime,osc=cx.createOscillator(),gn=cx.createGain();
-    osc.type='sine';
-    osc.frequency.setValueAtTime(2100,nw);
-    osc.frequency.setValueAtTime(getF(a),nw+0.06);
-    osc.frequency.setValueAtTime(getLF(l),nw+0.14);
-    osc.frequency.setValueAtTime(2450,nw+0.22);
-    gn.gain.setValueAtTime(0.01,nw);
-    gn.gain.linearRampToValueAtTime(0.7,nw+0.02);
-    gn.gain.setValueAtTime(0.7,nw+0.24);
-    gn.gain.exponentialRampToValueAtTime(0.001,nw+0.28);
-    osc.connect(gn);gn.connect(cx.destination);
-    osc.start(nw);osc.stop(nw+0.29);
-  }catch(e){}
-  new BroadcastChannel('airupi_beam_channel').postMessage({tx:t,amount:a,lang:l,merchant:'${merchantVpa}'});
-  document.getElementById('st').innerHTML='⚡ CHIRPED '+t+' (+₹'+a+')';
-  document.getElementById('st').style.color='#38bdf8';
-}
-<\/script></body></html>`;
-    }
-
-    function renderMerchantQr() {
-      const container = document.getElementById('qrContainer');
-      if (!container) return;
-      container.innerHTML = '';
-
-      let payload = "";
-      let errorLevel = 'M';
-      if (currentQrType === 'html') {
-        const rawHtml = getEmbeddedCustomerHtml();
-        payload = "data:text/html;base64," + btoa(unescape(encodeURIComponent(rawHtml)));
-        errorLevel = 'L';
-      } else {
-        payload = "upi://pay?pa=" + encodeURIComponent(merchantVpa) + "&pn=" + encodeURIComponent(merchantName) + "&cu=INR&tn=AirUPI%20Offline";
-        errorLevel = 'M';
-      }
-
-      try {
-        const qr = qrcode(0, errorLevel);
-        qr.addData(payload);
-        qr.make();
-        const cellSize = currentQrType === 'html' ? 2 : 4;
-        container.innerHTML = qr.createSvgTag({ cellSize: cellSize, margin: 2, scalable: true });
-        const svg = container.querySelector('svg');
-        if (svg) {
-          svg.setAttribute('width', '140');
-          svg.setAttribute('height', '140');
-          svg.style.display = 'block';
-        }
-      } catch (err) {
-        console.error("QR Error:", err);
-        container.innerHTML = "<div style='color:#ef4444;font-size:11px;padding:10px;'>QR Error: " + err.message + "</div>";
-      }
-    }
-
-    function setQrType(type) {
-      currentQrType = type;
-      document.getElementById('qrTypeHtml').classList.toggle('active', type === 'html');
-      document.getElementById('qrTypeUpi').classList.toggle('active', type === 'upi');
-      renderMerchantQr();
-    }
-
-    function openEmbeddedAppFreeUi() {
-      const rawHtml = getEmbeddedCustomerHtml();
-      const dataUri = "data:text/html;base64," + btoa(unescape(encodeURIComponent(rawHtml)));
-      window.open(dataUri, '_blank');
-    }
-
-    function switchMode(mode) {
-      document.getElementById('tabMerchant').classList.toggle('active', mode === 'merchant');
-      document.getElementById('tabCustomer').classList.toggle('active', mode === 'customer');
-      document.getElementById('panelMerchant').classList.toggle('active', mode === 'merchant');
-      document.getElementById('panelCustomer').classList.toggle('active', mode === 'customer');
-      if (mode === 'merchant') {
-        setTimeout(renderMerchantQr, 100);
-      }
-    }
-
-    function setAmt(val) {
-      document.getElementById('custAmt').value = val;
-    }
-
-    function activatePhoneSoundbox() {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      audioCtx.resume();
-      isSoundboxUnlocked = true;
-      const btn = document.getElementById('btnSoundboxActivate');
-      btn.innerText = "✓ Soundbox Speaker & Mic Sniffer Active";
-      btn.style.background = "#059669";
-      btn.style.color = "#ffffff";
-      playChime();
-      startAcousticListener();
-    }
+    function setAmt(val) { document.getElementById('custAmt').value = val; }
 
     function playChime() {
       try {
@@ -1024,76 +1053,85 @@ function p(){
       }, 500);
     }
 
-    function speakPhrase(phrase, lang) {
+    function speakPhrase(phrase, lang, onEndCallback) {
       if (window.AirUPIAndroid && typeof window.AirUPIAndroid.speak === 'function') {
         window.AirUPIAndroid.speak(phrase, lang);
+        if (onEndCallback) setTimeout(onEndCallback, 2800);
         return;
       }
-      if (!('speechSynthesis' in window)) return;
+      if (!('speechSynthesis' in window)) {
+        if (onEndCallback) onEndCallback();
+        return;
+      }
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(phrase);
       u.rate = 0.88;
       u.pitch = 1.04;
+      u.onend = () => { if (onEndCallback) onEndCallback(); };
+      u.onerror = () => { if (onEndCallback) onEndCallback(); };
       window.speechSynthesis.speak(u);
     }
 
-    function logMerchant(msg) {
-      const term = document.getElementById('merchantLog');
-      term.innerText += "\n" + msg;
-      term.scrollTop = term.scrollHeight;
+    function renderMerchantQr() {
+      const container = document.getElementById('qrContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      let payload = (currentQrType === 'html')
+        ? ("data:text/html;base64," + btoa(unescape(encodeURIComponent(getEmbeddedCustomerHtml()))))
+        : ("upi://pay?pa=" + encodeURIComponent(merchantVpa) + "&pn=" + encodeURIComponent(merchantName) + "&cu=INR&tn=AirUPI%20Offline");
+      const qr = qrcode(0, currentQrType === 'html' ? 'L' : 'M');
+      qr.addData(payload);
+      qr.make();
+      container.innerHTML = qr.createSvgTag({ cellSize: currentQrType === 'html' ? 2 : 4, margin: 2, scalable: true });
+      const svg = container.querySelector('svg');
+      if (svg) { svg.setAttribute('width', '140'); svg.setAttribute('height', '140'); }
     }
 
-    function logCustomer(msg) {
-      const term = document.getElementById('customerLog');
-      term.innerText += "\n" + msg;
-      term.scrollTop = term.scrollHeight;
-    }
-
-    function handleIncomingPayment(data) {
-      totalRevenue += data.amount;
-      document.getElementById('merchantTotal').innerHTML = "&#8377; " + totalRevenue + ".00";
-      document.getElementById('merchantStatus').innerText = "SUCCESS: " + data.tx + " (+Rs. " + data.amount + ")";
-      
-      const phrase = buildPhrase(data.amount, data.lang);
-      logMerchant(`⚡ [PAYMENT RECEIVED]: TX=${data.tx} | +Rs.${data.amount} | Total=Rs.${totalRevenue}`);
-      logMerchant(`   * Spoken: "${phrase}"`);
-
-      playChime();
-      setTimeout(() => { speakPhrase(phrase, data.lang); }, 300);
-    }
-
-    function beamCustomerPayment() {
-      const amt = parseInt(document.getElementById('custAmt').value) || 1;
-      const lang = document.getElementById('custLang').value || 'hi';
-      const targetVpa = document.getElementById('custMerchant').value || merchantVpa;
-      const tx = "TX_" + Math.floor(Math.random()*9000+1000);
-
-      const packet = {
-        tx: tx,
-        amount: amt,
-        lang: lang,
-        merchant: targetVpa,
-        timestamp: Date.now()
-      };
-
-      logCustomer(`⚡ [TRANSMITTING CHIRP]: Emitting soundwave to ${targetVpa} | Rs.${amt}`);
-      
-      // 1. Emit acoustic sound-wave chirp across the air
-      emitAcousticChirp(amt, lang);
-
-      // 2. BroadcastChannel & loopback fetch
-      airupiChannel.postMessage(packet);
-      fetch('http://192.168.1.174:8000/api/pay?tx=' + tx + '&amt=' + amt + '&lang=' + lang).catch(()=>{});
-      fetch('/api/pay?tx=' + tx + '&amt=' + amt + '&lang=' + lang).catch(()=>{});
-    }
-
-    airupiChannel.onmessage = (event) => {
-      handleIncomingPayment(event.data);
-    };
-
-    window.addEventListener('DOMContentLoaded', () => {
+    function setQrType(t) {
+      currentQrType = t;
+      document.getElementById('qrTypeHtml').classList.toggle('active', t === 'html');
+      document.getElementById('qrTypeUpi').classList.toggle('active', t === 'upi');
       renderMerchantQr();
-    });
+    }
+
+    function openEmbeddedAppFreeUi() {
+      window.open("data:text/html;base64," + btoa(unescape(encodeURIComponent(getEmbeddedCustomerHtml()))), '_blank');
+    }
+
+    function getEmbeddedCustomerHtml() {
+      return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>AirUPI Pay</title><style>*{box-sizing:border-box}body{background:#030712;color:#fff;font-family:sans-serif;padding:16px;text-align:center}.c{background:#0f172a;border-radius:14px;padding:16px;max-width:360px;margin:auto}input,select,button{width:100%;padding:12px;margin:6px 0;border-radius:8px;font-size:16px;border:none}button{background:#10b981;color:#fff;font-weight:700;cursor:pointer}</style></head><body><div class="c"><h3>⚡ AirUPI Instant Pay</h3><p style="color:#94a3b8">${merchantName} (${merchantVpa})</p><input id="a" type="number" value="1"><select id="l"><option value="hi">Hindi</option><option value="ta">Tamil</option><option value="en">English</option></select><button onclick="p()">⚡ BEAM PAYMENT</button><div id="st" style="margin-top:10px;font-size:12px;color:#38bdf8">Sender Ready • Zero Download</div></div><script>
+const D_TAB=[1050,1150,1250,1350,1450,1550,1650,1750,1850,1950];
+const L_CODES={'hi':1,'ta':2,'en':8};
+function p(){
+  const a=parseInt(document.getElementById('a').value)||1;
+  const l=document.getElementById('l').value||'hi';
+  const digits=a.toString().split('').map(d=>parseInt(d));
+  try{
+    const cx=new (window.AudioContext||window.webkitAudioContext)();
+    if(cx.state==='suspended')cx.resume();
+    let t=cx.currentTime;
+    const osc=cx.createOscillator(),gn=cx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(2200,t); t+=0.07;
+    for(let d of digits){ osc.frequency.setValueAtTime(D_TAB[d],t); t+=0.055; }
+    osc.frequency.setValueAtTime(D_TAB[L_CODES[l]||1],t); t+=0.055;
+    osc.frequency.setValueAtTime(2450,t); t+=0.04;
+    gn.gain.setValueAtTime(0.01,cx.currentTime);
+    gn.gain.linearRampToValueAtTime(0.7,cx.currentTime+0.02);
+    gn.gain.setValueAtTime(0.7,t-0.02);
+    gn.gain.exponentialRampToValueAtTime(0.001,t);
+    osc.connect(gn);gn.connect(cx.destination);
+    osc.start(cx.currentTime);osc.stop(t+0.01);
+  }catch(e){}
+  document.getElementById('st').innerText='⚡ BEAMED Rs.'+a;
+}
+<\/script></body></html>`;
+    }
+
+    function logMerchant(m) { const t = document.getElementById('merchantLog'); t.innerText += "\n" + m; t.scrollTop = t.scrollHeight; }
+    function logCustomer(m) { const t = document.getElementById('customerLog'); t.innerText += "\n" + m; t.scrollTop = t.scrollHeight; }
+
+    window.addEventListener('DOMContentLoaded', () => { renderMerchantQr(); });
   </script>
 </body>
 </html>
