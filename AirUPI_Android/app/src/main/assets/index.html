@@ -754,6 +754,10 @@ Listening for Melodic 10-Pitch Frames & Offline File-Drops.</div>
         ⚡ BEAM OFFLINE PAYMENT (ACOUSTIC + RADIO)
       </button>
 
+      <button class="btn-main" onclick="triggerSonicHandshakeManual()" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); margin-top: 8px; margin-bottom: 4px; padding: 13px; font-size: 14px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);">
+        ⚡ TEST ZERO-CLICK SONIC CHIRP HANDSHAKE
+      </button>
+
       <!-- TYPE-C HARDWIRED VAULT SECTION -->
       <div style="background: linear-gradient(135deg, #0f172a, #020617); border: 1px solid #eab308; border-radius: 12px; padding: 12px; margin-top: 10px; margin-bottom: 6px;">
         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 800; color: #facc15; margin-bottom: 6px;">
@@ -1333,6 +1337,19 @@ Works in Airplane Mode. Zero cloud required.</div>
       }
     }
 
+    function triggerSonicHandshakeManual() {
+      const amt = parseInt(document.getElementById('custAmt').value) || 6;
+      logCustomer(`⚡ [MANUAL SONIC HANDSHAKE]: Chirping dynamic nonce challenge-response for ₹${amt}...`);
+      emitSonicHandshakeBurst(scannedSeed, amt, () => {
+        logCustomer(`   ✓ Sonic Handshake Challenge Completed.`);
+      });
+      const tx = "AIR_SONIC_MANUAL_" + Math.floor(Math.random()*90000+10000);
+      const token = computeTotpToken(scannedSeed, amt);
+      if (window.AirUPIAndroid && window.AirUPIAndroid.broadcastSubnetPayment) {
+        window.AirUPIAndroid.broadcastSubnetPayment(amt, 'hi', tx, scannedMerchantIp || "", token.toString());
+      }
+    }
+
     function speakPhrase(phrase, lang, onDone) {
       try {
         if (window.AirUPIAndroid && window.AirUPIAndroid.speak) {
@@ -1538,20 +1555,93 @@ Works in Airplane Mode. Zero cloud required.</div>
         scannedMerchantIp = extractedIp;
         scannedSeed = extractedSeed;
         
+        const finalAmt = (extractedAmt && extractedAmt > 0) ? extractedAmt : (parseInt(document.getElementById('custAmt').value) || 6);
+        document.getElementById('custAmt').value = finalAmt;
+        selectChipAmt(finalAmt);
+
         let lockMsg = "[TARGET LOCKED: " + extractedVpa;
-        if (extractedAmt && extractedAmt > 0) {
-          document.getElementById('custAmt').value = extractedAmt;
-          selectChipAmt(extractedAmt);
-          lockMsg += " | 🧮 PRE-FILLED BILL: ₹" + extractedAmt;
-        }
+        lockMsg += " | 🧮 BILL: ₹" + finalAmt;
         if (extractedIp) lockMsg += " | IP: " + extractedIp;
         lockMsg += " | 🔐 TOTP SEED: " + extractedSeed + "]";
         
         document.getElementById('custLockStatus').innerText = lockMsg;
         updateSenderPreview();
-        playChime();
+
+        // 🚀 ZERO-CLICK VISUAL-TO-ACOUSTIC HANDSHAKE
+        logCustomer(`⚡ [OPTICAL DOWNLINK LOCKED]: QR decoded from ${extractedVpa}`);
+        logCustomer(`   -> Auto-Triggering Acoustic Uplink (Dynamic Sonic Nonce Chirp for ₹${finalAmt})...`);
+
+        emitSonicHandshakeBurst(extractedSeed, finalAmt, () => {
+          logCustomer(`   ✓ Sonic Handshake Chirp Completed & Dispatched!`);
+        });
+
+        // Also dispatch to local mesh / UDP broadcast for multi-channel guarantee
+        const tx = "AIR_SONIC_" + Math.floor(Math.random()*90000+10000);
+        const token = computeTotpToken(extractedSeed, finalAmt);
+        if (window.AirUPIAndroid && window.AirUPIAndroid.broadcastSubnetPayment) {
+          window.AirUPIAndroid.broadcastSubnetPayment(finalAmt, 'hi', tx, scannedMerchantIp || "", token.toString());
+        }
+        if (window.AirUPIAndroid && window.AirUPIAndroid.sendUsbCablePayment) {
+          window.AirUPIAndroid.sendUsbCablePayment(finalAmt, 'hi', tx, token.toString());
+        }
+
       } else {
         alert("Scanned Code: " + raw);
+      }
+    }
+
+    // 🔊 ACOUSTIC SONIC NONCE SYNTHESIZER (Visual-to-Acoustic Handshake Burst)
+    function emitSonicHandshakeBurst(seed, amount, onComplete) {
+      try {
+        const ctx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const FREQ_MAP = [1750, 1920, 2100, 2280, 2450, 2620, 2800, 2980];
+        
+        // Derive 4-tone dynamic frequency sequence from Hash(seed + amount)
+        let hash = 0;
+        const seedStr = (seed || "A7F3") + "_" + amount + "_" + Math.floor(Date.now() / 30000);
+        for (let i = 0; i < seedStr.length; i++) {
+          hash = ((hash << 5) - hash) + seedStr.charCodeAt(i);
+          hash |= 0;
+        }
+        const absHash = Math.abs(hash);
+
+        const tones = [
+          FREQ_MAP[absHash % 8],
+          FREQ_MAP[(absHash >> 3) % 8],
+          FREQ_MAP[(absHash >> 6) % 8],
+          FREQ_MAP[(absHash >> 9) % 8]
+        ];
+
+        let now = ctx.currentTime;
+        const burstDur = 0.045; // 45ms per tone
+        
+        tones.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * burstDur);
+
+          gain.gain.setValueAtTime(0.001, now + idx * burstDur);
+          gain.gain.linearRampToValueAtTime(0.7, now + idx * burstDur + 0.008);
+          gain.gain.setValueAtTime(0.7, now + idx * burstDur + burstDur - 0.008);
+          gain.gain.linearRampToValueAtTime(0.001, now + idx * burstDur + burstDur);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * burstDur);
+          osc.stop(now + idx * burstDur + burstDur + 0.005);
+        });
+
+        // Also emit the standard melodic pulses immediately following the sonic challenge
+        setTimeout(() => {
+          emitMelodicPulses(amount, onComplete);
+        }, tones.length * burstDur * 1000 + 30);
+
+      } catch (e) {
+        console.error("Sonic handshake error:", e);
+        if (onComplete) onComplete();
       }
     }
 
