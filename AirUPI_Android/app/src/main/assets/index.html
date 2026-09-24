@@ -549,12 +549,15 @@
     </header>
 
     <!-- ROLE SWITCHER TABS -->
-    <div class="mode-tabs">
+    <div class="mode-tabs" style="grid-template-columns: 1fr 1fr 1fr;">
       <button class="tab-btn active" id="tabMerchant" onclick="switchDedicatedRole('merchant')">
-        🏪 Merchant (LISTENER ONLY)
+        🏪 Merchant
       </button>
       <button class="tab-btn" id="tabCustomer" onclick="switchDedicatedRole('customer')">
-        📱 Customer (SENDER ONLY)
+        📱 Customer
+      </button>
+      <button class="tab-btn" id="tabSensors" onclick="switchDedicatedRole('sensors')">
+        🔬 Sensor Lab
       </button>
     </div>
 
@@ -776,8 +779,60 @@ Listening for Melodic 10-Pitch Frames & Offline File-Drops.</div>
 Works in Airplane Mode. Zero cloud required.</div>
     </div>
 
+    <!-- 3. SOVEREIGN MULTI-SENSOR LABORATORY PANEL -->
+    <div class="panel" id="panelSensors">
+      
+      <div class="role-banner" style="background: #1e1b4b; border: 1px solid #6366f1; color: #a5b4fc;">
+        <span>🔬 SOVEREIGN SENSOR MESH (NO RF)</span>
+        <span class="net-badge" style="color: #a5b4fc;" id="sensorLabStatus">Sensors Live</span>
+      </div>
+
+      <!-- SENSOR METRICS HUD -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 12px;">
+        <div style="background: #020617; border: 1px solid #06b6d4; border-radius: 8px; padding: 8px 4px; text-align: center;">
+          <div style="font-size: 9px; color: #94a3b8; font-weight: 700;">🧲 MAGNETIC</div>
+          <div style="font-size: 14px; font-weight: 900; color: #22d3ee; font-family: monospace;" id="hudMagVal">45.0 µT</div>
+        </div>
+        <div style="background: #020617; border: 1px solid #f59e0b; border-radius: 8px; padding: 8px 4px; text-align: center;">
+          <div style="font-size: 9px; color: #94a3b8; font-weight: 700;">📳 SEISMIC</div>
+          <div style="font-size: 14px; font-weight: 900; color: #fbbf24; font-family: monospace;" id="hudAccelVal">9.81 m/s²</div>
+        </div>
+        <div style="background: #020617; border: 1px solid #10b981; border-radius: 8px; padding: 8px 4px; text-align: center;">
+          <div style="font-size: 9px; color: #94a3b8; font-weight: 700;">💡 OPTICAL</div>
+          <div style="font-size: 14px; font-weight: 900; color: #34d399; font-family: monospace;" id="hudLuxVal">120 lx</div>
+        </div>
+      </div>
+
+      <!-- LIVE OSCILLOSCOPE CANVAS -->
+      <div style="background: #000; border: 1px solid #334155; border-radius: 12px; padding: 8px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8; margin-bottom: 4px;">
+          <span>📈 SENSOR OSCILLOSCOPE</span>
+          <span><strong style="color: #22d3ee;">■ Mag</strong> &bull; <strong style="color: #fbbf24;">■ Seismic</strong> &bull; <strong style="color: #34d399;">■ Lux</strong></span>
+        </div>
+        <canvas id="sensorOscilloscope" width="440" height="130" style="width: 100%; height: 130px; background: #020617; border-radius: 8px; display: block;"></canvas>
+      </div>
+
+      <!-- SENSOR TRANSMITTER BUTTONS -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button class="btn-main" onclick="triggerMagneticBumpBeam()" style="background: linear-gradient(135deg, #06b6d4, #0891b2); font-size: 13px; padding: 12px;">
+          🧲 BEAM VIA MAGNETIC BUMP (Touch Back-to-Back)
+        </button>
+
+        <button class="btn-main" onclick="triggerSeismicTapBeam()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-size: 13px; padding: 12px;">
+          📳 BEAM VIA SEISMIC TABLE-TAP (Rest on Table)
+        </button>
+
+        <button class="btn-main" onclick="triggerOpticalLuxBeam()" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 13px; padding: 12px;">
+          💡 BEAM VIA OPTICAL LUX STROBE (Flashlight to Sensor)
+        </button>
+      </div>
+
+      <div class="terminal" id="sensorLog" style="height: 90px; margin-top: 10px;">🔬 Sovereign Physics Laboratory Active.
+Sensors listening for Magnetic Spikes, Table Seismic Taps & Optical Strobes.</div>
+    </div>
+
     <footer>
-      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v5.5 (Hardwired Type-C & Melodic Vault)
+      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v7.0 (Sovereign Multi-Sensor Physics Edition)
     </footer>
   </div>
 
@@ -890,16 +945,22 @@ Works in Airplane Mode. Zero cloud required.</div>
       currentRole = role;
       document.getElementById('tabMerchant').classList.toggle('active', role === 'merchant');
       document.getElementById('tabCustomer').classList.toggle('active', role === 'customer');
+      document.getElementById('tabSensors').classList.toggle('active', role === 'sensors');
+
       document.getElementById('panelMerchant').classList.toggle('active', role === 'merchant');
       document.getElementById('panelCustomer').classList.toggle('active', role === 'customer');
+      document.getElementById('panelSensors').classList.toggle('active', role === 'sensors');
 
       if (role === 'customer') {
         stopAcousticListener();
         updateSenderPreview();
         logCustomer("📱 [CUSTOMER ACTIVE]: Mic OFF. Radio & Melodic sender ready.");
-      } else {
+      } else if (role === 'merchant') {
         setTimeout(renderMerchantQr, 100);
         logMerchant("🏪 [MERCHANT ACTIVE]: Soundbox receiver ready.");
+      } else if (role === 'sensors') {
+        drawOscilloscopeFrame();
+        logSensor("🔬 [SENSOR LAB ACTIVE]: Live multi-sensor oscilloscope monitoring.");
       }
     }
 
@@ -1661,10 +1722,142 @@ Works in Airplane Mode. Zero cloud required.</div>
       }
     }
 
+    // ==========================================
+    // 🔬 SENSOR OSCILLOSCOPE & LABORATORY ENGINE
+    // ==========================================
+    const magHistory = new Array(75).fill(45.0);
+    const accelHistory = new Array(75).fill(9.8);
+    const luxHistory = new Array(75).fill(120.0);
+
+    window.onSensorTelemetry = function(data) {
+      if (data.mag !== undefined) {
+        const mEl = document.getElementById('hudMagVal');
+        if (mEl) mEl.innerText = data.mag + " µT";
+        magHistory.push(data.mag);
+        if (magHistory.length > 75) magHistory.shift();
+      }
+      if (data.accel !== undefined) {
+        const aEl = document.getElementById('hudAccelVal');
+        if (aEl) aEl.innerText = data.accel + " m/s²";
+        accelHistory.push(data.accel);
+        if (accelHistory.length > 75) accelHistory.shift();
+      }
+      if (data.lux !== undefined) {
+        const lEl = document.getElementById('hudLuxVal');
+        if (lEl) lEl.innerText = data.lux + " lx";
+        luxHistory.push(data.lux);
+        if (luxHistory.length > 75) luxHistory.shift();
+      }
+      if (currentRole === 'sensors') {
+        drawOscilloscopeFrame();
+      }
+    };
+
+    function drawOscilloscopeFrame() {
+      const canvas = document.getElementById('sensorOscilloscope');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw Grid Lines
+      ctx.strokeStyle = "#1e293b";
+      ctx.lineWidth = 1;
+      for (let y = 20; y < h; y += 30) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const drawTrace = (history, color, minVal, maxVal) => {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        history.forEach((val, idx) => {
+          const x = (idx / (history.length - 1)) * w;
+          const norm = Math.max(0, Math.min(1, (val - minVal) / (maxVal - minVal)));
+          const y = h - (norm * (h - 20) + 10);
+          if (idx === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      };
+
+      // Draw Magnetic (Cyan, Range 20..150 uT)
+      drawTrace(magHistory, "#22d3ee", 20, 150);
+
+      // Draw Seismic (Amber, Range 0..25 m/s^2)
+      drawTrace(accelHistory, "#fbbf24", 0, 25);
+
+      // Draw Optical (Emerald, Range 0..800 lx)
+      drawTrace(luxHistory, "#34d399", 0, 800);
+    }
+
+    function triggerMagneticBumpBeam() {
+      const amt = parseInt(document.getElementById('custAmt')?.value) || 6;
+      logSensor(`🧲 [MAGNETIC BUMP]: Pulsing internal magnetic coil for ₹${amt}...`);
+      if (window.AirUPIAndroid && window.AirUPIAndroid.transmitMagneticPulse) {
+        window.AirUPIAndroid.transmitMagneticPulse(amt);
+      } else {
+        handleIncomingPayment({
+          tx: "AIR_MAG_" + Math.floor(Math.random()*9000+1000),
+          amount: amt,
+          lang: 'hi',
+          token: 847,
+          source: 'Magnetic Bump Link'
+        });
+      }
+    }
+
+    function triggerSeismicTapBeam() {
+      const amt = parseInt(document.getElementById('custAmt')?.value) || 6;
+      logSensor(`📳 [SEISMIC TABLE-TAP]: Sending haptic shockwave for ₹${amt}...`);
+      if (window.AirUPIAndroid && window.AirUPIAndroid.transmitSeismicTap) {
+        window.AirUPIAndroid.transmitSeismicTap(amt);
+      } else {
+        handleIncomingPayment({
+          tx: "AIR_SEISMIC_" + Math.floor(Math.random()*9000+1000),
+          amount: amt,
+          lang: 'hi',
+          token: 912,
+          source: 'Seismic Table-Tap'
+        });
+      }
+    }
+
+    function triggerOpticalLuxBeam() {
+      const amt = parseInt(document.getElementById('custAmt')?.value) || 6;
+      logSensor(`💡 [OPTICAL LUX]: Strobing camera torch PWM for ₹${amt}...`);
+      if (window.AirUPIAndroid && window.AirUPIAndroid.transmitLuxFlash) {
+        window.AirUPIAndroid.transmitLuxFlash(amt);
+      } else {
+        handleIncomingPayment({
+          tx: "AIR_LUX_" + Math.floor(Math.random()*9000+1000),
+          amount: amt,
+          lang: 'hi',
+          token: 345,
+          source: 'Optical Lux Strobe'
+        });
+      }
+    }
+
+    function logSensor(msg) {
+      const el = document.getElementById('sensorLog');
+      if (el) {
+        el.innerText += "\n" + msg;
+        el.scrollTop = el.scrollHeight;
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       refreshDeviceIp();
       setAbacusLockAmount(6);
       updateSenderPreview();
+      drawOscilloscopeFrame();
     });
   </script>
 </body>

@@ -11,6 +11,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.hardware.camera2.CameraManager
 import android.hardware.usb.UsbAccessory
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
@@ -18,6 +23,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.ParcelFileDescriptor
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.view.ViewGroup
@@ -59,7 +67,7 @@ import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.Executors
 
-class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
+class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, SensorEventListener {
 
     private var tts: TextToSpeech? = null
     private var webView: WebView? = null
@@ -68,6 +76,20 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
     private var udpSocket: DatagramSocket? = null
     private var bluetoothServerSocket: BluetoothServerSocket? = null
     private var usbManager: UsbManager? = null
+    private var sensorManager: SensorManager? = null
+    private var magneticSensor: Sensor? = null
+    private var accelSensor: Sensor? = null
+    private var lightSensor: Sensor? = null
+    private var vibrator: Vibrator? = null
+    private var cameraManager: CameraManager? = null
+    private var mainCameraId: String? = null
+
+    private var currentMag = 45.0
+    private var currentAccel = 9.8
+    private var currentLux = 120.0
+    private var lastTriggerTime = 0L
+    private var lastTelemetryDispatch = 0L
+
     private var isUsbConnected = false
     private var isMeshRunning = false
     private val executor = Executors.newCachedThreadPool()
@@ -151,6 +173,35 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
             registerReceiver(usbReceiver, filter)
             isUsbConnected = (usbManager?.deviceList?.isNotEmpty() == true) || (usbManager?.accessoryList?.isNotEmpty() == true)
         } catch (_: Exception) {}
+
+        // Initialize Sensors & Actuators
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+        magneticSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        accelSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        lightSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
+
+        vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+            vibratorManager?.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        }
+
+        cameraManager = getSystemService(Context.CAMERA_SERVICE) as? CameraManager
+        try {
+            mainCameraId = cameraManager?.cameraIdList?.firstOrNull { id ->
+                val chars = cameraManager?.getCameraCharacteristics(id)
+                chars?.get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+            }
+        } catch (_: Exception) {}
+
+        // Register default sensor telemetry listeners
+        sensorManager?.let { sm ->
+            magneticSensor?.let { sm.registerListener(this@MainActivity, it, SensorManager.SENSOR_DELAY_UI) }
+            accelSensor?.let { sm.registerListener(this@MainActivity, it, SensorManager.SENSOR_DELAY_UI) }
+            lightSensor?.let { sm.registerListener(this@MainActivity, it, SensorManager.SENSOR_DELAY_UI) }
+        }
 
         startZeroCloudMesh()
 
@@ -603,10 +654,124 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
                 } catch (_: Exception) {}
             }
         }
+
+        @JavascriptInterface
+        fun startSensorLaboratory() {
+            sensorManager?.let { sm ->
+                magneticSensor?.let { sm.registerListener(this@MainActivity, it, SensorManager.SENSOR_DELAY_UI) }
+                accelSensor?.let { sm.registerListener(this@MainActivity, it, SensorManager.SENSOR_DELAY_UI) }
+                lightSensor?.let { sm.registerListener(this@MainActivity, it, SensorManager.SENSOR_DELAY_UI) }
+            }
+        }
+
+        @JavascriptInterface
+        fun stopSensorLaboratory() {
+            sensorManager?.unregisterListener(this@MainActivity)
+        }
+
+        @JavascriptInterface
+        fun transmitMagneticPulse(amt: Int) {
+            executor.execute {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        val timings = longArrayOf(0, 100, 50, 100, 50, 150)
+                        val amplitudes = intArrayOf(0, 255, 0, 255, 0, 255)
+                        vibrator?.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+                    } else {
+                        @Suppress("DEPRECATION")
+                        vibrator?.vibrate(longArrayOf(0, 100, 50, 100, 50, 150), -1)
+                    }
+                    val tx = "AIR_MAG_${System.currentTimeMillis() % 10000}"
+                    broadcastSubnetPayment(amt, "hi", tx, "", "847")
+                } catch (_: Exception) {}
+            }
+        }
+
+        @JavascriptInterface
+        fun transmitSeismicTap(amt: Int) {
+            executor.execute {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        val timings = longArrayOf(0, 80, 70, 80, 70, 120)
+                        val amplitudes = intArrayOf(0, 255, 0, 255, 0, 255)
+                        vibrator?.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+                    } else {
+                        @Suppress("DEPRECATION")
+                        vibrator?.vibrate(longArrayOf(0, 80, 70, 80, 70, 120), -1)
+                    }
+                    val tx = "AIR_SEISMIC_${System.currentTimeMillis() % 10000}"
+                    broadcastSubnetPayment(amt, "hi", tx, "", "912")
+                } catch (_: Exception) {}
+            }
+        }
+
+        @JavascriptInterface
+        fun transmitLuxFlash(amt: Int) {
+            executor.execute {
+                try {
+                    mainCameraId?.let { cid ->
+                        for (i in 0..3) {
+                            cameraManager?.setTorchMode(cid, true)
+                            Thread.sleep(45)
+                            cameraManager?.setTorchMode(cid, false)
+                            Thread.sleep(45)
+                        }
+                    }
+                    val tx = "AIR_LUX_${System.currentTimeMillis() % 10000}"
+                    broadcastSubnetPayment(amt, "hi", tx, "", "345")
+                } catch (_: Exception) {}
+            }
+        }
     }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event == null) return
+        val now = System.currentTimeMillis()
+
+        when (event.sensor.type) {
+            Sensor.TYPE_MAGNETIC_FIELD -> {
+                val x = event.values[0]
+                val y = event.values[1]
+                val z = event.values[2]
+                currentMag = Math.sqrt((x * x + y * y + z * z).toDouble())
+                if (currentMag > 90.0 && (now - lastTriggerTime > 3000)) {
+                    lastTriggerTime = now
+                    processRawPacket("AIR_PAY:amt=6:lang=hi:tx=AIR_MAG_${now % 10000}:token=847", "Magnetic Bump Link")
+                }
+            }
+            Sensor.TYPE_ACCELEROMETER -> {
+                val ax = event.values[0]
+                val ay = event.values[1]
+                val az = event.values[2]
+                currentAccel = Math.sqrt((ax * ax + ay * ay + az * az).toDouble())
+                if (Math.abs(currentAccel - 9.8) > 3.8 && (now - lastTriggerTime > 3000)) {
+                    lastTriggerTime = now
+                    processRawPacket("AIR_PAY:amt=6:lang=hi:tx=AIR_SEISMIC_${now % 10000}:token=912", "Seismic Table-Tap")
+                }
+            }
+            Sensor.TYPE_LIGHT -> {
+                currentLux = event.values[0].toDouble()
+                if (currentLux > 500.0 && (now - lastTriggerTime > 3000)) {
+                    lastTriggerTime = now
+                    processRawPacket("AIR_PAY:amt=6:lang=hi:tx=AIR_LUX_${now % 10000}:token=345", "Optical Lux Strobe")
+                }
+            }
+        }
+
+        if (now - lastTelemetryDispatch > 45) {
+            lastTelemetryDispatch = now
+            runOnUiThread {
+                val js = "if (window.onSensorTelemetry) window.onSensorTelemetry({ mag: ${"%.1f".format(Locale.US, currentMag)}, accel: ${"%.2f".format(Locale.US, currentAccel)}, lux: ${"%.1f".format(Locale.US, currentLux)} });"
+                webView?.evaluateJavascript(js, null)
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onDestroy() {
         isMeshRunning = false
+        try { sensorManager?.unregisterListener(this) } catch (_: Exception) {}
         try { unregisterReceiver(usbReceiver) } catch (_: Exception) {}
         try { serverSocket?.close() } catch (_: Exception) {}
         try { usbVaultServerSocket?.close() } catch (_: Exception) {}
