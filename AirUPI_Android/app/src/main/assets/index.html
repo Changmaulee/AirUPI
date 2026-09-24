@@ -596,7 +596,7 @@
           </div>
 
           <div class="merchant-bill-input-row">
-            <input type="number" id="merchantCustomBillInput" value="6" placeholder="Enter custom bill (e.g. 47, 2500)" oninput="handleMerchantCustomInput(this.value)">
+            <input type="number" id="merchantCustomBillInput" value="6" max="250" placeholder="Enter custom bill (1 to 250)" oninput="handleMerchantCustomInput(this.value)">
           </div>
 
           <div class="abacus-chips">
@@ -604,12 +604,11 @@
             <div class="abacus-chip" id="abChip_1" onclick="setAbacusLockAmount(1)">₹1</div>
             <div class="abacus-chip active" id="abChip_6" onclick="setAbacusLockAmount(6)">₹6</div>
             <div class="abacus-chip" id="abChip_10" onclick="setAbacusLockAmount(10)">₹10</div>
+            <div class="abacus-chip" id="abChip_20" onclick="setAbacusLockAmount(20)">₹20</div>
             <div class="abacus-chip" id="abChip_50" onclick="setAbacusLockAmount(50)">₹50</div>
             <div class="abacus-chip" id="abChip_100" onclick="setAbacusLockAmount(100)">₹100</div>
+            <div class="abacus-chip" id="abChip_200" onclick="setAbacusLockAmount(200)">₹200</div>
             <div class="abacus-chip" id="abChip_250" onclick="setAbacusLockAmount(250)">₹250</div>
-            <div class="abacus-chip" id="abChip_500" onclick="setAbacusLockAmount(500)">₹500</div>
-            <div class="abacus-chip" id="abChip_1000" onclick="setAbacusLockAmount(1000)">₹1000</div>
-            <div class="abacus-chip" id="abChip_2500" onclick="setAbacusLockAmount(2500)">₹2500</div>
           </div>
         </div>
 
@@ -703,17 +702,20 @@ Listening for Melodic 10-Pitch Frames & Offline File-Drops.</div>
       </div>
 
       <div class="field-group">
-        <label>PAYMENT AMOUNT (&#8377; EXACT INR - UP TO &#8377;10,000)</label>
-        <input type="number" id="custAmt" value="6" max="10000" placeholder="Enter any amount (e.g. 1, 6, 10, 100, 2500)" oninput="updateSenderPreview()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+          <label style="margin-bottom: 0;">PAYMENT AMOUNT (&#8377; EXACT INR - CAPPED AT &#8377;250 MAX)</label>
+          <span style="font-size: 10px; color: var(--green); font-weight: 700; background: #022c22; border: 1px solid #059669; padding: 2px 6px; border-radius: 4px;">🛡️ Safe Cap: ₹250</span>
+        </div>
+        <input type="number" id="custAmt" value="6" max="250" placeholder="Enter amount (1 to 250)" oninput="updateSenderPreview()">
         <div class="quick-chips">
           <div class="chip" id="chip_1" onclick="selectChipAmt(1)">&#8377;1</div>
           <div class="chip selected" id="chip_6" onclick="selectChipAmt(6)">&#8377;6</div>
           <div class="chip" id="chip_10" onclick="selectChipAmt(10)">&#8377;10</div>
+          <div class="chip" id="chip_20" onclick="selectChipAmt(20)">&#8377;20</div>
           <div class="chip" id="chip_50" onclick="selectChipAmt(50)">&#8377;50</div>
           <div class="chip" id="chip_100" onclick="selectChipAmt(100)">&#8377;100</div>
+          <div class="chip" id="chip_200" onclick="selectChipAmt(200)">&#8377;200</div>
           <div class="chip" id="chip_250" onclick="selectChipAmt(250)">&#8377;250</div>
-          <div class="chip" id="chip_1000" onclick="selectChipAmt(1000)">&#8377;1000</div>
-          <div class="chip" id="chip_2500" onclick="selectChipAmt(2500)">&#8377;2500</div>
         </div>
       </div>
 
