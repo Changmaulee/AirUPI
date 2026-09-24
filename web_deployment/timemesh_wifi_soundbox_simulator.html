@@ -71,17 +71,34 @@
 
   <div class="container">
     
-    <!-- LEFT: TRANSMITTER (MERCHANT PHONE) -->
+    <!-- LEFT: PARTY 1 - CUSTOMER SMARTPHONE (AIRPLANE MODE) -->
     <div class="card">
-      <h2>📱 Merchant Smartphone / POS Transmitter</h2>
+      <h2>📱 Party 1: Customer Phone <span style="font-size: 11px; background: rgba(239,68,68,0.2); color: #f87171; padding: 2px 8px; border-radius: 999px; border: 1px solid #ef4444;">✈️ AIRPLANE MODE (Zero Internet)</span></h2>
       
+      <div style="background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <div style="font-size: 11px; color: var(--text-dim);">CONNECTED MERCHANT:</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--accent);" id="scannedMerchantText">None (Scan QR to Connect)</div>
+        </div>
+        <button class="btn-alt" onclick="triggerQrScanAnimation()" style="padding: 6px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;">
+          📷 Scan Shop QR
+        </button>
+      </div>
+
+      <!-- Scanner Viewfinder Animation Box -->
+      <div id="scannerBox" style="display: none; height: 110px; background: #000; border: 2px dashed var(--accent); border-radius: 8px; position: relative; overflow: hidden; align-items: center; justify-content: center;">
+        <div style="position: absolute; width: 100%; height: 3px; background: #38bdf8; box-shadow: 0 0 10px #38bdf8; top: 0; animation: scanLine 1.5s infinite alternate;"></div>
+        <div style="font-size: 12px; color: #38bdf8; z-index: 2;">🔍 Scanning Merchant QR Code Offline...</div>
+      </div>
+      <style>@keyframes scanLine { from { top: 5%; } to { top: 90%; } }</style>
+
       <div class="field-group">
-        <label>Payment Amount (₹ INR):</label>
+        <label>Enter Payment Amount (₹ INR):</label>
         <input type="number" id="payAmount" value="150" min="1" step="1">
       </div>
       
       <div class="field-group">
-        <label>Pan-Indic Language (22 OTM Options):</label>
+        <label>Select Soundbox Language:</label>
         <select id="payLang">
           <option value="hi" selected>Hindi (हिन्दी)</option>
           <option value="ta">Tamil (தமிழ்)</option>
@@ -93,34 +110,76 @@
       </div>
 
       <div class="field-group">
-        <label>Transaction ID (Deterministic Causal Token):</label>
-        <input type="text" id="payTx" value="TX_9981">
+        <label>Signed TimeMesh Causal Token:</label>
+        <input type="text" id="payTx" value="TX_9981" readonly style="font-family: monospace; color: #94a3b8;">
       </div>
 
       <div class="btn-row">
-        <button onclick="blastPaymentPacket()">⚡ Blast >P-Frame (Pay)</button>
+        <button onclick="blastPaymentPacket()" style="grid-column: span 2; background: linear-gradient(135deg, #10b981, #047857); font-size: 15px; padding: 14px;">
+          ⚡ Beam 45-Byte Payment (< 1ms Over Wi-Fi)
+        </button>
+      </div>
+      <div class="btn-row">
         <button class="btn-alt" onclick="blastWhatIfQuery()">🔍 ?B-Frame (What-If)</button>
-      </div>
-      <div class="btn-row">
         <button class="btn-refund" onclick="blastRefundPacket()">🔄 !R-Frame (Refund)</button>
-        <button class="btn-alt" onclick="clearTerminal()">🧹 Clear Logs</button>
       </div>
 
-      <div class="field-group" style="margin-top: 10px;">
+      <div class="field-group" style="margin-top: 6px;">
         <label>Generated 802.11 Layer-2 Raw Frame (Wire Bytecode):</label>
         <input type="text" id="rawPacketView" readonly style="font-family: monospace; color: #a5f3fc; font-size: 11px;">
       </div>
     </div>
 
-    <!-- RIGHT: RECEIVER (SOVEREIGN SOUNDBOX) -->
+    <!-- RIGHT: PARTY 2 - MERCHANT COUNTER (QR CODE STAND + SOVEREIGN SOUNDBOX) -->
     <div class="card">
-      <h2>📻 Sovereign Soundbox Hardware (RP2040 / ESP32)</h2>
+      <h2>🏪 Party 2: Merchant Counter (Shop QR Stand & Soundbox)</h2>
       
+      <div style="display: grid; grid-template-columns: 130px 1fr; gap: 14px; align-items: center; background: #020617; border: 1px solid #334155; border-radius: 12px; padding: 12px;">
+        <!-- Merchant QR Stand Graphic -->
+        <div style="background: #fff; padding: 8px; border-radius: 8px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.6); cursor: pointer;" onclick="triggerQrScanAnimation()" title="Click to Scan">
+          <svg width="100" height="100" viewBox="0 0 100 100" style="display: block; margin: 0 auto;">
+            <!-- Simple clean SVG QR pattern -->
+            <rect width="100" height="100" fill="#ffffff"/>
+            <!-- Position Mark Top-Left -->
+            <rect x="5" y="5" width="28" height="28" fill="#000000"/>
+            <rect x="9" y="9" width="20" height="20" fill="#ffffff"/>
+            <rect x="13" y="13" width="12" height="12" fill="#000000"/>
+            <!-- Position Mark Top-Right -->
+            <rect x="67" y="5" width="28" height="28" fill="#000000"/>
+            <rect x="71" y="9" width="20" height="20" fill="#ffffff"/>
+            <rect x="75" y="13" width="12" height="12" fill="#000000"/>
+            <!-- Position Mark Bottom-Left -->
+            <rect x="5" y="67" width="28" height="28" fill="#000000"/>
+            <rect x="9" y="71" width="20" height="20" fill="#ffffff"/>
+            <rect x="13" y="75" width="12" height="12" fill="#000000"/>
+            <!-- Center Pattern Details -->
+            <rect x="40" y="10" width="8" height="8" fill="#000000"/>
+            <rect x="52" y="10" width="8" height="8" fill="#000000"/>
+            <rect x="40" y="24" width="20" height="6" fill="#000000"/>
+            <rect x="10" y="40" width="80" height="6" fill="#000000"/>
+            <rect x="40" y="52" width="16" height="16" fill="#000000"/>
+            <rect x="65" y="52" width="20" height="8" fill="#000000"/>
+            <rect x="65" y="70" width="10" height="20" fill="#000000"/>
+            <rect x="80" y="75" width="12" height="15" fill="#000000"/>
+            <rect x="40" y="75" width="18" height="18" fill="#000000"/>
+          </svg>
+          <div style="color: #000; font-size: 8px; font-weight: 800; margin-top: 4px;">AIRUPI ACCEPTED</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; color: var(--text-dim);">MERCHANT ACCOUNT:</div>
+          <div style="font-size: 15px; font-weight: 700; color: #fff;">Gupta General Store</div>
+          <div style="font-size: 12px; color: var(--accent); font-family: monospace;">guptastore@airupi</div>
+          <div style="font-size: 11px; color: var(--green); margin-top: 4px;">✓ Static Offline QR Stand (No Power/Internet Needed)</div>
+        </div>
+      </div>
+
+      <!-- Sovereign Soundbox Visual -->
       <div class="soundbox-visual">
         <div class="lcd-screen">
           <div class="lcd-title" id="lcdShop">SHOP: GUPTA GENERAL STORE</div>
           <div class="lcd-amount" id="lcdAmount">₹ 150.00</div>
-          <div class="lcd-status" id="lcdStatus">STATUS: WAITING FOR WI-FI PACKET BLAST...</div>
+          <div class="lcd-status" id="lcdStatus">STATUS: READY & LISTENING (ZERO SIM/CLOUD)...</div>
         </div>
 
         <div class="speaker-grille">
@@ -537,6 +596,37 @@ Waiting for over-the-air TimeMesh packets...</div>
       utterance.volume = 1.0;
 
       window.speechSynthesis.speak(utterance);
+    }
+
+    function triggerQrScanAnimation() {
+      const scannerBox = document.getElementById('scannerBox');
+      const merchantText = document.getElementById('scannedMerchantText');
+      if (!scannerBox) return;
+
+      scannerBox.style.display = 'flex';
+      merchantText.innerText = "Scanning QR via camera...";
+      merchantText.style.color = "#f59e0b";
+
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+      } catch (e) {}
+
+      setTimeout(() => {
+        scannerBox.style.display = 'none';
+        merchantText.innerText = "✓ Gupta General Store (guptastore@airupi)";
+        merchantText.style.color = "#10b981";
+        log("📷 [QR SCANNER]: Decoded Merchant Payload offline -> VPA: guptastore@airupi | Channel: 1 | SSID: SovereignMesh_01");
+      }, 1200);
     }
 
     function log(msg) {
