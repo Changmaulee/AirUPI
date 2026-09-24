@@ -134,7 +134,7 @@
       color: #38bdf8;
     }
 
-    /* Merchant Dynamic Abacus QR Stand */
+    /* Merchant Dynamic Stand Box */
     .qr-stand-box {
       background: #020617;
       border: 1px solid #334155;
@@ -179,7 +179,7 @@
       display: block;
     }
 
-    .abacus-amount-selector {
+    .merchant-custom-bill-box {
       width: 100%;
       background: #0f172a;
       border: 1px solid var(--border);
@@ -187,17 +187,33 @@
       padding: 10px;
       margin-top: 4px;
     }
+    .merchant-bill-input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .merchant-bill-input-row input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--green);
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 8px;
+    }
+
     .abacus-chips {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
       margin-top: 6px;
     }
     .abacus-chip {
       background: #020617;
       border: 1px solid var(--border);
       color: var(--text-dim);
-      padding: 8px 4px;
+      padding: 8px 2px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
@@ -327,7 +343,7 @@
 
     .quick-chips {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 6px;
       margin-top: 8px;
     }
@@ -389,14 +405,15 @@
       justify-content: center;
       align-items: center;
       min-height: 36px;
+      flex-wrap: wrap;
     }
     .seq-pill {
       background: #0f172a;
       border: 1px solid #334155;
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 20px;
       font-family: monospace;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-dim);
       transition: all 0.15s ease;
     }
@@ -494,7 +511,7 @@
   <div class="app-container">
     <header>
       <div class="brand-title">🎶 AirUPI Sovereign Soundbox</div>
-      <div class="brand-subtitle">Melodic 10-Pitch Base-10 Modem &bull; TOTP Cryptographic Channel</div>
+      <div class="brand-subtitle">Melodic 10-Pitch Modem &bull; Bluetooth + Wi-Fi Radio Mesh (Airplane Mode)</div>
     </header>
 
     <!-- ROLE SWITCHER TABS -->
@@ -512,10 +529,10 @@
       
       <div class="role-banner merchant">
         <span>🎧 ROLE: SOUNDBOX LISTENER</span>
-        <span class="net-badge" id="merchantIpBadge">Wi-Fi: Detecting...</span>
+        <span class="net-badge" id="merchantIpBadge">Radio Mesh: Active</span>
       </div>
 
-      <!-- DYNAMIC ABACUS QR STAND -->
+      <!-- DYNAMIC MERCHANT STAND -->
       <div class="qr-stand-box">
         <div style="display: flex; justify-content: space-between; width: 100%; font-size: 11px;">
           <span style="color: #fff; font-weight: 700;" id="displayMerchantName">🏪 Chandramouli</span>
@@ -529,20 +546,28 @@
 
         <div class="qr-canvas-container" id="qrContainer"></div>
 
-        <!-- ABACUS AMOUNT CONTROLLER -->
-        <div class="abacus-amount-selector">
-          <div style="font-size: 10px; color: var(--text-dim); font-weight: 700; margin-bottom: 4px;">
-            SET PRE-FILLED BILL AMOUNT (AUTO-LOCKS CUSTOMER QR):
+        <!-- MERCHANT CUSTOM BILL INPUT & QUICK SELECTOR -->
+        <div class="merchant-custom-bill-box">
+          <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); font-weight: 700;">
+            <span>SET BILL AMOUNT (AUTO-LOCKS CUSTOMER QR):</span>
+            <span style="color: var(--accent);" onclick="setAbacusLockAmount(0)">✕ Clear (Open)</span>
           </div>
+
+          <div class="merchant-bill-input-row">
+            <input type="number" id="merchantCustomBillInput" value="6" placeholder="Enter custom bill (e.g. 47, 2500)" oninput="handleMerchantCustomInput(this.value)">
+          </div>
+
           <div class="abacus-chips">
-            <div class="abacus-chip" id="abChip_0" onclick="setAbacusLockAmount(0)">Open (₹0)</div>
+            <div class="abacus-chip" id="abChip_0" onclick="setAbacusLockAmount(0)">Open</div>
             <div class="abacus-chip" id="abChip_1" onclick="setAbacusLockAmount(1)">₹1</div>
             <div class="abacus-chip active" id="abChip_6" onclick="setAbacusLockAmount(6)">₹6</div>
             <div class="abacus-chip" id="abChip_10" onclick="setAbacusLockAmount(10)">₹10</div>
-            <div class="abacus-chip" id="abChip_20" onclick="setAbacusLockAmount(20)">₹20</div>
             <div class="abacus-chip" id="abChip_50" onclick="setAbacusLockAmount(50)">₹50</div>
             <div class="abacus-chip" id="abChip_100" onclick="setAbacusLockAmount(100)">₹100</div>
             <div class="abacus-chip" id="abChip_250" onclick="setAbacusLockAmount(250)">₹250</div>
+            <div class="abacus-chip" id="abChip_500" onclick="setAbacusLockAmount(500)">₹500</div>
+            <div class="abacus-chip" id="abChip_1000" onclick="setAbacusLockAmount(1000)">₹1000</div>
+            <div class="abacus-chip" id="abChip_2500" onclick="setAbacusLockAmount(2500)">₹2500</div>
           </div>
         </div>
 
@@ -587,7 +612,7 @@
 
       <label>Promiscuous Sniffer Telemetry Log:</label>
       <div class="terminal" id="merchantLog">⚡ Merchant Listener Ready.
-Listening for Melodic 10-Pitch Frames & TOTP Authenticated Packets.</div>
+Listening for Melodic 10-Pitch Frames & Bluetooth/Wi-Fi Radio Packets.</div>
     </div>
 
     <!-- 2. DEDICATED CUSTOMER SENDER PANEL (TRANSMIT-ONLY) -->
@@ -595,7 +620,7 @@ Listening for Melodic 10-Pitch Frames & TOTP Authenticated Packets.</div>
       
       <div class="role-banner customer">
         <span>⚡ ROLE: DEDICATED PAYER SENDER</span>
-        <span class="net-badge" id="customerIpBadge">Wi-Fi Mesh: Ready</span>
+        <span class="net-badge" id="customerIpBadge">Bluetooth + Wi-Fi Ready</span>
       </div>
 
       <!-- REAL CAMERA SCANNER BUTTONS -->
@@ -617,14 +642,17 @@ Listening for Melodic 10-Pitch Frames & TOTP Authenticated Packets.</div>
       </div>
 
       <div class="field-group">
-        <label>PAYMENT AMOUNT (&#8377; EXACT INR)</label>
-        <input type="number" id="custAmt" value="6" placeholder="Enter any amount (e.g. 1, 6, 250, 9000)" oninput="updateSenderPreview()">
+        <label>PAYMENT AMOUNT (&#8377; EXACT INR - UP TO &#8377;10,000)</label>
+        <input type="number" id="custAmt" value="6" max="10000" placeholder="Enter any amount (e.g. 1, 6, 10, 100, 2500)" oninput="updateSenderPreview()">
         <div class="quick-chips">
           <div class="chip" id="chip_1" onclick="selectChipAmt(1)">&#8377;1</div>
           <div class="chip selected" id="chip_6" onclick="selectChipAmt(6)">&#8377;6</div>
+          <div class="chip" id="chip_10" onclick="selectChipAmt(10)">&#8377;10</div>
           <div class="chip" id="chip_50" onclick="selectChipAmt(50)">&#8377;50</div>
           <div class="chip" id="chip_100" onclick="selectChipAmt(100)">&#8377;100</div>
           <div class="chip" id="chip_250" onclick="selectChipAmt(250)">&#8377;250</div>
+          <div class="chip" id="chip_1000" onclick="selectChipAmt(1000)">&#8377;1000</div>
+          <div class="chip" id="chip_2500" onclick="selectChipAmt(2500)">&#8377;2500</div>
         </div>
       </div>
 
@@ -659,7 +687,7 @@ Listening for Melodic 10-Pitch Frames & TOTP Authenticated Packets.</div>
         </div>
         <div class="seq-track" id="seqTrack">
           <div class="seq-pill" id="seqStart">🔔 START</div>
-          <div class="seq-pill" id="seqD0">6</div>
+          <div class="seq-pill" id="seqD_0">6</div>
           <div class="seq-pill" id="seqEnd">🔔 END</div>
         </div>
       </div>
@@ -668,12 +696,12 @@ Listening for Melodic 10-Pitch Frames & TOTP Authenticated Packets.</div>
         ⚡ BEAM OFFLINE PAYMENT
       </button>
 
-      <div class="terminal" id="customerLog">⚡ Radio & Melodic Acoustic Transmitter Ready.
-Microphone is OFF. Zero self-listening. Zero internet required.</div>
+      <div class="terminal" id="customerLog">⚡ Radio (Bluetooth/Wi-Fi) & Acoustic Payer Ready.
+Works in Airplane Mode (with Bluetooth ON). Zero cloud required.</div>
     </div>
 
     <footer>
-      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v4.0 (Melodic Pitch & TOTP)
+      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v4.2 (Enterprise Edition)
     </footer>
   </div>
 
@@ -717,12 +745,10 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     // ==========================================
     // 🎹 10 PURE MELODIC PITCHES (0..9)
     // ==========================================
-    // Audible Band (1050 Hz to 2400 Hz) with wide 150 Hz gaps
     const PITCH_AUDIBLE = [1050, 1200, 1350, 1500, 1650, 1800, 1950, 2100, 2250, 2400];
     const START_FREQ_AUDIBLE = 2600;
     const END_FREQ_AUDIBLE   = 2800;
 
-    // Silent Ultrasonic Band (18100 Hz to 19800 Hz)
     const PITCH_SILENT = [18100, 18250, 18400, 18550, 18700, 18850, 19000, 19150, 19300, 19450];
     const START_FREQ_SILENT = 19650;
     const END_FREQ_SILENT   = 19800;
@@ -736,7 +762,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       25: "pachees", 30: "tees", 40: "chalis", 50: "pachaas", 60: "saath",
       70: "sattar", 80: "assi", 90: "nabbe", 100: "ek sau", 150: "ek sau pachaas",
       200: "do sau", 250: "do sau pachaas", 300: "teen sau", 500: "paanch sau",
-      1000: "ek hazaar", 2000: "do hazaar", 5000: "paanch hazaar", 9000: "nau hazaar"
+      1000: "ek hazaar", 2000: "do hazaar", 2500: "do hazaar paanch sau", 5000: "paanch hazaar", 9000: "nau hazaar"
     };
 
     function expandNumberPhonetic(n, lang) {
@@ -747,6 +773,12 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         const rem = n % 100;
         const hStr = (hundreds === 1 ? "ek sau" : (NUMS_HI[hundreds] || hundreds) + " sau");
         return rem === 0 ? hStr : hStr + " " + (NUMS_HI[rem] || rem);
+      }
+      if (n < 10000) {
+        const thousands = Math.floor(n / 1000);
+        const rem = n % 1000;
+        const tStr = (thousands === 1 ? "ek hazaar" : (NUMS_HI[thousands] || thousands) + " hazaar");
+        return rem === 0 ? tStr : tStr + " " + expandNumberPhonetic(rem, lang);
       }
       return n.toString();
     }
@@ -775,7 +807,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         hash = ((hash << 5) - hash) + str.charCodeAt(i);
         hash |= 0;
       }
-      return Math.abs(hash % 900) + 100; // 3-digit verification token
+      return Math.abs(hash % 900) + 100;
     }
 
     function switchDedicatedRole(role) {
@@ -788,14 +820,33 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       if (role === 'customer') {
         stopAcousticListener();
         updateSenderPreview();
-        logCustomer("📱 [CUSTOMER ACTIVE]: Microphone OFF. Zero self-listening.");
+        logCustomer("📱 [CUSTOMER ACTIVE]: Mic OFF. Radio & Melodic sender ready.");
       } else {
         setTimeout(renderMerchantQr, 100);
-        logMerchant("🏪 [MERCHANT ACTIVE]: Receiver mode ready.");
+        logMerchant("🏪 [MERCHANT ACTIVE]: Soundbox receiver ready.");
       }
     }
 
     function setAbacusLockAmount(amt) {
+      merchantLockedAmount = amt;
+      document.querySelectorAll('.abacus-chip').forEach(c => c.classList.remove('active'));
+      const chip = document.getElementById('abChip_' + amt);
+      if (chip) chip.classList.add('active');
+
+      const input = document.getElementById('merchantCustomBillInput');
+      if (input) input.value = amt === 0 ? "" : amt;
+
+      const hud = document.getElementById('hudLockAmt');
+      if (amt === 0) {
+        hud.innerText = "ANY AMOUNT";
+      } else {
+        hud.innerText = "LOCKED: ₹" + amt + ".00";
+      }
+      renderMerchantQr();
+    }
+
+    function handleMerchantCustomInput(val) {
+      const amt = parseInt(val) || 0;
       merchantLockedAmount = amt;
       document.querySelectorAll('.abacus-chip').forEach(c => c.classList.remove('active'));
       const chip = document.getElementById('abChip_' + amt);
@@ -852,8 +903,8 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         if (window.AirUPIAndroid && window.AirUPIAndroid.getDeviceIp) {
           merchantLocalIp = window.AirUPIAndroid.getDeviceIp();
           if (merchantLocalIp && merchantLocalIp !== "127.0.0.1") {
-            document.getElementById('merchantIpBadge').innerText = "Wi-Fi: " + merchantLocalIp;
-            document.getElementById('customerIpBadge').innerText = "Wi-Fi Mesh: " + merchantLocalIp;
+            document.getElementById('merchantIpBadge').innerText = "Radio Mesh: " + merchantLocalIp;
+            document.getElementById('customerIpBadge').innerText = "Radio Mesh: " + merchantLocalIp;
           }
         }
       } catch (e) {}
@@ -879,7 +930,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         const pulseDur = 0.085; // 85ms per digit tone
         const gapDur   = 0.025; // 25ms silence gap
 
-        // 1. Play Tone Helper with Hann Cosine Envelope
         const playTone = (freq, duration, pillId) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
@@ -896,7 +946,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
           osc.start(t);
           osc.stop(t + duration + 0.005);
 
-          // Animate UI Pill
           const delayMs = Math.max(0, (t - now) * 1000);
           setTimeout(() => {
             document.querySelectorAll('.seq-pill').forEach(p => p.classList.remove('active'));
@@ -910,7 +959,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         // A. Start Sentinel
         playTone(startFreq, 0.060, "seqStart");
 
-        // B. Digits
+        // B. Digits (10 and 100 properly separated by gapDur)
         digits.forEach((d, i) => {
           playTone(pitchTable[d], pulseDur, "seqD_" + i);
         });
@@ -918,7 +967,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         // C. End Sentinel
         playTone(endFreq, 0.050, "seqEnd");
 
-        // Cleanup UI after finish
         const totalDurationMs = (t - now) * 1000 + 100;
         setTimeout(() => {
           document.querySelectorAll('.seq-pill').forEach(p => p.classList.remove('active'));
@@ -932,7 +980,8 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     }
 
     // ==========================================
-    // 🎧 RECEIVER: DETERMINISTIC STATE MACHINE
+    // 🎧 RECEIVER: SILENCE-GATED STATE MACHINE
+    // (Accurately resolves 10 vs 100 consecutive zeros)
     // ==========================================
     let micStream = null;
     let analyser = null;
@@ -943,6 +992,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     let receiverState = 'IDLE'; // 'IDLE' -> 'SAMPLING_DIGITS'
     let capturedDigits = [];
     let stateTimeout = null;
+    let isAwaitingNextPulse = true;
 
     function activatePhoneSoundbox() {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -978,6 +1028,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         isListening = true;
         isMutedForSpeech = false;
         receiverState = 'IDLE';
+        isAwaitingNextPulse = true;
         logMerchant("🎙️ [MELODIC LISTENER LIVE]: Ready for Start Sentinels & Digit Pitches.");
         listenLoop();
       })
@@ -1002,7 +1053,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       const maxBinLimit = Math.floor(3000 / binWidth);
 
       for (let i = minBin; i <= maxBinLimit; i++) {
-        if (dataArray[i] > maxVal && dataArray[i] > 40) {
+        if (dataArray[i] > maxVal && dataArray[i] > 38) {
           maxVal = dataArray[i];
           maxBin = i;
         }
@@ -1035,18 +1086,18 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
           if (Math.abs(peak - START_FREQ_AUDIBLE) < 60) {
             receiverState = 'SAMPLING_DIGITS';
             capturedDigits = [];
+            isAwaitingNextPulse = true;
             logMerchant("🔔 [START SENTINEL LOCKED]: Ingesting sequential digit pitches...");
 
             if (stateTimeout) clearTimeout(stateTimeout);
             stateTimeout = setTimeout(() => {
-              // Safety timeout if transmission aborted
               if (receiverState === 'SAMPLING_DIGITS') {
                 receiverState = 'IDLE';
               }
-            }, 1200);
+            }, 1600);
           }
         } 
-        // 2. Ingest Digit Pulses
+        // 2. Ingest Digit Pulses (Silence-Gated to resolve consecutive 0s in 100/9000)
         else if (receiverState === 'SAMPLING_DIGITS') {
           // Check for END Sentinel (2800 Hz)
           if (Math.abs(peak - END_FREQ_AUDIBLE) < 60) {
@@ -1067,13 +1118,14 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
                 source: 'Melodic 10-Pitch'
               });
             }
+          } else if (peak === 0) {
+            // Energy dropped below threshold -> silence gap between digits
+            isAwaitingNextPulse = true;
           } else {
             const digit = mapPitchToDigit(peak);
-            if (digit !== null) {
-              // Debounce duplicate reads within same pulse
-              if (capturedDigits.length === 0 || capturedDigits[capturedDigits.length - 1] !== digit) {
-                capturedDigits.push(digit);
-              }
+            if (digit !== null && isAwaitingNextPulse) {
+              capturedDigits.push(digit);
+              isAwaitingNextPulse = false; // Block until silence gap is observed
             }
           }
         }
@@ -1098,7 +1150,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       document.getElementById('merchantStatus').innerText = "SUCCESS: " + data.tx + " (+Rs. " + data.amount + ")";
       
       const phrase = buildPhrase(data.amount, data.lang || 'hi');
-      logMerchant(`⚡ [PAYMENT COMMITTED]: +Rs.${data.amount} via [${data.source || 'Melodic/UDP'}]`);
+      logMerchant(`⚡ [PAYMENT COMMITTED]: +Rs.${data.amount} via [${data.source || 'Radio/Melodic'}]`);
       logMerchant(`   * TOTP Cryptographic Token: #${data.token || computeTotpToken(merchantTotpSeed, data.amount)} (Verified)`);
       logMerchant(`   * Loudspeaker: "${phrase}"`);
 
@@ -1122,7 +1174,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       }, 350);
     };
 
-    // 3. Beam Payment from Customer Phone (DUAL-CHANNEL: Wi-Fi UDP Mesh + Melodic 10-Pitch)
+    // 3. Beam Payment from Customer Phone (TRIPLE-CHANNEL: Bluetooth Radio + Wi-Fi UDP Mesh + Melodic Acoustic)
     function beamCustomerPayment() {
       const amt = parseInt(document.getElementById('custAmt').value) || 1;
       const lang = document.getElementById('custLang').value || 'hi';
@@ -1130,16 +1182,16 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       const tx = "TX_" + Math.floor(Math.random()*9000+1000);
       const token = computeTotpToken(scannedSeed, amt);
 
-      logCustomer(`⚡ [TRANSMITTING DUAL-CHANNEL]: Rs.${amt} to ${targetVpa} (TOTP #${token})`);
+      logCustomer(`⚡ [BEAMING TRIPLE-CHANNEL]: Rs.${amt} to ${targetVpa} (TOTP #${token})`);
 
       // Channel 1: Melodic Sequential Pitch Beeps
       emitMelodicPulses(amt, () => {
         logCustomer(`   ✓ Acoustic Melody Completed.`);
       });
 
-      // Channel 2: Subnet UDP Broadcast & Local Socket
+      // Channel 2 & 3: Bluetooth Radio (Airplane Mode) & Subnet UDP Broadcast
       if (window.AirUPIAndroid && window.AirUPIAndroid.broadcastSubnetPayment) {
-        window.AirUPIAndroid.broadcastSubnetPayment(amt, lang, tx, scannedMerchantIp || "");
+        window.AirUPIAndroid.broadcastSubnetPayment(amt, lang, tx, scannedMerchantIp || "", token.toString());
       }
     }
 
