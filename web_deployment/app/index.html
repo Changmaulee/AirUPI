@@ -9,6 +9,7 @@
   <title>AirUPI - Virtual Sovereign Soundbox</title>
   <link rel="manifest" href="manifest.json">
   <script src="qrcode.min.js"></script>
+  <script src="jsqr.min.js"></script>
   <style>
     :root {
       --bg: #030712;
@@ -253,29 +254,6 @@
     }
     .chip:active { background: #1e293b; }
 
-    .scanner-view {
-      display: none;
-      height: 90px;
-      background: #000;
-      border: 2px dashed var(--accent);
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-    }
-    .scan-laser {
-      position: absolute;
-      width: 100%;
-      height: 3px;
-      background: #38bdf8;
-      box-shadow: 0 0 10px #38bdf8;
-      top: 0;
-      animation: scanAnim 1.2s infinite alternate;
-    }
-    @keyframes scanAnim { from { top: 5%; } to { top: 90%; } }
-
     .terminal {
       background: #020617;
       border: 1px solid var(--border);
@@ -307,6 +285,61 @@
       width: 100%;
       margin-top: 8px;
     }
+
+    /* Fullscreen Real Camera Viewfinder */
+    .camera-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 99999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .camera-modal.active { display: flex; }
+    #cameraVideo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .camera-ui-layer {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 40px 20px;
+      background: rgba(0,0,0,0.25);
+    }
+    .camera-reticle {
+      width: 250px;
+      height: 250px;
+      border: 3px solid #38bdf8;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
+    }
+    .scan-laser-active {
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background: #38bdf8;
+      box-shadow: 0 0 15px #38bdf8;
+      top: 0;
+      animation: scanSweep 1.5s infinite alternate ease-in-out;
+    }
+    @keyframes scanSweep { from { top: 5%; } to { top: 92%; } }
   </style>
 </head>
 <body>
@@ -384,20 +417,22 @@ Listening for 45-byte Over-the-Air Sound Chirps & Action Frames • Zero Cloud C
 
     <!-- 2. CUSTOMER MODE PANEL -->
     <div class="panel" id="panelCustomer">
-      <button class="btn-main" onclick="triggerCustomerScan()" style="background: #3b82f6; margin-bottom: 12px; padding: 12px; font-size: 14px;">
-        📷 Scan Shop QR Stand
+      
+      <!-- REAL CAMERA SCANNER BUTTONS -->
+      <button class="btn-main" onclick="startRealCameraScanner()" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); margin-bottom: 8px; padding: 14px; font-size: 15px;">
+        📷 Open Live Camera & Scan Shop QR
       </button>
 
-      <div class="scanner-view" id="customerScanner">
-        <div class="scan-laser"></div>
-        <div style="font-size: 12px; color: #38bdf8; z-index: 2;">🔍 Scanning Merchant QR Offline...</div>
-      </div>
+      <button class="btn-sublink" onclick="document.getElementById('fileQrInput').click()" style="margin-bottom: 12px;">
+        🖼️ Upload QR Image from Gallery / Screenshot
+      </button>
+      <input type="file" id="fileQrInput" accept="image/*" style="display:none;" onchange="handleQrImageUpload(event)">
 
       <div class="field-group">
-        <label>MERCHANT TARGET</label>
-        <input type="text" id="custMerchant" value="changmaulee@icici" readonly style="color: var(--accent); font-family: monospace;">
+        <label>SCANNED MERCHANT TARGET</label>
+        <input type="text" id="custMerchant" value="changmaulee@icici" style="color: var(--accent); font-family: monospace; font-weight: 700;">
         <div style="font-size: 11px; color: var(--green); margin-top: 4px;" id="custLockStatus">
-          [STAND TARGET VERIFIED OK: changmaulee@icici]
+          [STAND TARGET: changmaulee@icici]
         </div>
       </div>
 
@@ -437,6 +472,26 @@ Zero cellular/internet data required.</div>
     <footer>
       Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v1.0.0
     </footer>
+  </div>
+
+  <!-- FULLSCREEN CAMERA MODAL -->
+  <div class="camera-modal" id="cameraModal">
+    <video id="cameraVideo" playsinline autoplay></video>
+    <canvas id="cameraCanvas" style="display:none;"></canvas>
+    
+    <div class="camera-ui-layer">
+      <div style="background: rgba(0,0,0,0.7); color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid #38bdf8;">
+        🔍 Point Camera at Merchant QR Stand
+      </div>
+
+      <div class="camera-reticle">
+        <div class="scan-laser-active"></div>
+      </div>
+
+      <button onclick="stopRealCameraScanner()" style="background: #ef4444; color: #fff; border: none; padding: 12px 32px; border-radius: 30px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+        ✕ Cancel Scanner
+      </button>
+    </div>
   </div>
 
   <script>
@@ -496,15 +551,146 @@ Zero cellular/internet data required.</div>
       merchantName = document.getElementById('cfgMerchantName').value.trim() || "Chandramouli";
       document.getElementById('displayMerchantName').innerText = "🏪 " + merchantName;
       document.getElementById('custMerchant').value = merchantVpa;
-      document.getElementById('custLockStatus').innerText = "[STAND TARGET VERIFIED OK: " + merchantVpa + "]";
+      document.getElementById('custLockStatus').innerText = "[STAND TARGET: " + merchantVpa + "]";
       renderMerchantQr();
+    }
+
+    // ==========================================
+    // REAL LIVE CAMERA QR CODE SCANNER (jsQR)
+    // ==========================================
+    let cameraStream = null;
+    let isCameraRunning = false;
+
+    function startRealCameraScanner() {
+      const modal = document.getElementById('cameraModal');
+      const video = document.getElementById('cameraVideo');
+      modal.classList.add('active');
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Camera not supported on this device/browser.");
+        stopRealCameraScanner();
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }
+      })
+      .then(stream => {
+        cameraStream = stream;
+        video.srcObject = stream;
+        video.setAttribute('playsinline', true);
+        video.play();
+        isCameraRunning = true;
+        requestAnimationFrame(scanCameraFrame);
+      })
+      .catch(err => {
+        alert("Camera Permission Error: " + err.message);
+        stopRealCameraScanner();
+      });
+    }
+
+    function stopRealCameraScanner() {
+      const modal = document.getElementById('cameraModal');
+      modal.classList.remove('active');
+      isCameraRunning = false;
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+    }
+
+    function parseScannedPayload(text) {
+      if (!text) return null;
+      // 1. Check if upi://pay?pa=...
+      const matchUpi = text.match(/pa=([^&]+)/i);
+      if (matchUpi && matchUpi[1]) {
+        return decodeURIComponent(matchUpi[1]);
+      }
+      // 2. Check if raw VPA (contains @)
+      const matchVpa = text.match(/([a-zA-Z0-9.\-_]+@[a-zA-Z0-9]+)/);
+      if (matchVpa && matchVpa[1]) {
+        return matchVpa[1];
+      }
+      return text.substring(0, 40);
+    }
+
+    function onQrSuccessfullyScanned(decodedText) {
+      stopRealCameraScanner();
+      playChime();
+
+      const extractedVpa = parseScannedPayload(decodedText);
+      document.getElementById('custMerchant').value = extractedVpa;
+      document.getElementById('custLockStatus').innerText = "✓ [LIVE SCANNED: " + extractedVpa + "]";
+      document.getElementById('custLockStatus').style.color = "#10b981";
+
+      logCustomer(`📷 [REAL CAMERA SCAN SUCCESS]:`);
+      logCustomer(`   * Raw Decoded: ${decodedText.substring(0, 60)}...`);
+      logCustomer(`   * Locked Target: ${extractedVpa}`);
+    }
+
+    function scanCameraFrame() {
+      if (!isCameraRunning) return;
+      const video = document.getElementById('cameraVideo');
+      const canvas = document.getElementById('cameraCanvas');
+      const ctx = canvas.getContext('2d');
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (typeof jsQR !== 'undefined') {
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: "dontInvert",
+          });
+
+          if (code && code.data) {
+            onQrSuccessfullyScanned(code.data);
+            return;
+          }
+        }
+      }
+
+      if (isCameraRunning) {
+        requestAnimationFrame(scanCameraFrame);
+      }
+    }
+
+    // Gallery Image QR upload
+    function handleQrImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.getElementById('cameraCanvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+          const imageData = ctx.getImageData(0, 0, img.width, img.height);
+          if (typeof jsQR !== 'undefined') {
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+            if (code && code.data) {
+              onQrSuccessfullyScanned(code.data);
+            } else {
+              alert("No valid QR code found in this image.");
+            }
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     // ==========================================
     // ACOUSTIC SOUND-WAVE FSK MODEM ENGINE
     // ==========================================
-    const FSK_LEADER = 2100; // Leader Sync Tone (Hz)
-    const FSK_TAIL   = 2450; // Tail Tone (Hz)
+    const FSK_LEADER = 2100;
+    const FSK_TAIL   = 2450;
 
     const AMT_FREQS = [
       { amt: 1, freq: 1100 },
@@ -567,7 +753,6 @@ Zero cellular/internet data required.</div>
       return closest.lang;
     }
 
-    // 1. Transmitter: Emits 0.25s FSK Chirp via Speaker
     function emitAcousticChirp(amount, lang) {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -601,7 +786,6 @@ Zero cellular/internet data required.</div>
       }
     }
 
-    // 2. Receiver: Sniffs Chirps via Microphone
     let micStream = null;
     let analyser = null;
     let isListening = false;
@@ -853,20 +1037,6 @@ function p(){
       window.speechSynthesis.speak(u);
     }
 
-    function triggerCustomerScan() {
-      const sc = document.getElementById('customerScanner');
-      const st = document.getElementById('custLockStatus');
-      sc.style.display = 'flex';
-      st.innerText = "[SCANNING...]";
-      st.style.color = "#f59e0b";
-      setTimeout(() => {
-        sc.style.display = 'none';
-        st.innerText = "[VERIFIED OK: " + merchantVpa + "]";
-        st.style.color = "#10b981";
-        logCustomer("📷 [CAMERA SCAN]: Decoded Stand Payload: " + merchantVpa);
-      }, 1000);
-    }
-
     function logMerchant(msg) {
       const term = document.getElementById('merchantLog');
       term.innerText += "\n" + msg;
@@ -895,19 +1065,20 @@ function p(){
     function beamCustomerPayment() {
       const amt = parseInt(document.getElementById('custAmt').value) || 1;
       const lang = document.getElementById('custLang').value || 'hi';
+      const targetVpa = document.getElementById('custMerchant').value || merchantVpa;
       const tx = "TX_" + Math.floor(Math.random()*9000+1000);
 
       const packet = {
         tx: tx,
         amount: amt,
         lang: lang,
-        merchant: merchantVpa,
+        merchant: targetVpa,
         timestamp: Date.now()
       };
 
-      logCustomer(`⚡ [TRANSMITTING CHIRP]: Emitting over-the-air soundwave + radio pulse | Rs.${amt}`);
+      logCustomer(`⚡ [TRANSMITTING CHIRP]: Emitting soundwave to ${targetVpa} | Rs.${amt}`);
       
-      // 1. Emit acoustic physical sound-wave chirp across the air
+      // 1. Emit acoustic sound-wave chirp across the air
       emitAcousticChirp(amt, lang);
 
       // 2. BroadcastChannel & loopback fetch
