@@ -507,24 +507,36 @@ Zero cellular/internet data required.</div>
 
     function renderMerchantQr() {
       const container = document.getElementById('qrContainer');
+      if (!container) return;
       container.innerHTML = '';
 
       let payload = "";
+      let errorLevel = 'M';
       if (currentQrType === 'html') {
         const rawHtml = getEmbeddedCustomerHtml();
         payload = "data:text/html;charset=utf-8," + encodeURIComponent(rawHtml);
+        errorLevel = 'L';
       } else {
         payload = "upi://pay?pa=" + encodeURIComponent(merchantVpa) + "&pn=" + encodeURIComponent(merchantName) + "&cu=INR&tn=AirUPI%20Offline";
+        errorLevel = 'M';
       }
 
-      qrcodeObj = new QRCode(container, {
-        text: payload,
-        width: 140,
-        height: 140,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.L
-      });
+      try {
+        const qr = qrcode(0, errorLevel);
+        qr.addData(payload);
+        qr.make();
+        const cellSize = currentQrType === 'html' ? 2 : 4;
+        container.innerHTML = qr.createSvgTag({ cellSize: cellSize, margin: 2, scalable: true });
+        const svg = container.querySelector('svg');
+        if (svg) {
+          svg.setAttribute('width', '140');
+          svg.setAttribute('height', '140');
+          svg.style.display = 'block';
+        }
+      } catch (err) {
+        console.error("QR Error:", err);
+        container.innerHTML = "<div style='color:#ef4444;font-size:11px;padding:10px;'>QR Error: " + err.message + "</div>";
+      }
     }
 
     function setQrType(type) {
