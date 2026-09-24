@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#10b981">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>AirUPI - Virtual Sovereign Soundbox</title>
+  <title>AirUPI - Sovereign Virtual Soundbox</title>
   <link rel="manifest" href="manifest.json">
   <script src="qrcode.min.js"></script>
   <script src="jsqr.min.js"></script>
@@ -124,12 +124,11 @@
       color: #38bdf8;
     }
 
-    /* Net Badge */
     .net-badge {
       background: #0f172a;
       border: 1px solid #334155;
       border-radius: 6px;
-      padding: 3px 8px;
+      padding: 4px 8px;
       font-size: 11px;
       font-family: monospace;
       color: #38bdf8;
@@ -149,13 +148,21 @@
     }
     .qr-canvas-container {
       background: #ffffff;
-      padding: 10px;
-      border-radius: 10px;
+      padding: 12px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      min-width: 190px;
+      min-height: 190px;
     }
+    .qr-canvas-container svg {
+      width: 170px;
+      height: 170px;
+      display: block;
+    }
+
     .qr-type-selector {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -403,8 +410,8 @@
 
   <div class="app-container">
     <header>
-      <div class="brand-title">⚡ AirUPI Sovereign Soundbox</div>
-      <div class="brand-subtitle">Dual-Channel: Robust Acoustic Wave + Local Wi-Fi Mesh</div>
+      <div class="brand-title">🧮 AirUPI Sovereign Soundbox</div>
+      <div class="brand-subtitle">Acoustic Abacus Engine &bull; Zero-Cloud Subnet Mesh</div>
     </header>
 
     <!-- ROLE SWITCHER TABS -->
@@ -462,7 +469,7 @@
       <div class="lcd-screen">
         <div style="font-size: 11px; color: #a7f3d0; font-weight: 700; letter-spacing: 1px;">TOTAL REVENUE RECEIVED</div>
         <div class="lcd-amt" id="merchantTotal">&#8377; 0.00</div>
-        <div class="lcd-status" id="merchantStatus">LISTENING FOR OVER-THE-AIR CHIRPS...</div>
+        <div class="lcd-status" id="merchantStatus">LISTENING FOR OVER-THE-AIR ABACUS CHORDS...</div>
         
         <div class="speaker-grille">
           <div class="spk-dot" id="spk1"></div>
@@ -475,7 +482,7 @@
 
       <label>Promiscuous Sniffer Telemetry Log:</label>
       <div class="terminal" id="merchantLog">⚡ Merchant Listener Ready.
-Listening for Dual-Tone Acoustic Waves & Local Wi-Fi P2P Packets.</div>
+Listening for Acoustic Abacus Chords & UDP Subnet Broadcasts.</div>
     </div>
 
     <!-- 2. DEDICATED CUSTOMER SENDER PANEL (TRANSMIT-ONLY) -->
@@ -483,7 +490,7 @@ Listening for Dual-Tone Acoustic Waves & Local Wi-Fi P2P Packets.</div>
       
       <div class="role-banner customer">
         <span>⚡ ROLE: DEDICATED PAYER SENDER</span>
-        <span class="net-badge" id="customerIpBadge">Wi-Fi: Ready</span>
+        <span class="net-badge" id="customerIpBadge">Wi-Fi Mesh: Ready</span>
       </div>
 
       <!-- REAL CAMERA SCANNER BUTTONS -->
@@ -533,10 +540,10 @@ Listening for Dual-Tone Acoustic Waves & Local Wi-Fi P2P Packets.</div>
       <label>PHYSICAL CARRIER MODE</label>
       <div class="carrier-toggle">
         <div class="carrier-btn active" id="carrierAudible" onclick="setCarrier('audible')">
-          🔊 Audible Wave
+          🧮 Abacus Sound Chord
         </div>
         <div class="carrier-btn" id="carrierSilent" onclick="setCarrier('silent')">
-          🤫 Silent Ultrasonic
+          🤫 Ultrasonic Abacus
         </div>
       </div>
 
@@ -549,7 +556,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     </div>
 
     <footer>
-      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v2.1.0
+      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v3.0 (Abacus Edition)
     </footer>
   </div>
 
@@ -580,13 +587,11 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     let isSoundboxUnlocked = false;
     let currentQrType = 'upi';
     let carrierMode = 'audible';
-    let qrcodeObj = null;
 
     let merchantVpa = "changmaulee@icici";
     let merchantName = "Chandramouli";
     let merchantLocalIp = "127.0.0.1";
-    let scannedMerchantIp = null;
-    let txCounter = 1;
+    let scannedMerchantIp = "";
     let recentProcessedTxs = new Set();
 
     // Pan-Indic Number Expander
@@ -629,7 +634,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       }
     }
 
-    // Role switcher
     function switchDedicatedRole(role) {
       currentRole = role;
       document.getElementById('tabMerchant').classList.toggle('active', role === 'merchant');
@@ -668,153 +672,128 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       renderMerchantQr();
     }
 
-    // Fetch device IP from Android bridge
     function refreshDeviceIp() {
       try {
         if (window.AirUPIAndroid && window.AirUPIAndroid.getDeviceIp) {
           merchantLocalIp = window.AirUPIAndroid.getDeviceIp();
-          document.getElementById('merchantIpBadge').innerText = "Wi-Fi IP: " + merchantLocalIp;
-          document.getElementById('customerIpBadge').innerText = "Wi-Fi: " + merchantLocalIp;
+          if (merchantLocalIp && merchantLocalIp !== "127.0.0.1") {
+            document.getElementById('merchantIpBadge').innerText = "Wi-Fi: " + merchantLocalIp;
+            document.getElementById('customerIpBadge').innerText = "Wi-Fi Mesh: " + merchantLocalIp;
+          }
         }
       } catch (e) {}
     }
 
     // ==========================================
-    // ROBUST DUAL-CARRIER MODEM (v2.1)
+    // 🧮 BIQUINARY ACOUSTIC ABACUS ENGINE (v3.0)
     // ==========================================
-    // Preset Dual-Tones (High Band = 1800 Hz / 2100 Hz, Low Band = 1080..1500 Hz)
-    const DUAL_TONE_MAP = {
-      1:    { fLow: 1080, fHigh: 1800 },
-      2:    { fLow: 1140, fHigh: 1800 },
-      5:    { fLow: 1200, fHigh: 1800 },
-      6:    { fLow: 1260, fHigh: 1800 },
-      10:   { fLow: 1320, fHigh: 1800 },
-      20:   { fLow: 1380, fHigh: 1800 },
-      50:   { fLow: 1440, fHigh: 1800 },
-      100:  { fLow: 1500, fHigh: 1800 },
-      250:  { fLow: 1080, fHigh: 2100 },
-      500:  { fLow: 1200, fHigh: 2100 },
-      1000: { fLow: 1320, fHigh: 2100 },
-      2000: { fLow: 1440, fHigh: 2100 }
+    // Upper Deck (Heaven: 0 or +5) | Lower Deck (Earth: 0, 1, 2, 3, 4)
+    // Audible Beam at 1500 Hz
+    const ABACUS_HEAVEN_AUDIBLE = { 0: 1050, 5: 1350 };
+    const ABACUS_EARTH_AUDIBLE  = { 0: 1650, 1: 1800, 2: 1950, 3: 2100, 4: 2250 };
+
+    // Silent Ultrasonic Beam at 18700 Hz
+    const ABACUS_HEAVEN_SILENT = { 0: 18200, 5: 18500 };
+    const ABACUS_EARTH_SILENT  = { 0: 18900, 1: 19100, 2: 19300, 3: 19500, 4: 19700 };
+
+    // Standard preset amounts to direct single-chord mapping
+    const PRESET_CHORD_MAP = {
+      1:    { h: 0, e: 1 }, // 0 + 1 = 1
+      2:    { h: 0, e: 2 }, // 0 + 2 = 2
+      5:    { h: 5, e: 0 }, // 5 + 0 = 5
+      6:    { h: 5, e: 1 }, // 5 + 1 = 6
+      7:    { h: 5, e: 2 }, // 5 + 2 = 7
+      8:    { h: 5, e: 3 }, // 5 + 3 = 8
+      9:    { h: 5, e: 4 }, // 5 + 4 = 9
+      10:   { h: 0, e: 1, mult: 10 },
+      50:   { h: 5, e: 0, mult: 10 },
+      100:  { h: 0, e: 1, mult: 100 },
+      250:  { h: 0, e: 2, mult: 100 }, // 200 base + 50
+      500:  { h: 5, e: 0, mult: 100 },
+      1000: { h: 0, e: 1, mult: 1000 },
+      2000: { h: 0, e: 2, mult: 1000 }
     };
 
-    // Arbitrary Pulse FSK Frequencies
-    const FSK_SYNC_AUDIBLE = 2400;
-    const FSK_END_AUDIBLE  = 2650;
-    const FSK_DIGITS_AUDIBLE = [1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950];
-
-    // Silent Ultrasonic Frequencies
-    const FSK_SYNC_SILENT = 18100;
-    const FSK_END_SILENT  = 19400;
-    const FSK_DIGITS_SILENT = [18300, 18400, 18500, 18600, 18700, 18800, 18900, 19000, 19100, 19200];
-
-    const LANG_CODES = { 'hi': 1, 'ta': 2, 'te': 3, 'kn': 4, 'bn': 5, 'mr': 6, 'gu': 7, 'en': 8 };
-    const LANG_REVERSE = { 1: 'hi', 2: 'ta', 3: 'te', 4: 'kn', 5: 'bn', 6: 'mr', 7: 'gu', 8: 'en' };
-
-    // 1. TRANSMITTER: Emits either Instant Dual-Tone (350ms) or Pulse FSK
-    function emitAcousticChirp(amount, lang) {
+    // 1. TRANSMITTER: Strikes the Heaven & Earth Abacus Beads Simultaneously
+    function emitAbacusChord(amount) {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         if (ctx.state === 'suspended') ctx.resume();
 
         const isSilent = (carrierMode === 'silent');
+        const heavenTable = isSilent ? ABACUS_HEAVEN_SILENT : ABACUS_HEAVEN_AUDIBLE;
+        const earthTable  = isSilent ? ABACUS_EARTH_SILENT  : ABACUS_EARTH_AUDIBLE;
+
+        let hVal = 0;
+        let eVal = 1;
+
+        if (PRESET_CHORD_MAP[amount]) {
+          hVal = PRESET_CHORD_MAP[amount].h;
+          eVal = PRESET_CHORD_MAP[amount].e;
+        } else {
+          // Direct Biquinary digit resolution for arbitrary amount
+          const digit = amount % 10;
+          hVal = (digit >= 5) ? 5 : 0;
+          eVal = digit % 5;
+        }
+
+        const fHeaven = heavenTable[hVal];
+        const fEarth  = earthTable[eVal];
+
+        const duration = 0.35; // 350ms sustained harmonic chord
         const now = ctx.currentTime;
 
-        // If preset amount in Audible mode, use Instant Dual-Tone
-        if (!isSilent && DUAL_TONE_MAP[amount]) {
-          const pair = DUAL_TONE_MAP[amount];
-          const duration = 0.35; // 350ms sustained tone
+        const oscH = ctx.createOscillator();
+        const oscE = ctx.createOscillator();
+        const gainH = ctx.createGain();
+        const gainE = ctx.createGain();
 
-          const osc1 = ctx.createOscillator();
-          const osc2 = ctx.createOscillator();
-          const gain1 = ctx.createGain();
-          const gain2 = ctx.createGain();
+        oscH.type = 'sine';
+        oscE.type = 'sine';
+        oscH.frequency.setValueAtTime(fHeaven, now);
+        oscE.frequency.setValueAtTime(fEarth, now);
 
-          osc1.type = 'sine';
-          osc2.type = 'sine';
-          osc1.frequency.setValueAtTime(pair.fLow, now);
-          osc2.frequency.setValueAtTime(pair.fHigh, now);
+        // Smooth envelope to prevent audio clicking
+        gainH.gain.setValueAtTime(0.01, now);
+        gainH.gain.linearRampToValueAtTime(0.5, now + 0.03);
+        gainH.gain.setValueAtTime(0.5, now + duration - 0.03);
+        gainH.gain.linearRampToValueAtTime(0.001, now + duration);
 
-          gain1.gain.setValueAtTime(0.01, now);
-          gain1.gain.linearRampToValueAtTime(0.45, now + 0.03);
-          gain1.gain.setValueAtTime(0.45, now + duration - 0.03);
-          gain1.gain.linearRampToValueAtTime(0.001, now + duration);
+        gainE.gain.setValueAtTime(0.01, now);
+        gainE.gain.linearRampToValueAtTime(0.5, now + 0.03);
+        gainE.gain.setValueAtTime(0.5, now + duration - 0.03);
+        gainE.gain.linearRampToValueAtTime(0.001, now + duration);
 
-          gain2.gain.setValueAtTime(0.01, now);
-          gain2.gain.linearRampToValueAtTime(0.45, now + 0.03);
-          gain2.gain.setValueAtTime(0.45, now + duration - 0.03);
-          gain2.gain.linearRampToValueAtTime(0.001, now + duration);
+        oscH.connect(gainH);
+        oscE.connect(gainE);
+        gainH.connect(ctx.destination);
+        gainE.connect(ctx.destination);
 
-          osc1.connect(gain1);
-          osc2.connect(gain2);
-          gain1.connect(ctx.destination);
-          gain2.connect(ctx.destination);
-
-          osc1.start(now);
-          osc2.start(now);
-          osc1.stop(now + duration + 0.01);
-          osc2.stop(now + duration + 0.01);
-          return;
-        }
-
-        // Otherwise, emit Robust 180ms Pulse Stream
-        const syncFreq = isSilent ? FSK_SYNC_SILENT : FSK_SYNC_AUDIBLE;
-        const endFreq  = isSilent ? FSK_END_SILENT  : FSK_END_AUDIBLE;
-        const digitTable = isSilent ? FSK_DIGITS_SILENT : FSK_DIGITS_AUDIBLE;
-        const amtDigits = amount.toString().split('').map(d => parseInt(d));
-        const langDigit = LANG_CODES[lang] || 1;
-
-        let t = now;
-        const symbolTime = 0.18; // 180ms per symbol
-        const gapTime = 0.03;    // 30ms guard gap
-
-        const playTone = (freq, duration) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, t);
-          gain.gain.setValueAtTime(0.01, t);
-          gain.gain.linearRampToValueAtTime(0.7, t + 0.02);
-          gain.gain.setValueAtTime(0.7, t + duration - 0.02);
-          gain.gain.linearRampToValueAtTime(0.001, t + duration);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + duration + 0.005);
-          t += duration + gapTime;
-        };
-
-        // 1. Sync Header
-        playTone(syncFreq, 0.22);
-        // 2. Amount Digits
-        for (let d of amtDigits) {
-          playTone(digitTable[d], symbolTime);
-        }
-        // 3. Language Code
-        playTone(digitTable[langDigit], symbolTime);
-        // 4. End Frame
-        playTone(endFreq, 0.12);
+        oscH.start(now);
+        oscE.start(now);
+        oscH.stop(now + duration + 0.01);
+        oscE.stop(now + duration + 0.01);
 
       } catch (e) {
-        console.error("Audio emit error:", e);
+        console.error("Abacus emit error:", e);
       }
     }
 
-    // 2. RECEIVER: Adaptive Dynamic Noise Floor Demodulator
+    // 2. RECEIVER: Dual-Deck Abacus Beam Demodulator
     let micStream = null;
     let analyser = null;
     let isListening = false;
     let isMutedForSpeech = false;
     let animFrameId = null;
-    let dualToneDebounceCount = 0;
-    let lastDetectedCandidate = null;
+    let abacusDebounceCount = 0;
+    let lastCandidateAmt = null;
 
     function activatePhoneSoundbox() {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       audioCtx.resume();
       isSoundboxUnlocked = true;
       const btn = document.getElementById('btnSoundboxActivate');
-      btn.innerText = "✓ Dedicated Listener & Mic Sniffer Active";
+      btn.innerText = "✓ Dedicated Soundbox Listener Active";
       btn.style.background = "#059669";
       btn.style.color = "#ffffff";
       playChime();
@@ -842,7 +821,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
 
         isListening = true;
         isMutedForSpeech = false;
-        logMerchant("🎙️ [LISTENER ACTIVE]: Adaptive noise floor + Wi-Fi sniffer live.");
+        logMerchant("🎙️ [ABACUS LISTENER ACTIVE]: Listening for Heaven & Earth bead frequencies.");
         listenLoop();
       })
       .catch(err => {
@@ -859,8 +838,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       }
     }
 
-    // Measure spectrum energy at frequency +/- bandwidth
-    function getMagnitudeAtFreq(freq, dataArray, binWidth) {
+    function getEnergyAtFreq(freq, dataArray, binWidth) {
       const centerBin = Math.round(freq / binWidth);
       let maxVal = 0;
       for (let b = centerBin - 2; b <= centerBin + 2; b++) {
@@ -882,54 +860,66 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         const sampleRate = audioCtx.sampleRate;
         const binWidth = sampleRate / analyser.fftSize;
 
-        // Calculate ambient noise floor in 900 - 2500 Hz
+        // Dynamic Noise Floor
         const minBin = Math.floor(900 / binWidth);
         const maxBin = Math.floor(2500 / binWidth);
-        let totalEnergy = 0;
-        let count = 0;
+        let total = 0, count = 0;
         for (let i = minBin; i <= maxBin; i++) {
-          totalEnergy += dataArray[i];
+          total += dataArray[i];
           count++;
         }
-        const noiseFloor = count > 0 ? (totalEnergy / count) : 10;
-        const dynamicThreshold = Math.max(noiseFloor * 2.0, 45);
+        const noiseFloor = count > 0 ? (total / count) : 10;
+        const threshold = Math.max(noiseFloor * 1.8, 38);
 
-        // 1. Check for Instant Dual-Tone Presets
-        let detectedPreset = null;
-        for (let amt in DUAL_TONE_MAP) {
-          const pair = DUAL_TONE_MAP[amt];
-          const magLow = getMagnitudeAtFreq(pair.fLow, dataArray, binWidth);
-          const magHigh = getMagnitudeAtFreq(pair.fHigh, dataArray, binWidth);
-
-          if (magLow > dynamicThreshold && magHigh > dynamicThreshold) {
-            detectedPreset = parseInt(amt);
-            break;
+        // 1. Identify Heaven Deck Bead (0 or 5)
+        let detectedHeaven = null;
+        let maxHeavenVal = 0;
+        for (let h in ABACUS_HEAVEN_AUDIBLE) {
+          const val = getEnergyAtFreq(ABACUS_HEAVEN_AUDIBLE[h], dataArray, binWidth);
+          if (val > threshold && val > maxHeavenVal) {
+            maxHeavenVal = val;
+            detectedHeaven = parseInt(h);
           }
         }
 
-        if (detectedPreset !== null) {
-          if (detectedPreset === lastDetectedCandidate) {
-            dualToneDebounceCount++;
-            if (dualToneDebounceCount >= 3) { // Confirmed over 3 consecutive frames (~60ms)
-              dualToneDebounceCount = 0;
-              lastDetectedCandidate = null;
+        // 2. Identify Earth Deck Bead (0..4)
+        let detectedEarth = null;
+        let maxEarthVal = 0;
+        for (let e in ABACUS_EARTH_AUDIBLE) {
+          const val = getEnergyAtFreq(ABACUS_EARTH_AUDIBLE[e], dataArray, binWidth);
+          if (val > threshold && val > maxEarthVal) {
+            maxEarthVal = val;
+            detectedEarth = parseInt(e);
+          }
+        }
 
-              const tx = "AIR_WAVE_" + Math.floor(Math.random()*9000+1000);
-              logMerchant(`⚡ [ACOUSTIC DUAL-TONE LOCKED]: Received Rs.${detectedPreset}`);
+        // 3. Resolve Abacus Biquinary Formula: Digit = Heaven + Earth
+        if (detectedHeaven !== null && detectedEarth !== null) {
+          let resolvedAmt = detectedHeaven + detectedEarth;
+          if (resolvedAmt === 0) resolvedAmt = 50; // default zero representation
+
+          if (resolvedAmt === lastCandidateAmt) {
+            abacusDebounceCount++;
+            if (abacusDebounceCount >= 2) { // Locked over 2 consecutive frames (~45ms)
+              abacusDebounceCount = 0;
+              lastCandidateAmt = null;
+
+              const tx = "AIR_ABACUS_" + Math.floor(Math.random()*9000+1000);
+              logMerchant(`🧮 [ABACUS CHORD LOCKED]: Heaven=${detectedHeaven} + Earth=${detectedEarth} => Rs.${resolvedAmt}`);
               handleIncomingPayment({
                 tx: tx,
-                amount: detectedPreset,
+                amount: resolvedAmt,
                 lang: 'hi',
-                source: 'Acoustic Wave'
+                source: 'Acoustic Abacus'
               });
             }
           } else {
-            lastDetectedCandidate = detectedPreset;
-            dualToneDebounceCount = 1;
+            lastCandidateAmt = resolvedAmt;
+            abacusDebounceCount = 1;
           }
         } else {
-          dualToneDebounceCount = 0;
-          lastDetectedCandidate = null;
+          abacusDebounceCount = 0;
+          lastCandidateAmt = null;
         }
       }
 
@@ -942,7 +932,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     window.handleIncomingPayment = function(data) {
       if (currentRole !== 'merchant') return;
 
-      // Deduplication: prevent double processing within 3 seconds
       const dedupKey = data.amount + "_" + (data.tx ? data.tx.substring(0, 10) : "");
       if (recentProcessedTxs.has(dedupKey)) return;
       recentProcessedTxs.add(dedupKey);
@@ -953,11 +942,10 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       document.getElementById('merchantStatus').innerText = "SUCCESS: " + data.tx + " (+Rs. " + data.amount + ")";
       
       const phrase = buildPhrase(data.amount, data.lang || 'hi');
-      logMerchant(`⚡ [PAYMENT RECEIVED]: +Rs.${data.amount} via [${data.source || 'Acoustic/LAN'}]`);
-      logMerchant(`   * Total Revenue: Rs.${totalRevenue}.00`);
+      logMerchant(`⚡ [PAYMENT RECEIVED]: +Rs.${data.amount} via [${data.source || 'Abacus/Mesh'}]`);
       logMerchant(`   * Loudspeaker: "${phrase}"`);
 
-      // AUTO ECHO-MUTE: Mic stops while Soundbox is speaking
+      // AUTO ECHO-MUTE
       isMutedForSpeech = true;
       playChime();
 
@@ -965,45 +953,35 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         speakPhrase(phrase, data.lang || 'hi', () => {
           setTimeout(() => {
             isMutedForSpeech = false;
-          }, 600);
+          }, 500);
         });
-      }, 350);
+      }, 300);
     };
 
-    // Callback when Native Android TTS finishes speaking
     window.onTtsFinished = function() {
       setTimeout(() => {
         isMutedForSpeech = false;
-      }, 400);
+      }, 350);
     };
 
-    // 3. Beam Payment from Customer Phone (DUAL-CHANNEL: Wi-Fi P2P + Sound Wave)
+    // 3. Beam Payment from Customer Phone (DUAL-CHANNEL: Wi-Fi UDP Mesh + Abacus Sound Wave)
     function beamCustomerPayment() {
       const amt = parseInt(document.getElementById('custAmt').value) || 1;
       const lang = document.getElementById('custLang').value || 'hi';
       const targetVpa = document.getElementById('custMerchant').value || merchantVpa;
       const tx = "TX_" + Math.floor(Math.random()*9000+1000);
 
-      logCustomer(`⚡ [TRANSMITTING DUAL-CHANNEL]: Rs.${amt} to ${targetVpa}`);
+      logCustomer(`⚡ [BEAMING DUAL-CHANNEL]: Rs.${amt} to ${targetVpa}`);
 
-      // Channel 1: Over-the-Air Sound Wave
-      emitAcousticChirp(amt, lang);
+      // Channel 1: Over-the-Air Abacus Sound Chord
+      emitAbacusChord(amt);
 
-      // Channel 2: Local Wi-Fi P2P HTTP / LAN Socket
-      const targetIps = [];
-      if (scannedMerchantIp) targetIps.push(scannedMerchantIp);
-      targetIps.push("192.168.43.1"); // Android Hotspot default gateway
-      targetIps.push("192.168.1.174"); // Local subnet
-
-      for (let ip of targetIps) {
-        if (window.AirUPIAndroid && window.AirUPIAndroid.sendLocalHttpPayment) {
-          window.AirUPIAndroid.sendLocalHttpPayment(ip, amt, lang, tx);
-        }
-        fetch(`http://${ip}:8080/pay?amt=${amt}&lang=${lang}&tx=${tx}`, { mode: 'no-cors' }).catch(()=>{});
+      // Channel 2: Zero-Cloud Subnet UDP Broadcast & Local HTTP
+      if (window.AirUPIAndroid && window.AirUPIAndroid.broadcastSubnetPayment) {
+        window.AirUPIAndroid.broadcastSubnetPayment(amt, lang, tx, scannedMerchantIp || "");
       }
     }
 
-    // Native & Web Speech Synthesis
     function speakPhrase(phrase, lang, onDone) {
       try {
         if (window.AirUPIAndroid && window.AirUPIAndroid.speak) {
@@ -1031,7 +1009,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         const ctx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
         if (ctx.state === 'suspended') ctx.resume();
         const now = ctx.currentTime;
-        const freqs = [587.33, 880.00, 1174.66]; // D5, A5, D6
+        const freqs = [587.33, 880.00, 1174.66];
         freqs.forEach((f, i) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
@@ -1048,11 +1026,10 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       } catch (e) {}
     }
 
-    // Dynamic QR Generator (Embeds VPA + Local IP)
+    // Dynamic Vector SVG QR Stand Generator (Kazuhiko Arase Vector Engine)
     function renderMerchantQr() {
       const container = document.getElementById('qrContainer');
       if (!container) return;
-      container.innerHTML = "";
 
       refreshDeviceIp();
       let payload = "";
@@ -1062,15 +1039,15 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         payload = window.location.href.split('?')[0];
       }
 
-      if (typeof QRCode !== 'undefined') {
-        new QRCode(container, {
-          text: payload,
-          width: 170,
-          height: 170,
-          colorDark: "#020617",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.M
-        });
+      try {
+        if (typeof qrcode !== 'undefined') {
+          const qr = qrcode(0, 'M');
+          qr.addData(payload);
+          qr.make();
+          container.innerHTML = qr.createSvgTag(5, 4);
+        }
+      } catch (err) {
+        console.error("QR render error:", err);
       }
     }
 
@@ -1177,12 +1154,19 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     function parseAndLockQrPayload(raw) {
       logCustomer("📷 [QR SCANNED]: " + raw.substring(0, 45) + "...");
       let extractedVpa = "";
-      let extractedIp = null;
+      let extractedIp = "";
 
       if (raw.startsWith("upi://pay")) {
-        const url = new URL(raw);
-        extractedVpa = url.searchParams.get("pa") || "";
-        extractedIp = url.searchParams.get("ip");
+        try {
+          const url = new URL(raw);
+          extractedVpa = url.searchParams.get("pa") || "";
+          extractedIp = url.searchParams.get("ip") || "";
+        } catch (_) {
+          const matchVpa = raw.match(/pa=([^&]+)/);
+          if (matchVpa) extractedVpa = decodeURIComponent(matchVpa[1]);
+          const matchIp = raw.match(/ip=([^&]+)/);
+          if (matchIp) extractedIp = decodeURIComponent(matchIp[1]);
+        }
       } else {
         const match = raw.match(/([a-zA-Z0-9.\-_]+@[a-zA-Z0-9]+)/);
         if (match) extractedVpa = match[1];
@@ -1191,7 +1175,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       if (extractedVpa) {
         document.getElementById('custMerchant').value = extractedVpa;
         document.getElementById('custLockStatus').innerText = "[TARGET LOCKED: " + extractedVpa + (extractedIp ? (" | IP: " + extractedIp) : "") + "]";
-        if (extractedIp) scannedMerchantIp = extractedIp;
+        scannedMerchantIp = extractedIp;
         playChime();
       } else {
         alert("Scanned Code: " + raw);
