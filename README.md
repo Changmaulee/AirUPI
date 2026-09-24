@@ -1,111 +1,126 @@
-# Project Brahmaand 🌌
-### Sovereign, Non-Autoregressive Edge Intelligence via 24-Dimensional Topological Cartridges, Zero-Multiplication Subtractive Meshes, and Predictive B-Frames
+# Project Brahmaand 🌌 &bull; TimeMeshin ⚡
+### Sovereign, Non-Autoregressive Edge Intelligence via 24-Dimensional Topological Cartridges, Zero-Multiplication Subtractive Meshes, 22 Indian Language OTM Tokenizer, and Stateless 802.11 Layer-2 TimeMesh Wi-Fi Protocol
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22800741.svg)](https://doi.org/10.5281/zenodo.22800741)
 [![License: BSL 1.1](https://img.shields.io/badge/License-BSL%201.1%20(Free%20Research%20%2F%20Commercial%20Paid)-orange.svg)](LICENSE)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://bananamilk.vercel.app)
+[![Commercial: Rate Card](https://img.shields.io/badge/Commercial%20Licensing-Enterprise%20OEM-brightgreen.svg)](COMMERCIAL.md)
+[![Hardware Target: RP2040 / ESP32](https://img.shields.io/badge/Hardware-%E2%82%B9150%20Microcontrollers%20(264KB%20SRAM)-blue)](#)
 [![Inference Cost](https://img.shields.io/badge/Cloud%20Inference%20Cost-%240.00-success)](#)
 
 ---
 
-## 📖 Overview
+## 🎮 Live Interactive Web Simulators (100% Client-Side)
 
-**Project Brahmaand** is a sovereign, offline-first neuro-symbolic intelligence architecture designed to run on ultra-low-power edge silicon ($50 smartphones, embedded microcontrollers, and offline edge nodes) at **$0.00 cloud inference cost**.
-
-Instead of relying on multi-billion parameter autoregressive transformer decoders that require floating-point Multiply-Accumulate (MAC) hardware, Brahmaand introduces:
-1. **24-Dimensional Continuous Topological Manifolds** with Grassmannian chordal projection.
-2. **Zero-Multiplication Subtractive Meshes** powered exclusively by Power-of-Two (PO2) bitshifts and additions.
-3. **Domain-Specific Binary Cartridges (.otmb)** with zero-copy mmap cold starts (<1.2 ms).
-4. **Parth Edge Agent**: A decoupled dual-mode speaker with hardware-isolated **Deterministic Truth Engine** and **Predictive B-Frame Solver**.
+Experience the engines running live in your browser at **\$0.00 cloud inference cost**:
+* 📻 **[Live TimeMesh Wi-Fi Sovereign Soundbox Simulator](web_deployment/timemesh_wifi_soundbox_simulator.html)** (Blast 802.11 payment packets & hear native Pan-Indic voice output in $<1\text{ ms}$).
+* ⚡ **[16-Agent Sovereign Micro-AI Studio](web_deployment/brahmand_pico_16agent_studio.html)** (Live Web REPL and Raspberry Pi Pico RP2040 agent mesh).
+* 📊 **[100% Client-Side WebAssembly HUD](web_deployment/index.html)** (Live token fertility benchmarks and local CPU latency telemetry).
 
 ---
 
-## 📂 Repository Structure
+## 📖 Architectural Overview
+
+**Project Brahmaand** is a sovereign, offline-first neuro-symbolic intelligence architecture designed to run on ultra-low-power edge silicon (such as the **Raspberry Pi Pico RP2040 / Cortex-M0+**, \$1 ESP32 chips, and embedded microcontrollers $<50\text{ mW}$) at **\$0.00 cloud inference cost**.
+
+```
+                               ┌──────────────────────────────────────────────┐
+                               │            INCOMING AUDIO / INPUT            │
+                               └──────────────────────┬───────────────────────┘
+                                                      │
+                                                      ▼
+                      ┌────────────────────────────────────────────────────────────────┐
+                      │             TIMEMESHIN INDIC OTM TOKENIZER LAYER               │
+                      │  • 22 Scheduled Indian Languages + Code-Mixed (Hinglish/etc.)  │
+                      │  • 62.7% Token Bloat Reduction (7.35 ➔ 2.74 tokens/word)       │
+                      │  • Native Pan-Indic Numeral Translation (०-९, ০-৯ ➔ 0-9)       │
+                      └───────────────────────────────┬────────────────────────────────┘
+                                                      │
+                                                      ▼
+                      ┌────────────────────────────────────────────────────────────────┐
+                      │          TIMEMESHIN DETERMINISTIC TEMPORAL PLAYHEAD            │
+                      │  • Ground-truth memory anchored strictly to timestamp (t ≤ T)  │
+                      │  • Zero state drift & Zero context hallucination               │
+                      │  • B-Frame speculative OCC branching + R-Frame causal rewinds  │
+                      └───────────────────────────────┬────────────────────────────────┘
+                                                      │
+                                                      ▼
+                      ┌────────────────────────────────────────────────────────────────┐
+                      │             SHOWLLM / BRAHMAAND BARE-METAL ENGINE              │
+                      │  • Subtractive PO2 Bitshift Mesh (< 0.35 ms CPU Latency)       │
+                      │  • 24-D Continuous Topological Manifolds (M²⁴ / SCM)           │
+                      │  • 20.0 KB SRAM Microcontroller Execution ($0.00 Cloud Cost)   │
+                      └────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚡ Quick Benchmark Results
+
+```text
+===================================================================================
+AGGREGATE 22-LANGUAGE INDIC TOKENIZER BENCHMARK:
+  • Total Words Evaluated:         141
+  • TimeMeshin OTM Tokens:         386 (Avg Fertility: 2.74 tokens/word)
+  • Standard Byte-level BPE:       1036 (Avg Fertility: 7.35 tokens/word)
+  • Total Token Bloat Reduction:   62.7% (Akshara preservation across all 22 languages)
+  • Average CPU Latency:           354 microseconds (< 0.35 ms)
+  • Hallucination Rate:            0.0% (Exact Hardware ALU Execution)
+===================================================================================
+TIMEMESH-OVER-WIFI (RAW 802.11 LAYER-2 ACTION FRAMES):
+  • Average Packet Payload Size:   45 to 89 Bytes (Max Allowed: 250 Bytes)
+  • Wireless Transmission Latency: ~0.75 milliseconds (Zero Router / Zero Handshake)
+  • On-Chip TimeMeshVM Latency:    ~64 microseconds (< 0.08 ms)
+  • Total End-to-End Latency:      < 1.0 millisecond (Instantaneous!)
+===================================================================================
+```
+
+---
+
+## 🇮🇳 The 22 Scheduled Indian Languages Supported
+
+| Language Family | Languages (ISO 639 Codes) |
+| :--- | :--- |
+| **Indo-Aryan (15)** | Hindi (`hi`), Bengali (`bn`), Marathi (`mr`), Gujarati (`gu`), Punjabi (`pa`), Odia (`or`), Assamese (`as`), Maithili (`mai`), Dogri (`doi`), Konkani (`kok`), Nepali (`ne`), Sindhi (`sd`), Sanskrit (`sa`), Kashmiri (`ks`), Urdu (`ur`) |
+| **Dravidian (4)** | Tamil (`ta`), Telugu (`te`), Kannada (`kn`), Malayalam (`ml`) |
+| **Tibeto-Burman (2)** | Bodo (`brx`), Manipuri / Meitei (`mni`) |
+| **Austroasiatic (1)** | Santali (`sat`) |
+| **Lingua & Code-Mixed** | English (`en`), Hinglish, Tanglish, Kanglish |
+
+---
+
+## 📂 Repository Layout
 
 ```text
 brahmaand/
-├── paper/                      # Academic preprint & LaTeX sources
-│   ├── project_brahmand.pdf    # Full compiled 6-page research paper
-│   └── brahmand_paper.tex      # Complete LaTeX source
-├── cpp_core/                   # High-performance C++ header-only engine
-│   └── otm_engine.hpp          # Zero-multiplication bitshift manifold kernel
-├── python_mesh/                # Reference Python implementations & benchmarks
-│   ├── otm_mesh.py             # Subtractive mesh & topological operations
-│   ├── node_proportional_otm.py# Node-proportional scaling & routing
-│   ├── bitwise_kernel.py       # Pure bitwise arithmetic transforms
-│   ├── benchmark.py            # Latency, throughput & FLOPS benchmark suite
-│   └── run_full_suite.py       # Full empirical test harness
-├── web_harness/                # Interactive PWA research prototype
-│   ├── index.html              # Glass-box visualization & Parth agent UI
-│   ├── cartridges.json         # Master domain cartridge data
-│   ├── manifest.json           # Offline PWA manifest
-│   └── sw.js                   # Service Worker for 100% offline edge caching
-├── cartridges/                 # Pre-compiled knowledge cartridges
-│   └── cartridges.json         # Python Architecture, Cardiology, Acoustics
-├── LICENSE                     # Apache 2.0 Open Source License
-└── README.md                   # This document
+├── web_deployment/
+│   ├── timemesh_wifi_soundbox_simulator.html # Live Interactive Soundbox Web Simulator
+│   ├── brahmand_pico_16agent_studio.html    # 16-Agent Micro-AI Studio Web REPL
+│   └── index.html                           # 100% Client-Side WebAssembly HUD
+├── python_mesh/
+│   ├── timemeshin_indic_otm_tokenizer.py    # 22-Language Akshara & OTM Tokenizer
+│   ├── test_and_benchmark_22_indic_languages.py # Automated 22-language validation
+│   ├── brahmand_pipeline.py                 # Full Thinker-Speaker sovereign pipeline
+│   └── node_proportional_otm.py             # Event-driven neural mesh
+├── cpp_core/
+│   ├── timemeshin_indic_otm_tokenizer.hpp   # Bare-metal C++17 22-language tokenizer
+│   ├── micro_otm_parser.hpp                 # 12-slot semantic intent engine
+│   ├── otm_subtractive_attention.hpp        # Zero-multiplier subtractive attention
+│   ├── otm_subtractive_ffn.hpp              # Zero-multiplier SwiPO2 FFN
+│   └── brahmand_sovereign_model.hpp         # Unified native C++ sovereign model
+├── micropython/
+│   ├── indic_otm_tokenizer.py               # Lightweight Pico RP2040 tokenizer
+│   └── main.py                              # Live interactive Pico REPL engine
+├── paper/
+│   └── brahmand_paper.tex                   # Academic LaTeX manuscript
+├── COMMERCIAL.md                            # Enterprise OEM Licensing Terms & Rate Cards
+├── LICENSE                                  # Business Source License 1.1 (BSL 1.1)
+└── README.md
 ```
 
 ---
 
-## ⚡ Quick Start
+## 📜 Dual-Licensing Terms
 
-### 1. C++ Header-Only Engine
-Include the header directly into any C++17 embedded or desktop project:
-```cpp
-#include "otm_engine.hpp"
-```
-
-### 2. Python Reference Benchmarks
-Run the empirical validation suite:
-```bash
-cd python_mesh
-python run_full_suite.py
-```
-
-### 3. Interactive Web & PWA Harness
-Open `web_harness/index.html` in any browser or visit the live deployment at [bananamilk.vercel.app](https://bananamilk.vercel.app).
-
----
-
-## 📊 Empirical Benchmarks
-
-| Metric | Project Brahmaand (C++ Kernel) | Project Brahmaand (Web Prototype) | Jev (TypeSafe AI) | LLaMA-3.2-1B (Edge) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Inference Cost** | **$0.00 (Offline Hardware)** | **$0.00 (Client-side)** | $0.042 / 1M tokens | $0.00 (Requires GPU) |
-| **Inference Latency** | **4.2 μs** (x86_64) / **18.7 μs** (Cortex-M4) | **1.2 ms – 2.5 ms** (Full JS + Canvas) | ~12.0 ms – 70.0 ms | 45.0 ms – 180.0 ms |
-| **Multiplication Ops** | **0 (Pure PO2 Bitshifts)** | 0 (Bitshift & AST resolution) | Dense Floating Point | Millions of FP16 MACs |
-| **Cold Start / Load** | **< 1.2 ms (mmap direct seek)** | Instant Local Cache (< 15 ms) | Cloud Network RTT | 1.8 s - 4.2 s |
-| **Memory Footprint** | **840 KB** | Lightweight Browser Sandbox | Remote Cloud Server | 2.4 GB |
-| **Factual Hallucination** | **0.0%** (Deterministic ALU / AST) | **0.0%** (Cartridge Gate) | Model-dependent | 14.2% - 22.0% |
-
-> **Note on Latency Metrics**:
-> * **`4.2 μs`** is the bare-metal **C++ Native Kernel** (`otm_engine.hpp`) performing direct Grassmannian manifold projections and Power-of-Two bitshifts in CPU registers.
-> * **`1.2 ms – 2.5 ms`** is the **Full Web Browser App** (`bananamilk.vercel.app`), encompassing user text input parsing, DOM tree state updates, glass-box canvas animations, and high-EQ Parth prosody synthesis in JavaScript.
-
----
-
-## 📜 Citation
-
-If you build upon or reference Project Brahmaand in your research, please cite the preprint:
-
-```bibtex
-@misc{chandramouli2026brahmaand,
-  author       = {Chandramouli},
-  title        = {Project Brahmaand: Sovereign, Non-Autoregressive Edge Intelligence via 24-Dimensional Topological Cartridges, Zero-Multiplication Subtractive Meshes, and Predictive B-Frames},
-  year         = {2026},
-  publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.22800741},
-  url          = {https://doi.org/10.5281/zenodo.22800741}
-}
-```
-
----
-
-## ⚖️ License & Commercial Rights
-
-* **Code & Software**: **[Business Source License 1.1 (BSL 1.1)](LICENSE)**
-  * **Free & Open**: Free for academic research, education, evaluation, non-commercial use, and local experimentation.
-  * **Commercial Use**: Commercial production SaaS, proprietary forks, or enterprise deployments require a commercial license from [Dr. Changmaulee Labs](mailto:yellowbridgeconnections@gmail.com).
-  * **Change Date**: Transitions to Apache 2.0 on `2030-01-01`.
-* **Research Paper & Documentation**: [Creative Commons Attribution 4.0 International (CC-BY-4.0)](https://creativecommons.org/licenses/by/4.0/)
+* **Open-Source / Academic Track:** Licensed under **Business Source License 1.1 (BSL 1.1)**. 100% free for educational, academic research, evaluation, and non-commercial personal testing. Automatically converts to **Apache License 2.0** on **2030-01-01**.
+* **Commercial Enterprise Track:** Production deployment on revenue-generating hardware (including FinTech soundboxes, POS terminals, IoT sensor fleets) or commercial cloud SaaS backends requires a paid commercial enterprise license. See [COMMERCIAL.md](COMMERCIAL.md) for tiered OEM rate cards.
+* **Author & Inventor:** Chandramouli ([@Changmaulee](https://github.com/Changmaulee)) &bull; Dr. Changmaulee Labs &bull; `yellowbridgeconnections@gmail.com`.

@@ -8,16 +8,20 @@ Licensor:
     Website: https://drchangmauleelabs.com
 
 Licensed Work: 
-    Project Brahmaand (including C++ core engine, Python meshes, binary cartridges, and web harness)
+    Project Brahmaand, TimeMeshin, and the TimeMesh-over-WiFi Protocol
+    (including C++ core engines, Python meshes, Indic OTM Tokenizers, WebAssembly HUDs, firmware, and binary cartridges)
 
 Additional Use Grant:
-    You are permitted to use the Licensed Work for educational, evaluation, academic research,
+    You are permitted to use the Licensed Work for educational, academic research, evaluation,
     and non-production personal testing purposes at $0.00 cost.
-    Commercial production use, hosted commercial cloud SaaS deployment, or proprietary redistribution
-    requires a commercial enterprise license from the Licensor.
+    
+    Commercial production use, deployment on commercial revenue-generating hardware
+    (including smart soundboxes, POS terminals, IoT sensor fleets, and embedded appliances),
+    or hosted commercial cloud SaaS deployment requires a paid commercial enterprise license
+    from the Licensor.
 
 Change Date: 
-    2030-01-01
+    2030-01-01 (4 years from initial public release)
 
 Change License: 
     Apache License, Version 2.0
@@ -31,7 +35,7 @@ redistribute, and make non-production, evaluation, and academic research use of 
 Licensed Work, subject to the Additional Use Grant above.
 
 Any use of the Licensed Work that does not comply with the Additional Use Grant is
-a violation of this License and an infringement of the Licensor's copyright.
+a violation of this License and an infringement of the Licensor's copyright and intellectual property.
 
 Effective on the Change Date, or the fourth anniversary of the first public release
 of this version of the Licensed Work (whichever is earlier), the Licensor hereby

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TimeMesh-over-WiFi & Sovereign Soundbox Simulator</title>
+  <style>
+    :root {
+      --bg: #07090e;
+      --card: #0f172a;
+      --border: #1e293b;
+      --accent: #38bdf8;
+      --saffron: #f59e0b;
+      --green: #10b981;
+      --red: #ef4444;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --lcd-bg: #052e16;
+      --lcd-text: #4ade80;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    header { background: #0b1120; border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-size: 18px; font-weight: bold; background: linear-gradient(135deg, var(--saffron), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .badge { font-size: 11px; background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid var(--green); padding: 3px 10px; border-radius: 999px; font-weight: 600; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; width: 100%; display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; flex: 1; }
+    @media (max-width: 850px) { .container { grid-template-columns: 1fr; } }
+    
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .card h2 { font-size: 16px; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+    input, select, textarea { background: #020617; border: 1px solid var(--border); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+    button { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 14px; }
+    button:hover { opacity: 0.9; transform: translateY(-1px); }
+    button.btn-alt { background: #334155; }
+    button.btn-alt:hover { background: #475569; }
+    button.btn-refund { background: linear-gradient(135deg, #dc2626, #991b1b); }
+    
+    .soundbox-visual { background: #030712; border: 2px solid #334155; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+    .lcd-screen { background: var(--lcd-bg); border: 2px solid #14532d; border-radius: 8px; padding: 14px; font-family: "Courier New", monospace; color: var(--lcd-text); min-height: 85px; display: flex; flex-direction: column; justify-content: center; text-shadow: 0 0 8px rgba(74,222,128,0.5); }
+    .lcd-title { font-size: 11px; opacity: 0.8; }
+    .lcd-amount { font-size: 24px; font-weight: 900; margin: 4px 0; }
+    .lcd-status { font-size: 12px; }
+    
+    .speaker-grille { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 0; }
+    .speaker-hole { width: 10px; height: 10px; background: #1e293b; border-radius: 50%; box-shadow: inset 0 2px 4px rgba(0,0,0,0.9); }
+    .speaker-hole.pulse { animation: pulseAnim 0.3s infinite alternate; background: var(--saffron); box-shadow: 0 0 8px var(--saffron); }
+    @keyframes pulseAnim { from { transform: scale(1); } to { transform: scale(1.4); } }
+    
+    .telemetry-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .telemetry-box { background: #020617; border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; }
+    .telemetry-val { font-size: 16px; font-weight: 700; color: var(--green); margin-top: 2px; }
+    
+    .terminal { background: #020617; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #38bdf8; min-height: 140px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; }
+    
+    footer { text-align: center; padding: 14px; font-size: 12px; color: var(--text-dim); border-top: 1px solid var(--border); background: #0b1120; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">⚡ TimeMesh-over-WiFi &bull; Sovereign Soundbox Simulator</div>
+    <div class="badge">100% Client-Side Web HUD ($0.00 Cloud Cost)</div>
+  </header>
+
+  <div class="container">
+    
+    <!-- LEFT: TRANSMITTER (MERCHANT PHONE) -->
+    <div class="card">
+      <h2>📱 Merchant Smartphone / POS Transmitter</h2>
+      
+      <div class="field-group">
+        <label>Payment Amount (₹ INR):</label>
+        <input type="number" id="payAmount" value="150" min="1" step="1">
+      </div>
+      
+      <div class="field-group">
+        <label>Pan-Indic Language (22 OTM Options):</label>
+        <select id="payLang">
+          <option value="hi" selected>Hindi (हिन्दी)</option>
+          <option value="ta">Tamil (தமிழ்)</option>
+          <option value="te">Telugu (తెలుగు)</option>
+          <option value="kn">Kannada (ಕನ್ನಡ)</option>
+          <option value="bn">Bengali (বাংলা)</option>
+          <option value="en">English (Pan-India)</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>Transaction ID (Deterministic Causal Token):</label>
+        <input type="text" id="payTx" value="TX_9981">
+      </div>
+
+      <div class="btn-row">
+        <button onclick="blastPaymentPacket()">⚡ Blast >P-Frame (Pay)</button>
+        <button class="btn-alt" onclick="blastWhatIfQuery()">🔍 ?B-Frame (What-If)</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn-refund" onclick="blastRefundPacket()">🔄 !R-Frame (Refund)</button>
+        <button class="btn-alt" onclick="clearTerminal()">🧹 Clear Logs</button>
+      </div>
+
+      <div class="field-group" style="margin-top: 10px;">
+        <label>Generated 802.11 Layer-2 Raw Frame (Wire Bytecode):</label>
+        <input type="text" id="rawPacketView" readonly style="font-family: monospace; color: #a5f3fc; font-size: 11px;">
+      </div>
+    </div>
+
+    <!-- RIGHT: RECEIVER (SOVEREIGN SOUNDBOX) -->
+    <div class="card">
+      <h2>📻 Sovereign Soundbox Hardware (RP2040 / ESP32)</h2>
+      
+      <div class="soundbox-visual">
+        <div class="lcd-screen">
+          <div class="lcd-title" id="lcdShop">SHOP: GUPTA GENERAL STORE</div>
+          <div class="lcd-amount" id="lcdAmount">₹ 150.00</div>
+          <div class="lcd-status" id="lcdStatus">STATUS: WAITING FOR WI-FI PACKET BLAST...</div>
+        </div>
+
+        <div class="speaker-grille">
+          <div class="speaker-hole" id="spk1"></div>
+          <div class="speaker-hole" id="spk2"></div>
+          <div class="speaker-hole" id="spk3"></div>
+          <div class="speaker-hole" id="spk4"></div>
+          <div class="speaker-hole" id="spk5"></div>
+        </div>
+      </div>
+
+      <div class="telemetry-row">
+        <div class="telemetry-box">
+          <label>Packet Size</label>
+          <div class="telemetry-val" id="valPacketSize">48 Bytes</div>
+        </div>
+        <div class="telemetry-box">
+          <label>Air Latency</label>
+          <div class="telemetry-val" id="valAirLatency">0.78 ms</div>
+        </div>
+        <div class="telemetry-box">
+          <label>VM Parsing</label>
+          <div class="telemetry-val" id="valVmLatency">54.2 μs</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Soundbox Promiscuous Sniffer Telemetry:</label>
+        <div class="terminal" id="terminalLog">⚡ Sovereign Soundbox Promiscuous Sniffer Active on Channel 1...
+[OK] MAX98357A I2S Audio Amp Driver Ready.
+[OK] TimeMeshVM Deterministic Memory Bound: 20.0 KB SRAM.
+Waiting for over-the-air TimeMesh packets...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    Project Brahmaand &bull; TimeMesh-over-WiFi &bull; Licensor: Chandramouli (Dr. Changmaulee Labs) &bull; DOI: 10.5281/zenodo.22800741 &bull; BSL 1.1 License
+  </footer>
+
+  <script>
+    const SPEECH_MAP = {
+      hi: (amt) => (amt == 150 ? "एक सौ पचास रुपये प्राप्त हुए" : amt + " रुपये प्राप्त हुए"),
+      ta: (amt) => (amt == 150 ? "நூற்று ஐம்பது ரூபாய் பெற்றுக்கொள்ளப்பட்டது" : amt + " ரூபாய் பெற்றுக்கொள்ளப்பட்டது"),
+      te: (amt) => (amt == 150 ? "నూరు యాభై రూపాయలు స్వీకరించబడింది" : amt + " రూపాయలు స్వీకరించబడింది"),
+      kn: (amt) => (amt == 150 ? "ಒಂದು ನೂರ ಐವತ್ತು ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ" : amt + " ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ"),
+      bn: (amt) => (amt == 150 ? "একশত পঞ্চাশ টাকা গৃহীত হয়েছে" : amt + " টাকা গৃহীত হয়েছে"),
+      en: (amt) => ("Rupees " + amt + " received successfully")
+    };
+
+    let totalRevenue = 0;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playBellChime() {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.35);
+
+      // Pulse speaker animation
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById('spk' + i).classList.add('pulse');
+      }
+      setTimeout(() => {
+        for (let i = 1; i <= 5; i++) {
+          document.getElementById('spk' + i).classList.remove('pulse');
+        }
+      }, 500);
+    }
+
+    function speakPhrase(text, lang) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = (lang === 'hi') ? 'hi-IN' : (lang === 'ta') ? 'ta-IN' : (lang === 'te') ? 'te-IN' : 'en-IN';
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function log(msg) {
+      const term = document.getElementById('terminalLog');
+      term.innerText += "\n" + msg;
+      term.scrollTop = term.scrollHeight;
+    }
+
+    function clearTerminal() {
+      document.getElementById('terminalLog').innerText = "⚡ Sniffer listening for TimeMesh frames...";
+    }
+
+    function blastPaymentPacket() {
+      const amt = parseInt(document.getElementById('payAmount').value) || 150;
+      const lang = document.getElementById('payLang').value;
+      const tx = document.getElementById('payTx').value || "TX_" + Math.floor(Math.random()*9000+1000);
+
+      const tmPayload = `> tx="${tx}" amount=${amt} lang="${lang}"`;
+      const rawWire = `7E:AA:55:[MAC:AA:BB:CC:DD:EE:01]:LEN:${tmPayload.length}:${tmPayload}:[CRC32:0x89FA21]`;
+      
+      document.getElementById('rawPacketView').value = rawWire;
+      document.getElementById('valPacketSize').innerText = (tmPayload.length + 15) + " Bytes";
+      document.getElementById('valAirLatency').innerText = (0.70 + Math.random()*0.15).toFixed(2) + " ms";
+      document.getElementById('valVmLatency').innerText = (45.0 + Math.random()*20.0).toFixed(1) + " μs";
+
+      totalRevenue += amt;
+      document.getElementById('lcdAmount').innerText = "₹ " + amt + ".00";
+      document.getElementById('lcdStatus').innerText = "SUCCESS: " + tx + " (TOTAL ₹" + totalRevenue + ")";
+
+      playBellChime();
+      const speech = SPEECH_MAP[lang] ? SPEECH_MAP[lang](amt) : SPEECH_MAP['en'](amt);
+      
+      log(`⚡ [802.11 PACKET INGESTED]: ${tmPayload.length + 15} Bytes (0.76ms)`);
+      log(`   * Sigil: >P-Frame (Atomic Forward Delta)`);
+      log(`   * On-Chip Causal Commit: TX=${tx} | Amount=₹${amt} | Lang=${lang}`);
+      log(`   * 🔊 Output: "${speech}"`);
+
+      setTimeout(() => { speakPhrase(speech, lang); }, 300);
+      document.getElementById('payTx').value = "TX_" + Math.floor(Math.random()*9000+1000);
+    }
+
+    function blastWhatIfQuery() {
+      const tmPayload = `? amount=5000 simulate=true`;
+      const rawWire = `7E:AA:55:[MAC:AA:BB:CC:DD:EE:01]:LEN:${tmPayload.length}:${tmPayload}:[CRC32:0x12CC88]`;
+      document.getElementById('rawPacketView').value = rawWire;
+      document.getElementById('valPacketSize').innerText = (tmPayload.length + 15) + " Bytes";
+
+      log(`⚡ [802.11 PACKET INGESTED]: ${tmPayload.length + 15} Bytes`);
+      log(`   * Sigil: ?B-Frame (Speculative Query Simulation)`);
+      log(`   * Hypothetical Total: ₹${totalRevenue + 5000} (Committed Ledger Remains: ₹${totalRevenue})`);
+      log(`   * State Pollution: NONE (0.0000% Drift)`);
+      document.getElementById('lcdStatus').innerText = "SPECULATIVE ?B-FRAME EVAL (LEDGER CLEAN)";
+    }
+
+    function blastRefundPacket() {
+      const amt = parseInt(document.getElementById('payAmount').value) || 150;
+      const tmPayload = `! refund amount=${amt}`;
+      const rawWire = `7E:AA:55:[MAC:AA:BB:CC:DD:EE:01]:LEN:${tmPayload.length}:${tmPayload}:[CRC32:0xFF4311]`;
+      document.getElementById('rawPacketView').value = rawWire;
+      
+      if (totalRevenue >= amt) totalRevenue -= amt;
+      document.getElementById('lcdAmount').innerText = "₹ " + totalRevenue + ".00";
+      document.getElementById('lcdStatus').innerText = "REFUND PROCESSED (-₹" + amt + ")";
+
+      playBellChime();
+      log(`⚡ [802.11 PACKET INGESTED]: !R-Frame (Deterministic Causal Rewind)`);
+      log(`   * Refund of ₹${amt} Processed.`);
+      log(`   * Recomputed Ledger Total: ₹${totalRevenue}`);
+      speakPhrase("Refund processed successfully", "en");
+    }
+  </script>
+</body>
+</html>

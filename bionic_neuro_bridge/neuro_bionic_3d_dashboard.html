@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Brahmand — Neuro-Bionic AI Bridge (3D Live Telemetry)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #07090e;
+            --panel-bg: rgba(13, 17, 24, 0.85);
+            --border-glow: #00f0ff33;
+            --accent-cyan: #00f0ff;
+            --accent-green: #00ff88;
+            --accent-amber: #ffb800;
+            --accent-red: #ff3366;
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* UI Overlay Layer */
+        .hud-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: grid;
+            grid-template-columns: 340px 1fr 380px;
+            grid-template-rows: 70px 1fr;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        /* Glass Panel */
+        .hud-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            padding: 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow: hidden;
+        }
+
+        /* Header Bar */
+        .hud-header {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), rgba(13, 17, 24, 0.9));
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-badge {
+            font-size: 0.7rem;
+            background: var(--accent-cyan);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .stat-label {
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-val {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Left Control Panel */
+        .controls-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-preset {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            color: var(--text-main);
+            padding: 12px 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-preset:hover {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: var(--accent-cyan);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .btn-preset.active {
+            background: var(--accent-cyan);
+            color: #000;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+        }
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #1e293b;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        /* Right Telemetry Column */
+        .telemetry-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .oscilloscope-canvas {
+            width: 100%;
+            height: 90px;
+            background: #090d14;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .manifold-matrix {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+            padding: 8px 0;
+        }
+
+        .manifold-cell {
+            height: 24px;
+            background: #111827;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-family: monospace;
+            color: var(--text-dim);
+            transition: background 0.15s ease;
+        }
+
+        .manifold-cell.active {
+            background: rgba(0, 240, 255, 0.35);
+            color: #fff;
+            border: 1px solid var(--accent-cyan);
+        }
+
+        .power-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 255, 136, 0.08);
+            border: 1px solid rgba(0, 255, 136, 0.25);
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .dormancy-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .dormancy-active {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .dormancy-idle {
+            background: rgba(255, 184, 0, 0.2);
+            color: var(--accent-amber);
+            border: 1px solid var(--accent-amber);
+        }
+
+        /* Center Bottom Tip */
+        .center-hud {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .tip-pill {
+            background: rgba(13, 17, 24, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div class="hud-layer">
+        <!-- TOP HEADER -->
+        <header class="hud-panel hud-header interactive">
+            <div class="brand-title">
+                <span>PROJECT BRAHMAND</span>
+                <span class="brand-badge">NEURO-BIONIC BRIDGE v1.0</span>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Inference Latency</span>
+                    <span class="stat-val" id="hud-latency">0.041 ms</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Multipliers</span>
+                    <span class="stat-val" id="hud-macs" style="color: var(--accent-green);">0 FP32 MACs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Power Envelope</span>
+                    <span class="stat-val" id="hud-power" style="color: var(--accent-green);">< 50 mW</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- LEFT CONTROLS -->
+        <div class="controls-col interactive">
+            <div class="hud-panel">
+                <div class="section-title">
+                    <span>Neuromuscular Presets</span>
+                    <span style="font-size: 0.65rem; color: var(--accent-cyan);">12-Role OTM</span>
+                </div>
+                <div class="preset-grid">
+                    <button class="btn-preset active" onclick="setPreset('rest')">
+                        <span>🧘 Rest State</span>
+                        <span style="font-size: 0.65rem; opacity: 0.7;">Dormancy (0mW)</span>
+                    </button>
+                    <button class="btn-preset" onclick="setPreset('pinch')">
+                        <span>🤏 Pinch Grip</span>
+                        <span style="font-size: 0.65rem; opacity: 0.7;">Thumb+Index</span>
+                    </button>
+                    <button class="btn-preset" onclick="setPreset('power')">
+                        <span>✊ Power Grasp</span>
+                        <span style="font-size: 0.65rem; opacity: 0.7;">All 5 Fingers</span>
+                    </button>
+                    <button class="btn-preset" onclick="setPreset('point')">
+                        <span>☝️ Index Point</span>
+                        <span style="font-size: 0.65rem; opacity: 0.7;">Precision Tap</span>
+                    </button>
+                    <button class="btn-preset" onclick="setPreset('egg')">
+                        <span>🥚 Compliant Grip</span>
+                        <span style="font-size: 0.65rem; opacity: 0.7;">Soft Egg / Cup</span>
+                    </button>
+                    <button class="btn-preset" onclick="setPreset('noise')">
+                        <span>⚡ Noise / Tremor</span>
+                        <span style="font-size: 0.65rem; opacity: 0.7;">Causal Filter</span>
+                    </button>
+                </div>
+
+                <div class="slider-group" style="margin-top: 10px;">
+                    <div class="slider-header">
+                        <span>Forearm Muscle Flex (sEMG Voltage)</span>
+                        <span id="emg-val-text" style="color: var(--accent-cyan); font-weight: bold;">0.00 V</span>
+                    </div>
+                    <input type="range" id="emg-slider" min="0" max="100" value="0" oninput="onSliderChange(this.value)">
+                </div>
+
+                <div class="slider-group" style="margin-top: 6px;">
+                    <div class="slider-header">
+                        <span>Tactile Grip Compliance</span>
+                        <span id="compliance-text" style="color: var(--accent-green); font-weight: bold;">0.85 (Delicate)</span>
+                    </div>
+                    <input type="range" id="compliance-slider" min="0" max="100" value="85" oninput="onComplianceChange(this.value)">
+                </div>
+            </div>
+
+            <div class="hud-panel power-card">
+                <div>
+                    <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-dim);">Live Socket Thermal State</div>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: #fff;" id="active-watts">8.4 mW</div>
+                </div>
+                <div class="dormancy-badge dormancy-active" id="dormancy-status">100% DORMANT</div>
+            </div>
+        </div>
+
+        <!-- CENTER HINT -->
+        <div class="center-hud">
+            <div class="tip-pill">
+                <span style="color: var(--accent-cyan); font-weight: bold;">💡 Tip:</span>
+                <span>Rotate / Zoom the 3D Bionic Hand using Mouse Drag & Scroll.</span>
+            </div>
+        </div>
+
+        <!-- RIGHT TELEMETRY -->
+        <div class="telemetry-col interactive">
+            <div class="hud-panel">
+                <div class="section-title">
+                    <span>sEMG Oscilloscope (1000 Hz)</span>
+                    <span style="font-size: 0.65rem; color: var(--accent-green);" id="emg-hz">Active</span>
+                </div>
+                <canvas id="osc-canvas" class="oscilloscope-canvas"></canvas>
+            </div>
+
+            <div class="hud-panel">
+                <div class="section-title">
+                    <span>24-D Spatio-Temporal Manifold (M²⁴)</span>
+                    <span style="font-size: 0.65rem; color: var(--accent-cyan);">4 Subspaces</span>
+                </div>
+                <div style="font-size: 0.68rem; color: var(--text-dim); margin-top: 2px;">
+                    M_struct (0-5) | M_causal (6-11) | M_quant (12-17) | M_action (18-23)
+                </div>
+                <div class="manifold-matrix" id="manifold-grid">
+                    <!-- 24 cells dynamically populated -->
+                </div>
+            </div>
+
+            <div class="hud-panel">
+                <div class="section-title">
+                    <span>Predictive B-Frame Servos</span>
+                    <span style="font-size: 0.65rem; color: var(--accent-cyan);">O(1) Boundary</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem;">
+                    <div style="display:flex; justify-content:space-between;"><span>Thumb Servo (θ0):</span> <b id="srv-0" style="color:var(--accent-cyan)">0.0°</b></div>
+                    <div style="display:flex; justify-content:space-between;"><span>Index Servo (θ1):</span> <b id="srv-1" style="color:var(--accent-cyan)">0.0°</b></div>
+                    <div style="display:flex; justify-content:space-between;"><span>Middle Servo (θ2):</span> <b id="srv-2" style="color:var(--accent-cyan)">0.0°</b></div>
+                    <div style="display:flex; justify-content:space-between;"><span>Ring Servo (θ3):</span> <b id="srv-3" style="color:var(--accent-cyan)">0.0°</b></div>
+                    <div style="display:flex; justify-content:space-between;"><span>Pinky Servo (θ4):</span> <b id="srv-4" style="color:var(--accent-cyan)">0.0°</b></div>
+                    <div style="display:flex; justify-content:space-between;"><span>Wrist Angle (θ5):</span> <b id="srv-5" style="color:var(--accent-cyan)">0.0°</b></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D BIONIC ENGINE SCRIPT -->
+    <script>
+        // --- 1. Three.js Scene Setup ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x07090e, 0.035);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 2, 12);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const cyanSpot = new THREE.SpotLight(0x00f0ff, 2.5);
+        cyanSpot.position.set(5, 10, 8);
+        cyanSpot.castShadow = true;
+        scene.add(cyanSpot);
+
+        const rimLight = new THREE.DirectionalLight(0xff3366, 1.2);
+        rimLight.position.set(-8, -5, -5);
+        scene.add(rimLight);
+
+        // Grid floor
+        const gridHelper = new THREE.GridHelper(20, 20, 0x00f0ff, 0x1e293b);
+        gridHelper.position.y = -3.5;
+        scene.add(gridHelper);
+
+        // --- 2. Build 3D Articulated Bionic Hand ---
+        const handGroup = new THREE.Group();
+        scene.add(handGroup);
+        handGroup.position.set(0, -1.0, 0);
+
+        // Materials
+        const metalMaterial = new THREE.MeshStandardMaterial({
+            color: 0x1f2937,
+            metalness: 0.85,
+            roughness: 0.25,
+            wireframe: false
+        });
+
+        const jointMaterial = new THREE.MeshStandardMaterial({
+            color: 0x00f0ff,
+            emissive: 0x00f0ff,
+            emissiveIntensity: 0.4,
+            metalness: 0.5,
+            roughness: 0.5
+        });
+
+        const carbonMaterial = new THREE.MeshStandardMaterial({
+            color: 0x111827,
+            metalness: 0.3,
+            roughness: 0.8
+        });
+
+        // Palm Base
+        const palmGeo = new THREE.BoxGeometry(2.4, 2.8, 0.7);
+        const palm = new THREE.Mesh(palmGeo, metalMaterial);
+        palm.position.y = 0;
+        handGroup.add(palm);
+
+        // Wrist Joint
+        const wristGeo = new THREE.CylinderGeometry(0.8, 0.9, 1.2, 16);
+        const wrist = new THREE.Mesh(wristGeo, carbonMaterial);
+        wrist.position.y = -2.0;
+        handGroup.add(wrist);
+
+        // Build 5 Articulated Fingers
+        // Finger config: [x_offset, y_offset, length, isThumb]
+        const fingerConfigs = [
+            { name: 'Thumb', x: -1.4, y: -0.4, z: 0.2, len: 0.9, isThumb: true },
+            { name: 'Index', x: -0.85, y: 1.5, z: 0, len: 1.1, isThumb: false },
+            { name: 'Middle', x: -0.28, y: 1.6, z: 0, len: 1.25, isThumb: false },
+            { name: 'Ring', x: 0.28, y: 1.5, z: 0, len: 1.1, isThumb: false },
+            { name: 'Pinky', x: 0.85, y: 1.3, z: 0, len: 0.85, isThumb: false }
+        ];
+
+        const fingerNodes = [];
+
+        fingerConfigs.forEach((cfg) => {
+            const basePivot = new THREE.Group();
+            basePivot.position.set(cfg.x, cfg.y, cfg.z);
+            handGroup.add(basePivot);
+
+            if (cfg.isThumb) {
+                basePivot.rotation.z = Math.PI / 4;
+                basePivot.rotation.y = -Math.PI / 6;
+            }
+
+            // Phalanx 1
+            const p1Geo = new THREE.BoxGeometry(0.32, cfg.len, 0.32);
+            const p1 = new THREE.Mesh(p1Geo, metalMaterial);
+            p1.position.y = cfg.len / 2;
+            basePivot.add(p1);
+
+            // Joint Knuckle 1
+            const j1 = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 12), jointMaterial);
+            j1.position.y = 0;
+            basePivot.add(j1);
+
+            // Phalanx 2
+            const midPivot = new THREE.Group();
+            midPivot.position.y = cfg.len;
+            basePivot.add(midPivot);
+
+            const p2Geo = new THREE.BoxGeometry(0.28, cfg.len * 0.8, 0.28);
+            const p2 = new THREE.Mesh(p2Geo, metalMaterial);
+            p2.position.y = (cfg.len * 0.8) / 2;
+            midPivot.add(p2);
+
+            // Phalanx 3 (Tip)
+            const tipPivot = new THREE.Group();
+            tipPivot.position.y = cfg.len * 0.8;
+            midPivot.add(tipPivot);
+
+            const p3Geo = new THREE.BoxGeometry(0.24, cfg.len * 0.6, 0.24);
+            const p3 = new THREE.Mesh(p3Geo, carbonMaterial);
+            p3.position.y = (cfg.len * 0.6) / 2;
+            tipPivot.add(p3);
+
+            fingerNodes.push({
+                name: cfg.name,
+                isThumb: cfg.isThumb,
+                base: basePivot,
+                mid: midPivot,
+                tip: tipPivot
+            });
+        });
+
+        // --- 3. Brahmand Neuromuscular Engine (Client-Side Kernel) ---
+        let currentEMG = 0.0;
+        let targetAngles = [0, 0, 0, 0, 0, 0]; // 0.0 to 180.0
+        let currentAngles = [0, 0, 0, 0, 0, 0];
+        let manifoldState = new Array(24).fill(0.0);
+        let prevManifold = new Array(24).fill(0.0);
+        let isDormant = true;
+        let complianceFactor = 0.85;
+
+        // Populate 24-D HUD cells
+        const gridContainer = document.getElementById('manifold-grid');
+        for (let i = 0; i < 24; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'manifold-cell';
+            cell.id = `m-cell-${i}`;
+            cell.innerText = `d${i}`;
+            gridContainer.appendChild(cell);
+        }
+
+        // --- 4. Presets & Controls ---
+        function setPreset(type) {
+            document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (type === 'rest') {
+                currentEMG = 0.02;
+                document.getElementById('emg-slider').value = 2;
+            } else if (type === 'pinch') {
+                currentEMG = 0.35;
+                document.getElementById('emg-slider').value = 35;
+            } else if (type === 'power') {
+                currentEMG = 0.85;
+                document.getElementById('emg-slider').value = 85;
+            } else if (type === 'point') {
+                currentEMG = 0.45;
+                document.getElementById('emg-slider').value = 45;
+            } else if (type === 'egg') {
+                currentEMG = 0.25;
+                document.getElementById('emg-slider').value = 25;
+            } else if (type === 'noise') {
+                currentEMG = 0.08;
+                document.getElementById('emg-slider').value = 8;
+            }
+            updateEngineState(type);
+        }
+
+        function onSliderChange(val) {
+            currentEMG = val / 100.0;
+            document.getElementById('emg-val-text').innerText = `${currentEMG.toFixed(2)} V`;
+            updateEngineState();
+        }
+
+        function onComplianceChange(val) {
+            complianceFactor = val / 100.0;
+            document.getElementById('compliance-text').innerText = `${complianceFactor.toFixed(2)}`;
+        }
+
+        function updateEngineState(forcedPreset) {
+            // OTM Tokenizer logic
+            let role = 0;
+            if (currentEMG < 0.05) role = 0; // Rest
+            else if (currentEMG < 0.12) role = 1; // Tremor / Noise
+            else if (currentEMG >= 0.12 && currentEMG < 0.40) role = 2; // Pinch
+            else if (currentEMG >= 0.40 && currentEMG < 0.65) role = forcedPreset === 'point' ? 7 : 2;
+            else role = 3; // Power
+
+            // 24-D Manifold Projection
+            manifoldState.fill(0.0);
+            if (role === 0) {
+                targetAngles = [0, 0, 0, 0, 0, 0];
+                manifoldState[23] = 1.0; // Rest_Home
+            } else if (role === 1) {
+                // Noise filtered by Causal Invariance (State does not jump!)
+                manifoldState[1] = 0.05;
+            } else if (role === 2 || forcedPreset === 'pinch' || forcedPreset === 'egg') {
+                // Pinch / Compliant Egg
+                const flex = Math.min(120, currentEMG * 200 * complianceFactor);
+                targetAngles = [flex * 0.9, flex, 10, 5, 5, 15];
+                manifoldState[0] = 0.7; manifoldState[1] = 0.8;
+                manifoldState[12] = currentEMG * 0.6; // Soft force
+                manifoldState[18] = 1.0; // Grasp_Pinch
+            } else if (forcedPreset === 'point') {
+                targetAngles = [140, 0, 150, 150, 150, 0];
+                manifoldState[0] = 0.8; manifoldState[2] = 0.9; manifoldState[3] = 0.9;
+                manifoldState[20] = 1.0; // Grasp_Point
+            } else {
+                // Power Grasp
+                const flex = Math.min(160, currentEMG * 170);
+                targetAngles = [flex * 0.9, flex, flex, flex, flex, 0];
+                manifoldState[0] = 0.95; manifoldState[1] = 0.95; manifoldState[2] = 0.95;
+                manifoldState[12] = 0.9; // High Force
+                manifoldState[19] = 1.0; // Grasp_Power
+            }
+
+            // Multiplier-Free Delta check (Dormancy Gate: Delta < 0.02)
+            let maxDelta = 0;
+            for (let i = 0; i < 24; i++) {
+                const d = Math.abs(manifoldState[i] - prevManifold[i]);
+                if (d > maxDelta) maxDelta = d;
+            }
+
+            isDormant = (maxDelta < 0.02);
+            if (!isDormant) {
+                for (let i = 0; i < 24; i++) {
+                    prevManifold[i] = prevManifold[i] + 0.5 * (manifoldState[i] - prevManifold[i]); // PO2 bitshift smoothing
+                }
+            }
+
+            // Update HUD
+            const dormBadge = document.getElementById('dormancy-status');
+            const powerVal = document.getElementById('active-watts');
+            if (isDormant) {
+                dormBadge.className = 'dormancy-badge dormancy-active';
+                dormBadge.innerText = '100% DORMANT (0 mW ALU)';
+                powerVal.innerText = '8.2 mW';
+            } else {
+                dormBadge.className = 'dormancy-badge dormancy-idle';
+                dormBadge.innerText = 'ACTIVE INFERENCE';
+                powerVal.innerText = '31.4 mW';
+            }
+
+            // Update 24-D cells
+            for (let i = 0; i < 24; i++) {
+                const cell = document.getElementById(`m-cell-${i}`);
+                if (manifoldState[i] > 0.05) {
+                    cell.classList.add('active');
+                    cell.style.background = `rgba(0, 240, 255, ${Math.min(1.0, manifoldState[i] * 0.8 + 0.2)})`;
+                } else {
+                    cell.classList.remove('active');
+                    cell.style.background = '#111827';
+                }
+            }
+        }
+
+        // --- 5. Oscilloscope Live Canvas ---
+        const oscCanvas = document.getElementById('osc-canvas');
+        const oscCtx = oscCanvas.getContext('2d');
+        oscCanvas.width = oscCanvas.clientWidth * 2;
+        oscCanvas.height = oscCanvas.clientHeight * 2;
+
+        const waveData = new Array(80).fill(0);
+
+        function drawOscilloscope() {
+            // Push simulated EMG waveform
+            const noise = (Math.random() - 0.5) * (currentEMG > 0.1 ? 0.35 : 0.04);
+            const val = currentEMG + noise;
+            waveData.push(val);
+            waveData.shift();
+
+            oscCtx.fillStyle = '#090d14';
+            oscCtx.fillRect(0, 0, oscCanvas.width, oscCanvas.height);
+
+            // Centerline
+            oscCtx.strokeStyle = 'rgba(0, 240, 255, 0.15)';
+            oscCtx.lineWidth = 1;
+            oscCtx.beginPath();
+            oscCtx.moveTo(0, oscCanvas.height / 2);
+            oscCtx.lineTo(oscCanvas.width, oscCanvas.height / 2);
+            oscCtx.stroke();
+
+            // Waveform
+            oscCtx.strokeStyle = isDormant ? '#00ff88' : '#00f0ff';
+            oscCtx.lineWidth = 2.5;
+            oscCtx.beginPath();
+            const step = oscCanvas.width / waveData.length;
+            for (let i = 0; i < waveData.length; i++) {
+                const x = i * step;
+                const y = oscCanvas.height / 2 - (waveData[i] * oscCanvas.height * 0.4);
+                if (i === 0) oscCtx.moveTo(x, y);
+                else oscCtx.lineTo(x, y);
+            }
+            oscCtx.stroke();
+        }
+
+        // --- 6. Animation Loop (Predictive B-Frame Trajectory) ---
+        let mouseX = 0, mouseY = 0;
+        let isDragging = false, prevMouseX = 0, prevMouseY = 0;
+
+        window.addEventListener('mousedown', (e) => { isDragging = true; prevMouseX = e.clientX; prevMouseY = e.clientY; });
+        window.addEventListener('mouseup', () => { isDragging = false; });
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const deltaX = e.clientX - prevMouseX;
+                const deltaY = e.clientY - prevMouseY;
+                handGroup.rotation.y += deltaX * 0.008;
+                handGroup.rotation.x += deltaY * 0.008;
+                prevMouseX = e.clientX;
+                prevMouseY = e.clientY;
+            }
+        });
+        window.addEventListener('wheel', (e) => {
+            camera.position.z = Math.max(5, Math.min(20, camera.position.z + e.deltaY * 0.01));
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // B-Frame Smooth Bezier Trajectory Interpolation: current -> target
+            for (let i = 0; i < 6; i++) {
+                currentAngles[i] += 0.15 * (targetAngles[i] - currentAngles[i]);
+            }
+
+            // Apply Joint Angles to 3D Hand Model
+            // Thumb
+            const tAngle = (currentAngles[0] * Math.PI) / 180.0;
+            fingerNodes[0].base.rotation.y = -Math.PI / 6 - tAngle * 0.5;
+            fingerNodes[0].mid.rotation.z = tAngle * 0.6;
+            fingerNodes[0].tip.rotation.z = tAngle * 0.5;
+
+            // 4 Fingers (Index, Middle, Ring, Pinky)
+            for (let i = 1; i < 5; i++) {
+                const fAngle = (currentAngles[i] * Math.PI) / 180.0;
+                fingerNodes[i].base.rotation.x = fAngle * 0.5;
+                fingerNodes[i].mid.rotation.x = fAngle * 0.6;
+                fingerNodes[i].tip.rotation.x = fAngle * 0.4;
+            }
+
+            // Wrist
+            const wAngle = (currentAngles[5] * Math.PI) / 180.0;
+            handGroup.rotation.z = wAngle * 0.3;
+
+            // Update Servo Readouts
+            for (let i = 0; i < 6; i++) {
+                document.getElementById(`srv-${i}`).innerText = `${currentAngles[i].toFixed(1)}°`;
+            }
+
+            drawOscilloscope();
+            renderer.render(scene, camera);
+        }
+
+        // Window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize Rest State
+        updateEngineState('rest');
+        animate();
+    </script>
+</body>
+</html>

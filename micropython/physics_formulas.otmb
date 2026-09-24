@@ -1,0 +1,174 @@
+# ==============================================================================
+# OTMB MASTER ENCYCLOPEDIC PHYSICS & QUANTUM KNOWLEDGE VAULT
+# FORMAT: DOMAIN|SUBDOMAIN|TOPIC_KEY|NAME|EQUATION|SOLVES_FOR|VARS_AND_UNITS|CONCEPT|INTUITION_EXAMPLE
+# ZERO-HEAP STREAMING ARCHITECTURE FOR MICROPYTHON & DESKTOP PYTHON
+# ==============================================================================
+
+# ==============================================================================
+# SECTION 1: UNIVERSAL PHYSICAL CONSTANTS (CODATA EXACT SI VALUES)
+# ==============================================================================
+CONSTANTS|Universal|c|Speed_of_Light|c = 299792458|c|m/s|Speed of electromagnetic radiation in vacuum.|The cosmic speed limit of the universe; no information or mass can travel faster.
+CONSTANTS|Universal|G|Gravitational_Constant|G = 6.67430e-11|G|N*(m/kg)^2|Universal Newtonian gravitational coupling constant.|Governs the attraction between any two masses across the cosmos.
+CONSTANTS|Quantum|h|Planck_Constant|h = 6.62607015e-34|h|J*s|Fundamental quantum of action.|The bridge linking wave frequency to packetized quantum energy chunks.
+CONSTANTS|Quantum|hbar|Reduced_Planck|hbar = 1.054571817e-34|hbar|J*s|Dirac constant h / (2*pi).|Natural unit of angular momentum and spin in quantum mechanics.
+CONSTANTS|Thermal|kB|Boltzmann_Constant|kB = 1.380649e-23|kB|J/K|Thermodynamic energy per degree Kelvin.|Relates microscopic particle kinetic energy to macroscopic temperature.
+CONSTANTS|Electric|e|Elementary_Charge|e = 1.602176634e-19|e|C|Fundamental electric charge quantum.|Exact charge carried by a single proton (+e) or electron (-e).
+CONSTANTS|Mass|me|Electron_Rest_Mass|me = 9.1093837e-31|me|kg|Inertial rest mass of electron.|~1/1836th the mass of a proton; sets atomic orbitals and chemistry scales.
+CONSTANTS|Mass|mp|Proton_Rest_Mass|mp = 1.67262192e-27|mp|kg|Inertial rest mass of proton.|Constitutes the atomic nucleus; defines the atomic mass unit baseline.
+CONSTANTS|Mass|mn|Neutron_Rest_Mass|mn = 1.67492749e-27|mn|kg|Inertial rest mass of neutron.|Slightly heavier than proton; enables beta decay in free space.
+CONSTANTS|Chemical|NA|Avogadro_Constant|NA = 6.02214076e23|NA|mol^-1|Number of constituent particles in one mole.|Macroscopic bridge counting exact atoms in 12 grams of Carbon-12.
+CONSTANTS|Thermal|R|Universal_Gas_Constant|R = 8.314462618|R|J/(mol*K)|Molar gas constant (NA * kB).|Work done per mole of ideal gas per Kelvin temperature increase.
+CONSTANTS|EM|eps0|Vacuum_Permittivity|eps0 = 8.8541878128e-12|eps0|F/m|Electric permittivity of free space.|Measures vacuum resistance to forming an electric field.
+CONSTANTS|EM|mu0|Vacuum_Permeability|mu0 = 1.25663706212e-6|mu0|N/A^2|Magnetic permeability of free space.|Measures magnetic induction formed in vacuum per unit magnetizing field.
+CONSTANTS|Radiation|sigma|Stefan_Boltzmann|sigma = 5.670374419e-8|sigma|W/(m^2*K^4)|Blackbody radiative flux constant.|Total power radiated per unit area of blackbody proportional to T^4.
+CONSTANTS|Atomic|Rinf|Rydberg_Constant|Rinf = 10973731.568160|Rinf|m^-1|Hydrogen atomic spectral series constant.|Wavenumber limit of highest energy photon emitted in hydrogen transitions.
+CONSTANTS|Geophysical|g|Standard_Gravity|g = 9.80665|g|m/s^2|Earth surface gravitational acceleration.|Downward acceleration experienced by free-falling objects near Earth surface.
+
+# ==============================================================================
+# SECTION 2: CLASSICAL MECHANICS, GRAVITATION & FLUID DYNAMICS
+# ==============================================================================
+MECHANICS|Kinematics|v_accel|Velocity_Under_Constant_Acceleration|v = u + a*t|v|u:m/s, a:m/s^2, t:s|Final velocity after accelerating steadily.|A car at 10 m/s accelerating at 2 m/s^2 for 5s reaches 20 m/s.
+MECHANICS|Kinematics|displacement|Displacement_Kinematics|s = u*t + 0.5*a*t^2|s|u:m/s, t:s, a:m/s^2|Distance traveled under steady acceleration.|Dropping a ball (u=0) under gravity for 3s travels 0.5*9.8*9 = 44.1 meters.
+MECHANICS|Kinematics|torricelli|Torricelli_Kinematic_Relation|v^2 = u^2 + 2*a*s|v|u:m/s, a:m/s^2, s:m|Velocity-displacement relationship independent of time.|Determines final speed of falling object without tracking elapsed duration.
+MECHANICS|Dynamics|newton2|Newtons_Second_Law|F = m*a|F|m:kg, a:m/s^2|Net force equals rate of change of momentum.|Pushing a 1000 kg car with 2000 N force creates 2 m/s^2 acceleration.
+MECHANICS|Dynamics|momentum|Linear_Momentum|p = m*v|p|m:kg, v:m/s|Quantity of motion possessed by a moving body.|A 0.1 kg bullet at 800 m/s has momentum 80 kg*m/s, requiring high impulse to stop.
+MECHANICS|Dynamics|impulse|Impulse_Momentum_Theorem|J = F*dt|J|F:N, dt:s|Impulse of force equals change in linear momentum.|Airbags increase impact duration dt, reducing peak force F on passengers.
+MECHANICS|Energy|work|Work_Done|W = F*d*cos(theta)|W|F:N, d:m, theta:rad|Energy transferred by force acting over distance.|Pushing a 50 N box across 4 m floor does 200 Joules of mechanical work.
+MECHANICS|Energy|ke|Kinetic_Energy|KE = 0.5*m*v^2|KE|m:kg, v:m/s|Energy of translational motion.|Doubling vehicle speed quadruples its kinetic energy and braking distance.
+MECHANICS|Energy|pe|Gravitational_Potential_Energy|PE = m*g*h|PE|m:kg, g:m/s^2, h:m|Energy stored by position in gravitational field.|A 10 kg water bucket lifted 5 m stores 490.3 Joules of potential energy.
+MECHANICS|Energy|power|Mechanical_Power|P = W / t|P|W:J, t:s|Rate of energy consumption or work performed.|Lifting 1000 J of weight in 2 seconds requires 500 Watts (0.67 HP).
+MECHANICS|Circular|centripetal_accel|Centripetal_Acceleration|ac = v^2 / r|ac|v:m/s, r:m|Inward radial acceleration maintaining circular path.|Turning a curve at higher speed sharpens inward acceleration quadratically.
+MECHANICS|Circular|centripetal_force|Centripetal_Force|Fc = (m*v^2) / r|Fc|m:kg, v:m/s, r:m|Net inward force required for circular trajectory.|Friction between tyres and road provides the necessary inward centripetal force.
+MECHANICS|Gravity|newton_gravity|Universal_Law_of_Gravitation|Fg = G*m1*m2 / r^2|Fg|G:SI, m1:kg, m2:kg, r:m|Attractive force between two point masses.|Inverse-square law governing planetary orbits, moons, and falling apples.
+MECHANICS|Gravity|escape_velocity|Escape_Velocity|ve = sqrt(2*G*M / R)|ve|G:SI, M:kg, R:m|Speed needed to escape gravitational pull without propulsion.|Earth escape speed is 11.19 km/s; moon escape speed is only 2.38 km/s.
+MECHANICS|Gravity|orbital_velocity|Orbital_Velocity|vo = sqrt(G*M / r)|vo|G:SI, M:kg, r:m|Speed of satellite in stable circular orbit.|Low Earth Orbit (LEO at 400 km) requires ~7.67 km/s orbital speed.
+MECHANICS|Elasticity|hookes_law|Hookes_Law|F = -k*x|F|k:N/m, x:m|Restoring force exerted by deformed elastic spring.|Compressing a 500 N/m spring by 0.1 m pushes back with 50 N force.
+MECHANICS|Elasticity|spring_pe|Spring_Potential_Energy|U = 0.5*k*x^2|U|k:N/m, x:m|Elastic potential energy stored in spring.|A compressed spring in a pinball machine stores mechanical launch energy.
+MECHANICS|Oscillation|pendulum_period|Simple_Pendulum_Period|T = 2*pi*sqrt(L / g)|T|L:m, g:m/s^2|Small-angle oscillation period of simple pendulum.|A 1-meter long pendulum completes one full swing cycle every ~2.006 seconds.
+MECHANICS|Oscillation|shm_spring|Spring_Mass_Period|T = 2*pi*sqrt(m / k)|T|m:kg, k:N/m|Natural oscillation period of harmonic mass on spring.|Heavier mass slows oscillation frequency; stiffer spring speeds it up.
+MECHANICS|Rotation|torque|Torque_Moment_of_Force|tau = r*F*sin(theta)|tau|r:m, F:N, theta:rad|Rotational turning effect of applied force.|A longer spanner wrench increases leverage radius r, multiplying applied torque.
+MECHANICS|Rotation|rot_ke|Rotational_Kinetic_Energy|KE_rot = 0.5*I*omega^2|KE_rot|I:kg*m^2, omega:rad/s|Kinetic energy stored in spinning flywheel.|Flywheels store industrial energy purely in rotational moment of inertia.
+MECHANICS|Rotation|ang_momentum|Angular_Momentum|L = I*omega|L|I:kg*m^2, omega:rad/s|Rotational momentum of rotating rigid body.|Figure skater pulling arms inward reduces inertia I, speeding up spin omega.
+MECHANICS|Fluids|bernoulli|Bernoulli_Equation|P + 0.5*rho*v^2 + rho*g*h = const|const|P:Pa, rho:kg/m^3, v:m/s, h:m|Conservation of energy in flowing streamline fluid.|Air flowing faster over airplane wing lowers pressure, generating aerodynamic lift.
+MECHANICS|Fluids|continuity|Fluid_Continuity_Equation|A1*v1 = A2*v2|v2|A1:m^2, v1:m/s, A2:m^2|Conservation of mass in incompressible fluid pipe.|Constricting hose nozzle area A2 forces water flow velocity v2 to shoot faster.
+
+# ==============================================================================
+# SECTION 3: THERMODYNAMICS & STATISTICAL MECHANICS
+# ==============================================================================
+THERMODYNAMICS|Gas_Laws|ideal_gas|Ideal_Gas_Law|P*V = n*R*T|P|V:m^3, n:mol, R:SI, T:K|Equation of state for dilute classical ideal gas.|Heating an enclosed gas bottle increases internal molecular pressure linearly.
+THERMODYNAMICS|Laws|first_law|First_Law_of_Thermodynamics|dU = Q - W|dU|Q:J, W:J|Conservation of energy: internal energy change equals heat minus work.|Heat added to gas expands the piston (work) while raising gas temperature (dU).
+THERMODYNAMICS|Heat|specific_heat|Specific_Heat_Formula|Q = m*c*dT|Q|m:kg, c:J/(kg*K), dT:K|Thermal energy needed to raise temperature of mass.|Water has high heat capacity c=4184 J/kg*K, making it an ideal engine coolant.
+THERMODYNAMICS|Heat|latent_heat|Latent_Heat_Phase_Change|Q = m*L|Q|m:kg, L:J/kg|Energy consumed during phase change at fixed temperature.|Boiling 1 kg of water absorbs 2.26 MJ of latent heat of vaporization.
+THERMODYNAMICS|Radiation|stefan_law|Stefan_Boltzmann_Radiation|P = eps*sigma*A*T^4|P|eps:unitless, sigma:SI, A:m^2, T:K|Total thermal power radiated by hot body.|Doubling absolute temperature T increases emitted radiation power 16-fold.
+THERMODYNAMICS|Radiation|wiens_law|Wiens_Displacement_Law|lambda_max = b / T|lambda_max|b:2.89777e-3 m*K, T:K|Peak emission wavelength of blackbody radiator.|Sun at 5800 K peaks in green-yellow light; human body at 310 K peaks in infrared.
+THERMODYNAMICS|Engines|carnot_efficiency|Carnot_Engine_Efficiency|eta = 1 - (Tc / Th)|eta|Tc:K, Th:K|Maximum theoretical efficiency of any heat engine.|An engine between 600K and 300K can never exceed 50% thermal efficiency.
+THERMODYNAMICS|Entropy|boltzmann_entropy|Boltzmann_Entropy_Formula|S = kB * ln(Omega)|S|kB:SI, Omega:microstates|Statistical measure of microscopic disorder.|Higher microstates Omega mean greater thermodynamic entropy and irreversibility.
+THERMODYNAMICS|Expansion|thermal_expansion|Linear_Thermal_Expansion|dL = alpha*L0*dT|dL|alpha:K^-1, L0:m, dT:K|Expansion of solid length due to thermal lattice vibrations.|Railway tracks have expansion gaps to prevent buckling on hot summer days.
+
+# ==============================================================================
+# SECTION 4: ELECTROMAGNETISM, MAXWELL'S EQUATIONS & CIRCUITS
+# ==============================================================================
+ELECTROMAGNETISM|Electrostatics|coulombs_law|Coulombs_Law|F = (1/(4*pi*eps0))*q1*q2 / r^2|F|q1:C, q2:C, r:m|Electrostatic force between two point charges.|Like charges repel, opposite charges attract with inverse-square dropoff.
+ELECTROMAGNETISM|Electrostatics|electric_field|Electric_Field_Strength|E = F / q|E|F:N, q:C|Force experienced per unit test charge in electric field.|A charge placed between parallel capacitor plates feels uniform electric force.
+ELECTROMAGNETISM|Electrostatics|gauss_law|Gauss_Law_Electrostatics|oint(E*dA) = Q_enclosed / eps0|Flux|E:V/m, Q:C, eps0:SI|Total electric flux through closed surface equals enclosed charge.|Explains why electric field inside a hollow metallic Faraday cage is always zero.
+ELECTROMAGNETISM|Circuits|ohms_law|Ohms_Law|V = I*R|V|I:A, R:ohm|Linear voltage drop across resistive conductor.|Passing 2 Amperes through a 50 Ohm resistor creates 100 Volts drop.
+ELECTROMAGNETISM|Circuits|electric_power|Joule_Heating_Power|P = I^2*R|P|I:A, R:ohm|Rate of electrical energy dissipated as thermal heat.|High voltage power lines use low current I to minimize I^2*R transmission losses.
+ELECTROMAGNETISM|Circuits|capacitance|Capacitance_Definition|C = Q / V|C|Q:C, V:V|Charge stored per unit potential difference.|A 1 Farad capacitor holds 1 Coulomb of electric charge at 1 Volt potential.
+ELECTROMAGNETISM|Circuits|parallel_plate|Parallel_Plate_Capacitor|C = (eps0 * A) / d|C|A:m^2, d:m, eps0:SI|Capacitance of parallel conductive plates.|Bringing plates closer (smaller d) increases charge storage capacity.
+ELECTROMAGNETISM|Circuits|rc_time|RC_Circuit_Time_Constant|tau = R * C|tau|R:ohm, C:F|Time required to charge capacitor to 63.2% voltage.|A 10k ohm resistor and 100uF capacitor have a 1-second RC filter time constant.
+ELECTROMAGNETISM|Magnetism|lorentz_force|Lorentz_Force_Law|F = q*(E + v*B)|F|q:C, E:V/m, v:m/s, B:T|Total electromagnetic force acting on moving charged particle.|Charged solar wind particles spiral along Earth's magnetic lines, creating Auroras.
+ELECTROMAGNETISM|Magnetism|biot_savart|Biot_Savart_Law|dB = (mu0/(4*pi)) * (I*dL x r_hat)/r^2|dB|I:A, dL:m, r:m|Magnetic field generated by steady electric current element.|Electric current flowing in a wire coil generates an electromagnet dipole field.
+ELECTROMAGNETISM|Induction|faradays_law|Faradays_Law_of_Induction|emf = -N * (dPhi / dt)|emf|N:turns, dPhi:Wb, dt:s|Induced voltage from time-varying magnetic flux.|Spinning a magnet inside a copper coil generates electrical grid power.
+ELECTROMAGNETISM|Induction|lenz_law|Lenz_Law_Conservation|direction = oppose_change|dir|dPhi:Wb|Induced current always opposes the magnetic change that created it.|Dropping a strong neodymium magnet down a copper pipe slows down due to eddy currents.
+ELECTROMAGNETISM|Circuits|lc_resonant|LC_Resonant_Frequency|f0 = 1 / (2*pi*sqrt(L*C))|f0|L:H, C:F|Natural resonant frequency of electrical LC tank circuit.|Tuning an AM/FM radio receiver adjusts C to match broadcast carrier frequency.
+ELECTROMAGNETISM|Maxwell|poynting_vector|Poynting_Vector_EM_Power|S = (1/mu0) * (E x B)|S|E:V/m, B:T, mu0:SI|Direction and rate of electromagnetic energy flux per unit area.|Carries solar energy across empty space from the Sun to Earth's solar panels.
+
+# ==============================================================================
+# SECTION 5: WAVES, OPTICS & ACOUSTICS
+# ==============================================================================
+WAVES_OPTICS|Wave_Mechanics|wave_speed|Wave_Speed_Relation|v = f * lambda|v|f:Hz, lambda:m|Speed of wave propagation equals frequency times wavelength.|Middle C sound at 261.6 Hz in air (v=343 m/s) has a wavelength of 1.31 meters.
+WAVES_OPTICS|Acoustics|decibels|Sound_Intensity_Decibels|dB = 10 * log10(I / I0)|dB|I:W/m^2, I0:1e-12 W/m^2|Logarithmic scale of human auditory sound intensity.|Each 10 dB increase represents a 10-fold increase in acoustic sound wave power.
+WAVES_OPTICS|Acoustics|doppler_sound|Doppler_Effect_Approaching|f_obs = f * (v / (v - v_src))|f_obs|f:Hz, v:m/s, v_src:m/s|Shift in observed frequency when sound source moves toward listener.|An approaching ambulance siren sounds higher in pitch, dropping as it passes by.
+WAVES_OPTICS|Geometric_Optics|snells_law|Snells_Law_of_Refraction|n1 * sin(theta1) = n2 * sin(theta2)|theta2|n1:index, theta1:rad, n2:index|Bending of light rays passing between different optical media.|Light entering water (n=1.33) bends toward normal, making objects appear shallower.
+WAVES_OPTICS|Geometric_Optics|critical_angle|Total_Internal_Reflection|sin(theta_c) = n2 / n1|theta_c|n1:dense, n2:rare|Threshold angle where refracted light reflects 100% internally.|Powers fiber optic cables, trapping internet light pulses inside glass cores.
+WAVES_OPTICS|Geometric_Optics|thin_lens|Thin_Lens_Equation|1/f = 1/v - 1/u|v|f:m, u:m|Relates object distance u, image distance v, and focal length f.|Convex eyeglasses bend diverging light to focus sharply on the human retina.
+WAVES_OPTICS|Wave_Optics|double_slit|Youngs_Double_Slit_Fringes|y = (m * lambda * D) / d|y|lambda:m, D:m, d:m, m:int|Constructive interference fringe spacing in wave optics.|Proves light behaves as waves creating alternating bright and dark interference bands.
+WAVES_OPTICS|Wave_Optics|diffraction_grating|Diffraction_Grating_Equation|d * sin(theta) = m * lambda|theta|d:m, lambda:m, m:int|Spectral line angular dispersion from periodic grating slits.|Splits composite starlight into precise rainbow spectrum to detect chemical elements.
+WAVES_OPTICS|Wave_Optics|brewsters_angle|Brewsters_Polarization_Angle|tan(theta_B) = n2 / n1|theta_B|n1:index, n2:index|Angle where reflected light is 100% linearly polarized.|Polaroid sunglasses eliminate blinding glare reflected off flat water or asphalt roads.
+
+# ==============================================================================
+# SECTION 6: ATOMIC, NUCLEAR & PARTICLE PHYSICS
+# ==============================================================================
+ATOMIC_NUCLEAR|Bohr_Atom|bohr_radius|Bohr_Atomic_Radius|a0 = (4*pi*eps0*hbar^2) / (me*e^2)|a0|me:kg, e:C, hbar:SI|Fundamental physical scale of hydrogen atom ground state (0.529 Angstroms).|Sets the physical size of all atoms in the periodic table.
+ATOMIC_NUCLEAR|Spectroscopy|rydberg_formula|Rydberg_Hydrogen_Spectral_Series|1/lambda = Rinf * (1/n1^2 - 1/n2^2)|lambda|Rinf:m^-1, n1:int, n2:int|Predicts emission wavelengths of hydrogen spectral transition lines.|Transitions dropping to n=2 produce the visible Balmer series glow of red/blue light.
+ATOMIC_NUCLEAR|Radioactivity|radioactive_decay|Radioactive_Decay_Law|N = N0 * exp(-lambda * t)|N|N0:count, lambda:s^-1, t:s|Statistical exponential decay of unstable radioactive atomic nuclei.|Carbon-14 isotope decay allows precise archaeological dating of ancient organic relics.
+ATOMIC_NUCLEAR|Radioactivity|half_life|Half_Life_Decay_Relation|T_half = ln(2) / lambda|T_half|lambda:s^-1|Time required for exactly half of radioactive sample nuclei to disintegrate.|Uranium-235 has half-life of 704 million years, pacing geological clockwork.
+ATOMIC_NUCLEAR|Nuclear_Energy|mass_defect|Nuclear_Binding_Energy|BE = delta_m * c^2|BE|delta_m:kg, c:SI|Energy binding protons and neutrons together inside atomic nucleus.|Mass of Helium nucleus is less than sum of constituents; difference powers the Sun.
+ATOMIC_NUCLEAR|Nuclear_Energy|q_value|Nuclear_Reaction_Q_Value|Q = (m_reactants - m_products) * c^2|Q|m_reactants:kg, m_products:kg|Net kinetic energy released in nuclear fusion or fission reaction.|Fission of 1 gram of Uranium-235 yields energy equivalent to burning 3 tons of coal.
+ATOMIC_NUCLEAR|Radiation|bragg_diffraction|Braggs_Law_XRay_Crystallography|2 * d * sin(theta) = n * lambda|theta|d:m, lambda:m, n:int|Constructive scattering of X-rays from crystal lattice atomic planes.|Enabled Rosalind Franklin, Watson and Crick to discover the double helix DNA structure.
+
+# ==============================================================================
+# SECTION 7: SPECIAL & GENERAL RELATIVITY
+# ==============================================================================
+RELATIVITY|Special|lorentz_gamma|Lorentz_Factor|gamma = 1 / sqrt(1 - (v^2 / c^2))|gamma|v:m/s, c:SI|Relativistic scaling factor for high-speed moving frames.|At 86.6% speed of light, gamma equals 2.0, doubling time dilation and mass.
+RELATIVITY|Special|time_dilation|Relativistic_Time_Dilation|t_prime = t * gamma|t_prime|t:s, v:m/s, c:SI|Proper time passes slower for an observer moving at high velocity.|Fast-moving atmospheric muons survive down to Earth surface before decaying.
+RELATIVITY|Special|length_contraction|Lorentz_Length_Contraction|L_prime = L0 / gamma|L_prime|L0:m, v:m/s, c:SI|Physical spatial length contracts along direction of high-speed motion.|A 100-meter spaceship cruising at 0.866c appears only 50 meters long to stationary observer.
+RELATIVITY|Special|rel_momentum|Relativistic_Momentum|p = gamma * m * v|p|m:kg, v:m/s, c:SI|Momentum increases asymptotically toward infinity as speed approaches c.|Explains why particles in CERN LHC require gigawatts of power to nudge closer to c.
+RELATIVITY|Special|mass_energy|Einstein_Mass_Energy_Equivalence|E = m * c^2|E|m:kg, c:SI|Rest energy contained within physical matter mass.|1 milligram of matter contains 90 billion Joules (~21 tons TNT equivalent).
+RELATIVITY|Special|rel_energy_momentum|Relativistic_Energy_Momentum_Invariant|E^2 = (p*c)^2 + (m0*c^2)^2|E|p:kg*m/s, m0:kg, c:SI|Complete relativistic energy encompassing moving mass and massless photons.|Photons have zero rest mass (m0=0), leading directly to E = p*c.
+RELATIVITY|Special|rel_doppler|Relativistic_Doppler_Shift|f_obs = f_src * sqrt((1 + beta)/(1 - beta))|f_obs|f_src:Hz, beta:v/c|Spectral frequency shift taking into account relativistic time dilation.|Distant receding stars show cosmological redshift toward longer red wavelengths.
+RELATIVITY|General|schwarzschild|Schwarzschild_Black_Hole_Radius|Rs = (2 * G * M) / c^2|Rs|G:SI, M:kg, c:SI|Radius of event horizon where escape velocity equals speed of light.|Compressing Earth into a 9-millimeter radius sphere would create a black hole.
+RELATIVITY|General|grav_time_dilation|Gravitational_Time_Dilation|t_grav = t0 * sqrt(1 - (2*G*M / (r*c^2)))|t_grav|t0:s, M:kg, r:m|Clocks run slower in stronger gravitational potentials.|GPS satellites tick 38 microseconds faster per day; relativistic corrections are mandatory.
+
+# ==============================================================================
+# SECTION 8: QUANTUM MECHANICS & WAVE MECHANICS
+# ==============================================================================
+QUANTUM|Photoelectric|photoelectric_eq|Einsteins_Photoelectric_Equation|KE_max = h*f - Phi|KE_max|h:SI, f:Hz, Phi:J|Maximum kinetic energy of ejected electron equals photon energy minus work function.|Proved light is quantized into discrete packets (photons); won Einstein 1921 Nobel Prize.
+QUANTUM|Wave_Particle|photon_energy|Planck_Einstein_Relation|E = h * f|E|h:SI, f:Hz|Energy carried by a single quantum photon.|UV photons have higher frequency than radio waves, possessing enough energy to damage DNA.
+QUANTUM|Wave_Particle|compton_shift|Compton_Scattering_Wavelength_Shift|delta_lambda = (h/(me*c)) * (1 - cos(theta))|delta_lambda|h:SI, me:kg, c:SI, theta:rad|Increase in X-ray photon wavelength after scattering off free electron.|Demonstrated that photons carry discrete relativistic linear momentum p = h/lambda.
+QUANTUM|Wave_Particle|de_broglie|de_Broglie_Matter_Wavelength|lambda = h / p|lambda|h:SI, p:kg*m/s|Matter exhibits wave-like properties with characteristic de Broglie wavelength.|Electrons accelerated through electric fields diffract like waves, enabling Electron Microscopes.
+QUANTUM|Uncertainty|heisenberg_pos_mom|Heisenberg_Position_Momentum_Uncertainty|dx * dp >= hbar / 2|limit|dx:m, dp:kg*m/s, hbar:SI|Fundamental quantum limit: position and momentum cannot both be simultaneously known.|Attempting to pinpoint an electron location imparts violent uncontrollable momentum recoil.
+QUANTUM|Uncertainty|heisenberg_energy_time|Heisenberg_Energy_Time_Uncertainty|dE * dt >= hbar / 2|limit|dE:J, dt:s, hbar:SI|Quantum fluctuations can borrow energy dE for ultra-brief duration dt.|Permits creation of virtual particle-antiparticle pairs in vacuum (Hawking radiation).
+QUANTUM|Schrodinger|tdse|Time_Dependent_Schrodinger_Equation|i*hbar * dPsi/dt = H_hat * Psi|Evolution|hbar:SI, H_hat:operator, Psi:state|Master differential equation governing the dynamic time evolution of quantum wavefunctions.|Describes how quantum probability clouds diffuse and propagate through space and time.
+QUANTUM|Schrodinger|tise|Time_Independent_Schrodinger_Equation|H_hat * psi = E * psi|E|H_hat:operator, psi:eigenstate, E:J|Quantum eigenvalue equation yielding stationary discrete energy levels.|Calculates atomic orbitals (s, p, d, f) and exact energy states of electrons in atoms.
+QUANTUM|Potential_Well|particle_in_box|Particle_in_1D_Infinite_Square_Well|En = (n^2 * pi^2 * hbar^2) / (2 * m * L^2)|En|n:int, hbar:SI, m:kg, L:m|Quantized energy levels of particle confined in one-dimensional box.|Confined quantum particles can never have zero energy; ground state has non-zero zero-point energy.
+QUANTUM|Harmonic_Oscillator|quantum_oscillator|Quantum_Harmonic_Oscillator_Levels|En = (n + 0.5) * hbar * omega|En|n:int, hbar:SI, omega:rad/s|Equally spaced discrete quantum vibrational rungs.|Molecules vibrating in chemical bonds absorb discrete infrared photon quanta.
+QUANTUM|Tunneling|quantum_tunneling|Quantum_Barrier_Tunneling_Probability|T = exp(-2 * K * L)|T|K:m^-1, L:m|Probability of quantum particle penetrating through a barrier higher than its energy.|Enables Alpha decay from atomic nuclei and semiconductor Flash memory operation.
+QUANTUM|Principles|pauli_exclusion|Pauli_Exclusion_Principle|no_two_fermions_same_quantum_state|Principle|n,l,m,s:quantum_numbers|No two identical fermions (electrons/quarks) can occupy the same quantum state.|Prevents all atomic electrons from collapsing into ground shell, enabling chemistry and life.
+QUANTUM|Optics|rydberg_energy|Hydrogen_Energy_Levels|En = -13.6 / (n^2)|En|n:int, eV|Discrete quantized energy levels of electron bound in hydrogen atom.|Ground state requires 13.6 eV to ionize; transitions emit characteristic spectral colors.
+
+# ==============================================================================
+# SECTION 9: PARTICLE PHYSICS & STANDARD MODEL
+# ==============================================================================
+PARTICLES|Standard_Model|quarks|Quark_Generations|u,d (1st) | c,s (2nd) | t,b (3rd)|Fermions|Charges: +2/3e, -1/3e|Fundamental fractional-charge building blocks of hadrons.|Protons consist of (uud) quarks; Neutrons consist of (udd) quarks bound by gluons.
+PARTICLES|Standard_Model|leptons|Lepton_Generations|e,nu_e (1st) | mu,nu_mu (2nd) | tau,nu_tau (3rd)|Fermions|Charge: -1e, 0|Fundamental particles that do not experience strong nuclear force.|Electrons form atomic shells; neutrinos interact only via weak nuclear force and gravity.
+PARTICLES|Standard_Model|bosons|Gauge_Force_Carriers|Photon (EM), Gluon (Strong), W/Z (Weak), Graviton (Gravity)|Bosons|Spin 1, Spin 2|Vector particles mediating fundamental interactions of nature.|Electromagnetic force is mediated by photons; strong force binds atomic nucleus via gluons.
+PARTICLES|Higgs|higgs_mechanism|Higgs_Field_Mass_Generation|m = (y * v_higgs) / sqrt(2)|m|y:Yukawa_coupling, v_higgs:246_GeV|Fundamental particles acquire inertial rest mass by dragging through Higgs vacuum field.|Discovered at CERN LHC in 2012; without Higgs mechanism, electrons would move at light speed.
+
+# ==============================================================================
+# SECTION 10: ASTROPHYSICS & COSMOLOGY
+# ==============================================================================
+COSMOLOGY|Kepler|kepler3|Keplers_Third_Law|T^2 = (4*pi^2 / (G*M)) * a^3|T|G:SI, M:kg, a:m|Orbital period squared is proportional to semi-major axis cubed.|Allows astronomers to weigh distant stars and discover supermassive black holes.
+COSMOLOGY|Astrophysics|chandrasekhar|Chandrasekhar_Mass_Limit|M_ch = 1.44 * M_sun|M_ch|M_sun:1.989e30 kg|Maximum mass limit for stable white dwarf supported by electron degeneracy pressure.|Exceeding 1.44 solar masses causes core collapse into neutron star or Type Ia Supernova.
+COSMOLOGY|Expansion|hubbles_law|Hubble_Lemaitre_Expansion_Law|v = H0 * D|v|H0:70 km/s/Mpc, D:Mpc|Recessional velocity of distant galaxies is proportional to their distance.|Proves universe is expanding dynamically from initial hot dense Big Bang state.
+COSMOLOGY|Relativity|friedmann|Friedmann_Cosmological_Equation|H^2 = (8*pi*G*rho / 3) - (k*c^2 / a^2) + (Lambda*c^2 / 3)|H|G:SI, rho:density, Lambda:dark_energy|Governs expansion rate and geometric curvature of homogeneous isotropic universe.|Incorporates Dark Matter (matter density rho) and Dark Energy (Cosmological Constant Lambda).
+COSMOLOGY|Relativity|gravitational_waves|Gravitational_Wave_Luminosity|L_gw = (G / (5 * c^5)) * (d3Q/dt3)^2|L_gw|G:SI, c:SI, Q:quadrupole|Ripples in space-time metric produced by accelerating massive binary black hole mergers.|Directly detected by LIGO and Virgo observatories from merging black holes billions of light years away.
+COSMOLOGY|Cosmology|dark_matter|Dark_Matter_Galactic_Rotation|v_rot = sqrt(G * M_enclosed / r) = const|v_rot|G:SI, M:kg, r:m|Flat galactic rotation curves reveal invisible non-baryonic mass halo.|Vera Rubin discovered stars at galaxy edges orbit too fast, proving 85% of cosmic matter is Dark Matter.
+COSMOLOGY|Cosmology|cmb_radiation|Cosmic_Microwave_Background|T_cmb = 2.7255 K|T_cmb|K|Thermal relic blackbody radiation left over from the Big Bang decoupling epoch.|Penzias and Wilson detected this uniform cosmic radio hiss, proving the Big Bang origin of the cosmos.
+
+# ==============================================================================
+# SECTION 11: SOLID STATE, QUANTUM ENTANGLEMENT & MODERN PHENOMENA
+# ==============================================================================
+QUANTUM|Entanglement|bells_theorem|Quantum_Entanglement_Bell_Inequality|S_bell <= 2 (Classical) vs 2*sqrt(2) (Quantum)|S_bell|Correlation|Non-local quantum correlations between entangled particle pairs violating local realism.|Measuring one entangled spin instantly determines the other across any distance (Einstein spooky action).
+QUANTUM|Optics|rayleigh_scattering|Rayleigh_Scattering_Sky_Blue|I_scatter = I0 * (1 / lambda^4)|I_scatter|lambda:m, I0:W/m^2|Scattering intensity of light off air molecules is inversely proportional to 4th power of wavelength.|Short blue wavelengths scatter 10x more strongly than red, making the daytime sky appear blue!
+QUANTUM|Lasers|stimulated_emission|Einstein_Stimulated_Emission_Laser|dN/dt = B21 * rho_nu * N2|rate|B21:Einstein_coeff, rho_nu:radiation|Incident photon triggers excited atom to emit an identical twin photon with exact same phase and wavelength.|Forms the operational foundation of all lasers (Light Amplification by Stimulated Emission of Radiation).
+QUANTUM|Superconductivity|meissner_effect|Meissner_Ochsenfeld_Effect|B_internal = 0|B|T|Complete expulsion of magnetic field lines from superconductor below critical temperature Tc.|Superconducting pucks levitate frictionlessly above permanent magnets.
+QUANTUM|Superconductivity|bcs_cooper_pairs|BCS_Theory_Cooper_Pairs|E_gap = 3.52 * kB * Tc|E_gap|kB:SI, Tc:K|Electrons pair up via crystal lattice phonon interactions into zero-resistance bosonic Cooper pairs.|Enables zero electrical resistance and lossless power transmission in superconducting materials.
+QUANTUM|Semiconductors|bandgap|Semiconductor_Bandgap_Conduction|n_i = sqrt(Nc * Nv) * exp(-Eg / (2*kB*T))|n_i|Eg:eV, kB:SI, T:K|Thermal excitation of electrons across energy bandgap from valence to conduction band.|Forms the physical foundation of modern microprocessors, Silicon transistors, LEDs, and solar cells.
+QUANTUM|Semiconductors|hall_effect|Hall_Effect_Voltage|Vh = (I * B) / (n * q * d)|Vh|I:A, B:T, n:carrier_density, q:C, d:m|Transverse voltage developed when magnetic field deflects electric current carriers.|Identifies whether charge carriers in a semiconductor are positive holes or negative electrons.
+ATOMIC_NUCLEAR|Nuclear_Reactions|nuclear_fission|Uranium_235_Nuclear_Fission|n + U235 -> Ba144 + Kr89 + 3n + 200_MeV|Energy|MeV|Heavy unstable nucleus splits into lighter fragments releasing immense kinetic energy and prompt neutrons.|Powers commercial nuclear power reactors; 1 kg Uranium produces 24 million kWh of heat.
+ATOMIC_NUCLEAR|Nuclear_Reactions|nuclear_fusion|Deuterium_Tritium_Fusion|H2 + H3 -> He4 + n + 17.6_MeV|Energy|MeV|Light hydrogen isotopes fuse together at millions of degrees into helium, releasing huge energy.|Powers the core of the Sun and experimental thermonuclear fusion reactors (ITER).
+THERMODYNAMICS|Laws|second_law_entropy|Second_Law_of_Thermodynamics|dS_universe >= 0|dS|J/K|Total entropy of an isolated system always increases over time in spontaneous irreversible processes.|Time flows in one forward arrow direction; heat never spontaneously flows from cold to hot.
+THERMODYNAMICS|Laws|third_law_nernst|Third_Law_Absolute_Zero|lim(T->0) S = 0|S|J/K|Entropy of a perfect pure crystal approaches exactly zero as temperature approaches absolute zero (0 Kelvin).|It is physically impossible to reach absolute zero in a finite number of thermodynamic cycles.
+THERMODYNAMICS|Statistical|maxwell_boltzmann|Maxwell_Boltzmann_Speed_Distribution|v_rms = sqrt(3 * kB * T / m)|v_rms|kB:SI, T:K, m:kg|Root mean square thermal speed of gas molecules at absolute temperature T.|At room temperature (300 K), Nitrogen molecules in the air zip around at ~517 meters per second!
+

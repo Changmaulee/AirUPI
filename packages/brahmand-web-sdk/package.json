@@ -1,0 +1,23 @@
+{
+  "name": "@brahmand/sovereign-engine",
+  "version": "1.0.0",
+  "description": "Zero-dependency, multiplier-free, client-side WebAssembly & JavaScript decision engine with 0% hallucination and microsecond latency.",
+  "main": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "wasm",
+    "webassembly",
+    "ai",
+    "edge-ai",
+    "system-one",
+    "decision-engine",
+    "zero-dependency",
+    "sovereign-ai"
+  ],
+  "author": "Project Brahmand Team",
+  "license": "Apache-2.0"
+}
