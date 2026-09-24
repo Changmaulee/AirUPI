@@ -1,4 +1,4 @@
-# Project Brahmaand 🌌 &bull; TimeMeshin ⚡
+# AirUPI ⚡ &bull; Project Brahmaand 🌌
 ### Sovereign, Non-Autoregressive Edge Intelligence via 24-Dimensional Topological Cartridges, Zero-Multiplication Subtractive Meshes, 22 Indian Language OTM Tokenizer, and Stateless 802.11 Layer-2 TimeMesh Wi-Fi Protocol
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22800741.svg)](https://doi.org/10.5281/zenodo.22800741)
@@ -11,8 +11,8 @@
 
 ## 🎮 Live Interactive Web Simulators (100% Client-Side)
 
-Experience the engines running live in your browser at **\$0.00 cloud inference cost**:
-* 📻 **[Live TimeMesh Wi-Fi Sovereign Soundbox Simulator](web_deployment/timemesh_wifi_soundbox_simulator.html)** (Blast 802.11 payment packets & hear native Pan-Indic voice output in $<1\text{ ms}$).
+Experience the engines running live in your browser at **$0.00 cloud inference cost**:
+* 📻 **[Live TimeMesh Wi-Fi Sovereign Soundbox Simulator](web_deployment/timemesh_wifi_soundbox_simulator.html)** (Blast 802.11 payment packets & hear native Pan-Indic voice output in `< 1 ms`).
 * ⚡ **[16-Agent Sovereign Micro-AI Studio](web_deployment/brahmand_pico_16agent_studio.html)** (Live Web REPL and Raspberry Pi Pico RP2040 agent mesh).
 * 📊 **[100% Client-Side WebAssembly HUD](web_deployment/index.html)** (Live token fertility benchmarks and local CPU latency telemetry).
 
@@ -20,7 +20,7 @@ Experience the engines running live in your browser at **\$0.00 cloud inference 
 
 ## 📖 Architectural Overview
 
-**Project Brahmaand** is a sovereign, offline-first neuro-symbolic intelligence architecture designed to run on ultra-low-power edge silicon (such as the **Raspberry Pi Pico RP2040 / Cortex-M0+**, \$1 ESP32 chips, and embedded microcontrollers $<50\text{ mW}$) at **\$0.00 cloud inference cost**.
+**AirUPI** (powered by Project Brahmaand & TimeMeshin) is a sovereign, offline-first neuro-symbolic intelligence architecture designed to run on ultra-low-power edge silicon (such as the **Raspberry Pi Pico RP2040 / Cortex-M0+**, $1 ESP32 chips, and embedded microcontrollers under 50 mW power) at **$0.00 cloud inference cost**.
 
 ```
                                ┌──────────────────────────────────────────────┐
