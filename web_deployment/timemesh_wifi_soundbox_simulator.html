@@ -163,45 +163,282 @@ Waiting for over-the-air TimeMesh packets...</div>
   </footer>
 
   <script>
-    // Authentic Dravidian & Pan-Indic Phonetic Cadence Dictionary
-    const INDIC_SPEECH_DATA = {
+    // =========================================================================
+    // 🌌 PAN-INDIC DYNAMIC NUMERAL-TO-WORDS ALGORITHMIC ENGINE (ANY AMOUNT)
+    // =========================================================================
+    const PanIndicNumerals = {
+      // 1. TAMIL NUMERAL CONVERTER (தமிழ்)
+      ta: {
+        units: ["", "ஒன்று", "இரண்டு", "மூன்று", "நான்கு", "ஐந்து", "ஆறு", "ஏழு", "எட்டு", "ஒன்பது", "பத்து", 
+                "பதினொன்று", "பன்னிரண்டு", "பதின்மூன்று", "பதினான்கு", "பதினைந்து", "பதினாறு", "பதினேழு", "பதினெட்டு", "பத்தொன்பது"],
+        unitsPhonetic: ["", "Ondru", "Irandu", "Moondru", "Naangu", "Aindhu", "Aaru", "Ezhu", "Ettu", "Onbadhu", "Patthu",
+                        "Padhinondru", "Pannirandu", "Padhinmoondru", "Padhinaangu", "Padhinaindhu", "Padhinaaru", "Padhinezhu", "Padhinettu", "Patthonbadhu"],
+        tens: ["", "", "இருபது", "முப்பது", "நாற்பது", "ஐம்பது", "அறுபது", "எழுபது", "எண்பது", "தொண்ணூறு"],
+        tensPhonetic: ["", "", "Iru-badhu", "Mup-padhu", "Naar-padhu", "Aym-badhu", "Aru-badhu", "Ezhu-badhu", "En-badhu", "Thon-nooru"],
+        hundreds: ["", "நூற்று", "இருநூற்று", "முந்நூற்று", "annooru", "ஐந்நூற்று", "அறுநூற்று", "எழுநூற்று", "எண்ணூற்று", "தொள்ளாயிரத்து"],
+        hundredsPhonetic: ["", "Noottru", "Iru-noottru", "Mun-noottru", "Naa-noottru", "Ayn-noottru", "Aru-noottru", "Ezhu-noottru", "En-noottru", "Thol-laayiratthu"],
+        expand(n) {
+          if (n === 0) return { native: "பூஜ்ஜியம்", phonetic: "Poojjiyam" };
+          if (n === 100) return { native: "நூறு", phonetic: "Nooru" };
+          if (n === 500) return { native: "ஐந்நூறு", phonetic: "Ayn-nooru" };
+          if (n === 1000) return { native: "ஆயிரம்", phonetic: "Aayiram" };
+          
+          let parts = [], partsPh = [];
+          if (n >= 1000) {
+            let th = Math.floor(n / 1000);
+            n %= 1000;
+            let thWords = this.expand(th);
+            parts.push(th === 1 ? "ஆயிரத்து" : thWords.native + " ஆயிரம்");
+            partsPh.push(th === 1 ? "Aayiratthu" : thWords.phonetic + " Aayiram");
+          }
+          if (n >= 100) {
+            let h = Math.floor(n / 100);
+            n %= 100;
+            if (n === 0) {
+              let hExact = ["", "நூறு", "இருநூறு", "முந்நூறு", "நானூறு", "ஐந்நூறு", "அறுநூறு", "எழுநூறு", "எண்ணூறு", "தொள்ளாயிரம்"][h];
+              let hExPh = ["", "Nooru", "Iru-nooru", "Mun-nooru", "Naa-nooru", "Ayn-nooru", "Aru-nooru", "Ezhu-nooru", "En-nooru", "Thol-laayiram"][h];
+              parts.push(hExact);
+              partsPh.push(hExPh);
+            } else {
+              parts.push(this.hundreds[h] || (h + " நூற்று"));
+              partsPh.push(this.hundredsPhonetic[h] || (h + " Noottru"));
+            }
+          }
+          if (n > 0) {
+            if (n < 20) {
+              parts.push(this.units[n]);
+              partsPh.push(this.unitsPhonetic[n]);
+            } else {
+              let t = Math.floor(n / 10);
+              let u = n % 10;
+              parts.push(this.tens[t] + (u > 0 ? " " + this.units[u] : ""));
+              partsPh.push(this.tensPhonetic[t] + (u > 0 ? " " + this.unitsPhonetic[u] : ""));
+            }
+          }
+          return { native: parts.join(" "), phonetic: partsPh.join(" ") };
+        }
+      },
+
+      // 2. KANNADA NUMERAL CONVERTER (ಕನ್ನಡ)
+      kn: {
+        units: ["", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು", "ಎಂಟು", "ಒಂಬತ್ತು", "ಹತ್ತು", 
+                "ಹನ್ನೊಂದು", "ಹನ್ನೆರಡು", "ಹದಿಮೂರು", "ಹದಿನಾಲ್ಕು", "ಹದಿನೈದು", "ಹದಿನಾರು", "ಹದಿನೇಳು", "ಹದಿನೆಂಟು", "ಹತ್ತೊಂಬತ್ತು"],
+        unitsPhonetic: ["", "Ondhu", "Eradu", "Mooru", "Naalku", "Aydu", "Aaru", "Eelu", "Entu", "Ombhatthu", "Hatthu",
+                        "Hannondu", "Hanneradu", "Hadimooru", "Hadinaalku", "Hadhinaydu", "Hadinaaru", "Hadhineelu", "Hadinetthu", "Hatthonbhatthu"],
+        tens: ["", "", "ಇಪ್ಪತ್ತು", "ಮೂವತ್ತು", "ನಲವತ್ತು", "ಐವತ್ತು", "ಅರವತ್ತು", "ಎಪ್ಪತ್ತು", "ಎಂಬತ್ತು", "ತೊಂಬತ್ತು"],
+        tensPhonetic: ["", "", "Ippatthu", "Moovatthu", "Nalavatthu", "Ai-vatthu", "Aravatthu", "Eppatthu", "Embhatthu", "Thombhatthu"],
+        expand(n) {
+          if (n === 0) return { native: "ಸೊನ್ನೆ", phonetic: "Sonne" };
+          if (n === 100) return { native: "ನೂರು", phonetic: "Nooru" };
+          if (n === 500) return { native: "ಐದು ನೂರು", phonetic: "Aydu Nooru" };
+          if (n === 1000) return { native: "ಒಂದು ಸಾವಿರ", phonetic: "Ondhu Saavira" };
+          
+          let parts = [], partsPh = [];
+          if (n >= 1000) {
+            let th = Math.floor(n / 1000);
+            n %= 1000;
+            let thWords = this.expand(th);
+            parts.push(thWords.native + " ಸಾವಿರ");
+            partsPh.push(thWords.phonetic + " Saavira");
+          }
+          if (n >= 100) {
+            let h = Math.floor(n / 100);
+            n %= 100;
+            if (n === 0) {
+              parts.push(h === 1 ? "ನೂರು" : this.units[h] + " ನೂರು");
+              partsPh.push(h === 1 ? "Nooru" : this.unitsPhonetic[h] + " Nooru");
+            } else {
+              parts.push(h === 1 ? "ನೂರ" : this.units[h] + " ನೂರ");
+              partsPh.push(h === 1 ? "Noora" : this.unitsPhonetic[h] + " Noora");
+            }
+          }
+          if (n > 0) {
+            if (n < 20) {
+              parts.push(this.units[n]);
+              partsPh.push(this.unitsPhonetic[n]);
+            } else {
+              let t = Math.floor(n / 10);
+              let u = n % 10;
+              parts.push(this.tens[t] + (u > 0 ? " " + this.units[u] : ""));
+              partsPh.push(this.tensPhonetic[t] + (u > 0 ? " " + this.unitsPhonetic[u] : ""));
+            }
+          }
+          return { native: parts.join(" "), phonetic: partsPh.join(" ") };
+        }
+      },
+
+      // 3. TELUGU NUMERAL CONVERTER (తెలుగు)
+      te: {
+        units: ["", "ఒకటి", "రెండు", "మూడు", "నాలుగు", "ఐదు", "ఆరు", "ఏడు", "ఎనిమిది", "తొమ్మిది", "పది",
+                "పదకొండు", "పన్నెండు", "పదమూడు", "పద్నాలుగు", "పదిహేను", "పదహారు", "పదిహేడు", "పద్దెనిమిది", "పంతొమ్మిది"],
+        unitsPhonetic: ["", "Okati", "Rendu", "Moodu", "Naalugu", "Aydu", "Aaru", "Eedu", "Enimidi", "Tommidi", "Padhi",
+                        "Padhakondu", "Pannendu", "Padhamoodu", "Padhnaalugu", "Padhihenu", "Padhahaaru", "Padhiheedu", "Paddhenimidi", "Panthommidi"],
+        tens: ["", "", "ఇరవై", "ముప్పై", "నలభై", "యాభై", "అరవై", "డెబ్బై", "ఎనభై", "తొంభై"],
+        tensPhonetic: ["", "", "Iravai", "Muppai", "Nalabhy", "Yaa-bhay", "Aravai", "Debbai", "Enabhai", "Thombhai"],
+        expand(n) {
+          if (n === 0) return { native: "సున్నా", phonetic: "Sunna" };
+          if (n === 100) return { native: "నూరు", phonetic: "Nooru" };
+          if (n === 500) return { native: "ఐదు వందలు", phonetic: "Aydu Vandhalu" };
+          if (n === 1000) return { native: "వెయ్యి", phonetic: "Veyyi" };
+
+          let parts = [], partsPh = [];
+          if (n >= 1000) {
+            let th = Math.floor(n / 1000);
+            n %= 1000;
+            let thWords = this.expand(th);
+            parts.push(th === 1 ? "వెయ్యి" : thWords.native + " వేలు");
+            partsPh.push(th === 1 ? "Veyyi" : thWords.phonetic + " Veelu");
+          }
+          if (n >= 100) {
+            let h = Math.floor(n / 100);
+            n %= 100;
+            parts.push(h === 1 ? "నూరు" : this.units[h] + " వందల");
+            partsPh.push(h === 1 ? "Nooru" : this.unitsPhonetic[h] + " Vandhala");
+          }
+          if (n > 0) {
+            if (n < 20) {
+              parts.push(this.units[n]);
+              partsPh.push(this.unitsPhonetic[n]);
+            } else {
+              let t = Math.floor(n / 10);
+              let u = n % 10;
+              parts.push(this.tens[t] + (u > 0 ? " " + this.units[u] : ""));
+              partsPh.push(this.tensPhonetic[t] + (u > 0 ? " " + this.unitsPhonetic[u] : ""));
+            }
+          }
+          return { native: parts.join(" "), phonetic: partsPh.join(" ") };
+        }
+      },
+
+      // 4. HINDI NUMERAL CONVERTER (हिन्दी)
+      hi: {
+        units: ["", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात", "आठ", "नौ", "दस",
+                "ग्यारह", "बारह", "तेरह", "चौदह", "पंद्रह", "सोलह", "सत्रह", "अठारह", "उन्नीस"],
+        unitsPhonetic: ["", "Ek", "Do", "Teen", "Chaar", "Paanch", "Chheh", "Saat", "Aath", "Nau", "Das",
+                        "Gyaarah", "Baarah", "Terah", "Chaudah", "Pandrah", "Solah", "Satrah", "Athaarah", "Unnees"],
+        tens: ["", "", "बीस", "तीस", "चालीस", "पचास", "साठ", "सत्तर", "अस्सी", "नब्बे"],
+        tensPhonetic: ["", "", "Bees", "Tees", "Chaalees", "Pachaas", "Saath", "Sattar", "Assee", "Nabbee"],
+        expand(n) {
+          if (n === 0) return { native: "शून्य", phonetic: "Shoonya" };
+          if (n === 150) return { native: "एक सौ पचास", phonetic: "Ek sau pachaas" };
+          if (n === 500) return { native: "पाँच सौ", phonetic: "Paanch sau" };
+          if (n === 1000) return { native: "एक हज़ार", phonetic: "Ek hazaar" };
+          
+          let parts = [], partsPh = [];
+          if (n >= 1000) {
+            let th = Math.floor(n / 1000);
+            n %= 1000;
+            let thWords = this.expand(th);
+            parts.push(thWords.native + " हज़ार");
+            partsPh.push(thWords.phonetic + " Hazaar");
+          }
+          if (n >= 100) {
+            let h = Math.floor(n / 100);
+            n %= 100;
+            parts.push(this.units[h] + " सौ");
+            partsPh.push(this.unitsPhonetic[h] + " Sau");
+          }
+          if (n > 0) {
+            if (n < 20) {
+              parts.push(this.units[n]);
+              partsPh.push(this.unitsPhonetic[n]);
+            } else {
+              let t = Math.floor(n / 10);
+              let u = n % 10;
+              parts.push(this.tens[t] + (u > 0 ? " " + this.units[u] : ""));
+              partsPh.push(this.tensPhonetic[t] + (u > 0 ? " " + this.unitsPhonetic[u] : ""));
+            }
+          }
+          return { native: parts.join(" "), phonetic: partsPh.join(" ") };
+        }
+      },
+
+      // 5. ENGLISH NUMERAL CONVERTER
+      en: {
+        units: ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+                "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"],
+        tens: ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"],
+        expand(n) {
+          if (n === 0) return { native: "Zero", phonetic: "Zero" };
+          let parts = [];
+          if (n >= 1000) {
+            let th = Math.floor(n / 1000);
+            n %= 1000;
+            parts.push(this.expand(th).native + " Thousand");
+          }
+          if (n >= 100) {
+            let h = Math.floor(n / 100);
+            n %= 100;
+            parts.push(this.units[h] + " Hundred");
+          }
+          if (n > 0) {
+            if (n < 20) parts.push(this.units[n]);
+            else {
+              let t = Math.floor(n / 10), u = n % 10;
+              parts.push(this.tens[t] + (u > 0 ? " " + this.units[u] : ""));
+            }
+          }
+          let str = parts.join(" ");
+          return { native: str, phonetic: str };
+        }
+      }
+    };
+
+    // Master Suffixes per Language
+    const LANGUAGE_CONFIG = {
       hi: {
         code: "hi-IN",
-        toWords: (amt) => (amt == 150 ? "एक सौ पचास रुपये प्राप्त हुए" : amt + " रुपये प्राप्त हुए"),
-        phonetic: (amt) => (amt == 150 ? "Ek sau pachaas rupaye praapt hue" : amt + " rupaye praapt hue"),
-        voiceMatch: ["hindi", "hi-in", "hi_in", "hemant", "kalpana", "swara", "madhur"]
+        buildPhrase: (amt) => {
+          let num = PanIndicNumerals.hi.expand(amt);
+          return {
+            native: `${num.native} रुपये प्राप्त हुए`,
+            phonetic: `${num.phonetic} rupaye praapt hue`
+          };
+        },
+        voiceMatch: ["hindi", "hi-in", "hi_in", "hemant", "kalpana", "swara"]
       },
       ta: {
         code: "ta-IN",
-        toWords: (amt) => (amt == 150 ? "நூற்று ஐம்பது ரூபாய் பெற்றுக்கொள்ளப்பட்டது" : amt + " ரூபாய் பெற்றுக்கொள்ளப்பட்டது"),
-        // Tuned for authentic Tamil retail soundbox cadence (retroflex + vowel elongation)
-        phonetic: (amt) => (amt == 150 ? "Noottru aym-badhu roobaai, petruk-kolla-pattadhu" : amt + " roobaai, petruk-kolla-pattadhu"),
+        buildPhrase: (amt) => {
+          let num = PanIndicNumerals.ta.expand(amt);
+          return {
+            native: `${num.native} ரூபாய் பெற்றுக்கொள்ளப்பட்டது`,
+            phonetic: `${num.phonetic} roobaai, petruk-kolla-pattadhu`
+          };
+        },
         voiceMatch: ["tamil", "ta-in", "ta_in", "valluvar", "iniya", "google தமிழ்"]
       },
       te: {
         code: "te-IN",
-        toWords: (amt) => (amt == 150 ? "నూరు యాభై రూపాయలు స్వీకరించబడింది" : amt + " రూపాయలు స్వీకరించబడింది"),
-        // Tuned for authentic Telugu retail cadence
-        phonetic: (amt) => (amt == 150 ? "Nooru yaa-bhay roopaayalu, sweekarincha-badindhi" : amt + " roopaayalu, sweekarincha-badindhi"),
+        buildPhrase: (amt) => {
+          let num = PanIndicNumerals.te.expand(amt);
+          return {
+            native: `${num.native} రూపాయలు స్వీకరించబడింది`,
+            phonetic: `${num.phonetic} roopaayalu, sweekarincha-badindhi`
+          };
+        },
         voiceMatch: ["telugu", "te-in", "te_in", "mohan", "shruti", "google తెలుగు"]
       },
       kn: {
         code: "kn-IN",
-        toWords: (amt) => (amt == 150 ? "ಒಂದು ನೂರ ಐವತ್ತು ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ" : amt + " ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ"),
-        // Tuned for authentic Kannada Namma Bengaluru soundbox cadence
-        phonetic: (amt) => (amt == 150 ? "Ondhu noora ai-vatthu roopaayi, sweekarisa-laagidhe" : amt + " roopaayi, sweekarisa-laagidhe"),
+        buildPhrase: (amt) => {
+          let num = PanIndicNumerals.kn.expand(amt);
+          return {
+            native: `${num.native} ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ`,
+            phonetic: `${num.phonetic} roopaayi, sweekarisa-laagidhe`
+          };
+        },
         voiceMatch: ["kannada", "kn-in", "kn_in", "sapna", "gagan", "google ಕನ್ನಡ"]
-      },
-      bn: {
-        code: "bn-IN",
-        toWords: (amt) => (amt == 150 ? "একশত পঞ্চাশ টাকা গৃহীত হয়েছে" : amt + " টাকা গৃহীত হয়েছে"),
-        phonetic: (amt) => (amt == 150 ? "Ek-shoto ponchaash taaka, grohon kora hoyeche" : amt + " taaka, grohon kora hoyeche"),
-        voiceMatch: ["bengali", "bn-in", "bn_in", "bashkar", "tanisha", "google বাংলা"]
       },
       en: {
         code: "en-IN",
-        toWords: (amt) => ("Rupees " + amt + " received successfully"),
-        phonetic: (amt) => ("Rupees " + amt + " received successfully"),
+        buildPhrase: (amt) => {
+          let num = PanIndicNumerals.en.expand(amt);
+          return {
+            native: `Rupees ${num.native} received successfully`,
+            phonetic: `Rupees ${num.phonetic} received successfully`
+          };
+        },
         voiceMatch: ["en-in", "en_in", "india", "ravi", "heera", "neerja", "prabhat"]
       }
     };
@@ -259,14 +496,15 @@ Waiting for over-the-air TimeMesh packets...</div>
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
 
-      const langData = INDIC_SPEECH_DATA[langKey] || INDIC_SPEECH_DATA['en'];
+      const langConfig = LANGUAGE_CONFIG[langKey] || LANGUAGE_CONFIG['en'];
+      const phraseObj = langConfig.buildPhrase(amt);
       populateVoices();
 
       // Look for a native regional voice matching the language keywords
       let selectedVoice = availableVoices.find(v => {
         const name = (v.name || '').toLowerCase();
         const lang = (v.lang || '').toLowerCase().replace('_', '-');
-        return langData.voiceMatch.some(k => name.includes(k) || lang.includes(k));
+        return langConfig.voiceMatch.some(k => name.includes(k) || lang.includes(k));
       });
 
       // Secondary fallback: Any Indian English / Indian voice
@@ -281,20 +519,20 @@ Waiting for over-the-air TimeMesh packets...</div>
       let textToSpeak = "";
       let targetLangCode = "en-IN";
 
-      if (selectedVoice && langData.voiceMatch.some(k => (selectedVoice.name || '').toLowerCase().includes(k) || (selectedVoice.lang || '').toLowerCase().includes(k)) && langKey !== 'en') {
-        // Native regional voice is installed on OS
-        textToSpeak = langData.toWords(amt);
-        targetLangCode = langData.code;
+      if (selectedVoice && langConfig.voiceMatch.some(k => (selectedVoice.name || '').toLowerCase().includes(k) || (selectedVoice.lang || '').toLowerCase().includes(k)) && langKey !== 'en') {
+        // Native regional voice is installed on OS (speaks native Tamil/Telugu/Kannada script)
+        textToSpeak = phraseObj.native;
+        targetLangCode = langConfig.code;
       } else {
-        // Use authentic Dravidian prosody-tuned phonetic string with South Indian inflection
-        textToSpeak = langData.phonetic(amt);
+        // Fallback to authentic Dravidian prosody-tuned phonetic string (SPEAKS THE EXACT LOCAL WORDS!)
+        textToSpeak = phraseObj.phonetic;
         targetLangCode = (selectedVoice && selectedVoice.lang) ? selectedVoice.lang : "en-IN";
       }
 
       const utterance = new SpeechSynthesisUtterance(textToSpeak);
       utterance.lang = targetLangCode;
       if (selectedVoice) utterance.voice = selectedVoice;
-      utterance.rate = 0.90;  // Slightly paced for authentic bazaar soundbox clarity
+      utterance.rate = 0.88;  // Slightly paced for authentic bazaar soundbox clarity
       utterance.pitch = 1.04; // Natural cadence
       utterance.volume = 1.0;
 
@@ -329,13 +567,14 @@ Waiting for over-the-air TimeMesh packets...</div>
       document.getElementById('lcdStatus').innerText = "SUCCESS: " + tx + " (TOTAL ₹" + totalRevenue + ")";
 
       playBellChime();
-      const langObj = INDIC_SPEECH_DATA[lang] || INDIC_SPEECH_DATA['en'];
-      const nativeSpeechText = langObj.toWords(amt);
+      const langConfig = LANGUAGE_CONFIG[lang] || LANGUAGE_CONFIG['en'];
+      const phraseObj = langConfig.buildPhrase(amt);
       
       log(`⚡ [802.11 PACKET INGESTED]: ${tmPayload.length + 15} Bytes (0.76ms)`);
       log(`   * Sigil: >P-Frame (Atomic Forward Delta)`);
       log(`   * On-Chip Causal Commit: TX=${tx} | Amount=₹${amt} | Lang=${lang}`);
-      log(`   * 🔊 Native Akshara: "${nativeSpeechText}"`);
+      log(`   * 🔊 Native Akshara: "${phraseObj.native}"`);
+      log(`   * 🗣️ Phonetic Spoken: "${phraseObj.phonetic}"`);
 
       setTimeout(() => { speakPhrase(lang, amt); }, 300);
       document.getElementById('payTx').value = "TX_" + Math.floor(Math.random()*9000+1000);
