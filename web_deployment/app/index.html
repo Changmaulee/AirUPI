@@ -134,7 +134,7 @@
       color: #38bdf8;
     }
 
-    /* Merchant QR Stand */
+    /* Merchant Dynamic Abacus QR Stand */
     .qr-stand-box {
       background: #020617;
       border: 1px solid #334155;
@@ -146,6 +146,22 @@
       align-items: center;
       gap: 10px;
     }
+
+    .abacus-bead-hud {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #38bdf8;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     .qr-canvas-container {
       background: #ffffff;
       padding: 12px;
@@ -161,6 +177,37 @@
       width: 170px;
       height: 170px;
       display: block;
+    }
+
+    .abacus-amount-selector {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 4px;
+    }
+    .abacus-chips {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .abacus-chip {
+      background: #020617;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 8px 4px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+    }
+    .abacus-chip.active {
+      background: #1e293b;
+      color: var(--green);
+      border-color: var(--green);
     }
 
     .qr-type-selector {
@@ -411,7 +458,7 @@
   <div class="app-container">
     <header>
       <div class="brand-title">🧮 AirUPI Sovereign Soundbox</div>
-      <div class="brand-subtitle">Acoustic Abacus Engine &bull; Zero-Cloud Subnet Mesh</div>
+      <div class="brand-subtitle">Dynamic Abacus QR Engine &bull; Zero-Cloud Subnet Mesh</div>
     </header>
 
     <!-- ROLE SWITCHER TABS -->
@@ -432,14 +479,36 @@
         <span class="net-badge" id="merchantIpBadge">Wi-Fi: Detecting...</span>
       </div>
 
-      <!-- DYNAMIC QR STAND -->
+      <!-- DYNAMIC ABACUS QR STAND -->
       <div class="qr-stand-box">
         <div style="display: flex; justify-content: space-between; width: 100%; font-size: 11px;">
           <span style="color: #fff; font-weight: 700;" id="displayMerchantName">🏪 Chandramouli</span>
-          <span style="color: var(--green); font-weight: 700;">✓ Live Stand</span>
+          <span style="color: var(--green); font-weight: 700;">✓ Live Abacus Stand</span>
+        </div>
+
+        <div class="abacus-bead-hud" id="abacusBeadHud">
+          <span>🧮 BEADS: H(5) + E(1)</span>
+          <span style="color: var(--green); font-weight: 800;">LOCKED: ₹6.00</span>
         </div>
 
         <div class="qr-canvas-container" id="qrContainer"></div>
+
+        <!-- ABACUS AMOUNT CONTROLLER -->
+        <div class="abacus-amount-selector">
+          <div style="font-size: 10px; color: var(--text-dim); font-weight: 700; margin-bottom: 4px;">
+            SET ABACUS BILL LOCK AMOUNT (PRE-FILLS CUSTOMER QR):
+          </div>
+          <div class="abacus-chips">
+            <div class="abacus-chip" id="abChip_0" onclick="setAbacusLockAmount(0)">Open (₹0)</div>
+            <div class="abacus-chip" id="abChip_1" onclick="setAbacusLockAmount(1)">₹1</div>
+            <div class="abacus-chip active" id="abChip_6" onclick="setAbacusLockAmount(6)">₹6</div>
+            <div class="abacus-chip" id="abChip_10" onclick="setAbacusLockAmount(10)">₹10</div>
+            <div class="abacus-chip" id="abChip_20" onclick="setAbacusLockAmount(20)">₹20</div>
+            <div class="abacus-chip" id="abChip_50" onclick="setAbacusLockAmount(50)">₹50</div>
+            <div class="abacus-chip" id="abChip_100" onclick="setAbacusLockAmount(100)">₹100</div>
+            <div class="abacus-chip" id="abChip_250" onclick="setAbacusLockAmount(250)">₹250</div>
+          </div>
+        </div>
 
         <div class="qr-type-selector">
           <div class="qr-type-btn active" id="qrTypeUpi" onclick="setQrType('upi')">
@@ -513,10 +582,10 @@ Listening for Acoustic Abacus Chords & UDP Subnet Broadcasts.</div>
 
       <div class="field-group">
         <label>PAYMENT AMOUNT (&#8377; EXACT INR)</label>
-        <input type="number" id="custAmt" value="1" placeholder="Enter any amount (e.g. 1, 6, 250)">
+        <input type="number" id="custAmt" value="6" placeholder="Enter any amount (e.g. 1, 6, 250)">
         <div class="quick-chips">
-          <div class="chip selected" id="chip_1" onclick="selectChipAmt(1)">&#8377;1</div>
-          <div class="chip" id="chip_6" onclick="selectChipAmt(6)">&#8377;6</div>
+          <div class="chip" id="chip_1" onclick="selectChipAmt(1)">&#8377;1</div>
+          <div class="chip selected" id="chip_6" onclick="selectChipAmt(6)">&#8377;6</div>
           <div class="chip" id="chip_50" onclick="selectChipAmt(50)">&#8377;50</div>
           <div class="chip" id="chip_100" onclick="selectChipAmt(100)">&#8377;100</div>
           <div class="chip" id="chip_250" onclick="selectChipAmt(250)">&#8377;250</div>
@@ -556,7 +625,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     </div>
 
     <footer>
-      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v3.0 (Abacus Edition)
+      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v3.1 (Abacus QR Edition)
     </footer>
   </div>
 
@@ -592,6 +661,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     let merchantName = "Chandramouli";
     let merchantLocalIp = "127.0.0.1";
     let scannedMerchantIp = "";
+    let merchantLockedAmount = 6; // Default to ₹6 Abacus lock
     let recentProcessedTxs = new Set();
 
     // Pan-Indic Number Expander
@@ -650,6 +720,24 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       }
     }
 
+    function setAbacusLockAmount(amt) {
+      merchantLockedAmount = amt;
+      document.querySelectorAll('.abacus-chip').forEach(c => c.classList.remove('active'));
+      const chip = document.getElementById('abChip_' + amt);
+      if (chip) chip.classList.add('active');
+
+      const hud = document.getElementById('abacusBeadHud');
+      if (amt === 0) {
+        hud.innerHTML = `<span>🧮 ABACUS STAND: OPEN</span><span style="color: #38bdf8; font-weight: 800;">ANY AMOUNT</span>`;
+      } else {
+        const digit = amt % 10;
+        const h = (digit >= 5) ? 5 : 0;
+        const e = digit % 5;
+        hud.innerHTML = `<span>🧮 BEADS: H(${h}) + E(${e})</span><span style="color: var(--green); font-weight: 800;">LOCKED: ₹${amt}.00</span>`;
+      }
+      renderMerchantQr();
+    }
+
     function selectChipAmt(val) {
       document.getElementById('custAmt').value = val;
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
@@ -685,36 +773,32 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     }
 
     // ==========================================
-    // 🧮 BIQUINARY ACOUSTIC ABACUS ENGINE (v3.0)
+    // 🧮 BIQUINARY ACOUSTIC ABACUS ENGINE (v3.1)
     // ==========================================
-    // Upper Deck (Heaven: 0 or +5) | Lower Deck (Earth: 0, 1, 2, 3, 4)
-    // Audible Beam at 1500 Hz
     const ABACUS_HEAVEN_AUDIBLE = { 0: 1050, 5: 1350 };
     const ABACUS_EARTH_AUDIBLE  = { 0: 1650, 1: 1800, 2: 1950, 3: 2100, 4: 2250 };
 
-    // Silent Ultrasonic Beam at 18700 Hz
     const ABACUS_HEAVEN_SILENT = { 0: 18200, 5: 18500 };
     const ABACUS_EARTH_SILENT  = { 0: 18900, 1: 19100, 2: 19300, 3: 19500, 4: 19700 };
 
-    // Standard preset amounts to direct single-chord mapping
     const PRESET_CHORD_MAP = {
-      1:    { h: 0, e: 1 }, // 0 + 1 = 1
-      2:    { h: 0, e: 2 }, // 0 + 2 = 2
-      5:    { h: 5, e: 0 }, // 5 + 0 = 5
-      6:    { h: 5, e: 1 }, // 5 + 1 = 6
-      7:    { h: 5, e: 2 }, // 5 + 2 = 7
-      8:    { h: 5, e: 3 }, // 5 + 3 = 8
-      9:    { h: 5, e: 4 }, // 5 + 4 = 9
-      10:   { h: 0, e: 1, mult: 10 },
-      50:   { h: 5, e: 0, mult: 10 },
-      100:  { h: 0, e: 1, mult: 100 },
-      250:  { h: 0, e: 2, mult: 100 }, // 200 base + 50
-      500:  { h: 5, e: 0, mult: 100 },
-      1000: { h: 0, e: 1, mult: 1000 },
-      2000: { h: 0, e: 2, mult: 1000 }
+      1:    { h: 0, e: 1 },
+      2:    { h: 0, e: 2 },
+      5:    { h: 5, e: 0 },
+      6:    { h: 5, e: 1 },
+      7:    { h: 5, e: 2 },
+      8:    { h: 5, e: 3 },
+      9:    { h: 5, e: 4 },
+      10:   { h: 0, e: 1 },
+      20:   { h: 0, e: 2 },
+      50:   { h: 5, e: 0 },
+      100:  { h: 0, e: 1 },
+      250:  { h: 0, e: 2 },
+      500:  { h: 5, e: 0 },
+      1000: { h: 0, e: 1 },
+      2000: { h: 0, e: 2 }
     };
 
-    // 1. TRANSMITTER: Strikes the Heaven & Earth Abacus Beads Simultaneously
     function emitAbacusChord(amount) {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -731,7 +815,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
           hVal = PRESET_CHORD_MAP[amount].h;
           eVal = PRESET_CHORD_MAP[amount].e;
         } else {
-          // Direct Biquinary digit resolution for arbitrary amount
           const digit = amount % 10;
           hVal = (digit >= 5) ? 5 : 0;
           eVal = digit % 5;
@@ -739,8 +822,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
 
         const fHeaven = heavenTable[hVal];
         const fEarth  = earthTable[eVal];
-
-        const duration = 0.35; // 350ms sustained harmonic chord
+        const duration = 0.35;
         const now = ctx.currentTime;
 
         const oscH = ctx.createOscillator();
@@ -753,7 +835,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         oscH.frequency.setValueAtTime(fHeaven, now);
         oscE.frequency.setValueAtTime(fEarth, now);
 
-        // Smooth envelope to prevent audio clicking
         gainH.gain.setValueAtTime(0.01, now);
         gainH.gain.linearRampToValueAtTime(0.5, now + 0.03);
         gainH.gain.setValueAtTime(0.5, now + duration - 0.03);
@@ -779,7 +860,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       }
     }
 
-    // 2. RECEIVER: Dual-Deck Abacus Beam Demodulator
     let micStream = null;
     let analyser = null;
     let isListening = false;
@@ -860,7 +940,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         const sampleRate = audioCtx.sampleRate;
         const binWidth = sampleRate / analyser.fftSize;
 
-        // Dynamic Noise Floor
         const minBin = Math.floor(900 / binWidth);
         const maxBin = Math.floor(2500 / binWidth);
         let total = 0, count = 0;
@@ -871,7 +950,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
         const noiseFloor = count > 0 ? (total / count) : 10;
         const threshold = Math.max(noiseFloor * 1.8, 38);
 
-        // 1. Identify Heaven Deck Bead (0 or 5)
         let detectedHeaven = null;
         let maxHeavenVal = 0;
         for (let h in ABACUS_HEAVEN_AUDIBLE) {
@@ -882,7 +960,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
           }
         }
 
-        // 2. Identify Earth Deck Bead (0..4)
         let detectedEarth = null;
         let maxEarthVal = 0;
         for (let e in ABACUS_EARTH_AUDIBLE) {
@@ -893,14 +970,13 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
           }
         }
 
-        // 3. Resolve Abacus Biquinary Formula: Digit = Heaven + Earth
         if (detectedHeaven !== null && detectedEarth !== null) {
           let resolvedAmt = detectedHeaven + detectedEarth;
-          if (resolvedAmt === 0) resolvedAmt = 50; // default zero representation
+          if (resolvedAmt === 0) resolvedAmt = 50;
 
           if (resolvedAmt === lastCandidateAmt) {
             abacusDebounceCount++;
-            if (abacusDebounceCount >= 2) { // Locked over 2 consecutive frames (~45ms)
+            if (abacusDebounceCount >= 2) {
               abacusDebounceCount = 0;
               lastCandidateAmt = null;
 
@@ -928,7 +1004,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       }
     }
 
-    // Ingest Payment on Merchant Soundbox (Deduplicated & Echo-Isolated)
     window.handleIncomingPayment = function(data) {
       if (currentRole !== 'merchant') return;
 
@@ -945,7 +1020,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       logMerchant(`⚡ [PAYMENT RECEIVED]: +Rs.${data.amount} via [${data.source || 'Abacus/Mesh'}]`);
       logMerchant(`   * Loudspeaker: "${phrase}"`);
 
-      // AUTO ECHO-MUTE
       isMutedForSpeech = true;
       playChime();
 
@@ -964,7 +1038,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       }, 350);
     };
 
-    // 3. Beam Payment from Customer Phone (DUAL-CHANNEL: Wi-Fi UDP Mesh + Abacus Sound Wave)
     function beamCustomerPayment() {
       const amt = parseInt(document.getElementById('custAmt').value) || 1;
       const lang = document.getElementById('custLang').value || 'hi';
@@ -976,7 +1049,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       // Channel 1: Over-the-Air Abacus Sound Chord
       emitAbacusChord(amt);
 
-      // Channel 2: Zero-Cloud Subnet UDP Broadcast & Local HTTP
+      // Channel 2: Subnet UDP Broadcast & Local Socket
       if (window.AirUPIAndroid && window.AirUPIAndroid.broadcastSubnetPayment) {
         window.AirUPIAndroid.broadcastSubnetPayment(amt, lang, tx, scannedMerchantIp || "");
       }
@@ -1026,7 +1099,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       } catch (e) {}
     }
 
-    // Dynamic Vector SVG QR Stand Generator (Kazuhiko Arase Vector Engine)
+    // Dynamic Abacus QR Stand Generator (Embedding Amount & Place Values)
     function renderMerchantQr() {
       const container = document.getElementById('qrContainer');
       if (!container) return;
@@ -1034,7 +1107,9 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       refreshDeviceIp();
       let payload = "";
       if (currentQrType === 'upi') {
-        payload = `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=${encodeURIComponent(merchantName)}&cu=INR&ip=${merchantLocalIp}`;
+        let amtParam = (merchantLockedAmount > 0) ? `&am=${merchantLockedAmount.toFixed(2)}` : "";
+        let abacusParam = (merchantLockedAmount > 0) ? `&tr=ABA_${merchantLockedAmount}_${Date.now()%10000}` : "";
+        payload = `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=${encodeURIComponent(merchantName)}${amtParam}&cu=INR&ip=${merchantLocalIp}${abacusParam}`;
       } else {
         payload = window.location.href.split('?')[0];
       }
@@ -1062,7 +1137,6 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       window.open(window.location.href, '_blank');
     }
 
-    // Real Camera Barcode Scanner
     let cameraStream = null;
     let isCameraRunning = false;
 
@@ -1155,17 +1229,22 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       logCustomer("📷 [QR SCANNED]: " + raw.substring(0, 45) + "...");
       let extractedVpa = "";
       let extractedIp = "";
+      let extractedAmt = null;
 
       if (raw.startsWith("upi://pay")) {
         try {
           const url = new URL(raw);
           extractedVpa = url.searchParams.get("pa") || "";
           extractedIp = url.searchParams.get("ip") || "";
+          const am = url.searchParams.get("am");
+          if (am) extractedAmt = parseFloat(am);
         } catch (_) {
           const matchVpa = raw.match(/pa=([^&]+)/);
           if (matchVpa) extractedVpa = decodeURIComponent(matchVpa[1]);
           const matchIp = raw.match(/ip=([^&]+)/);
           if (matchIp) extractedIp = decodeURIComponent(matchIp[1]);
+          const matchAm = raw.match(/am=([^&]+)/);
+          if (matchAm) extractedAmt = parseFloat(matchAm[1]);
         }
       } else {
         const match = raw.match(/([a-zA-Z0-9.\-_]+@[a-zA-Z0-9]+)/);
@@ -1174,8 +1253,18 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
 
       if (extractedVpa) {
         document.getElementById('custMerchant').value = extractedVpa;
-        document.getElementById('custLockStatus').innerText = "[TARGET LOCKED: " + extractedVpa + (extractedIp ? (" | IP: " + extractedIp) : "") + "]";
         scannedMerchantIp = extractedIp;
+        
+        let lockMsg = "[TARGET LOCKED: " + extractedVpa;
+        if (extractedAmt && extractedAmt > 0) {
+          document.getElementById('custAmt').value = extractedAmt;
+          selectChipAmt(extractedAmt);
+          lockMsg += " | 🧮 PRE-FILLED BILL: ₹" + extractedAmt;
+        }
+        if (extractedIp) lockMsg += " | IP: " + extractedIp;
+        lockMsg += "]";
+        
+        document.getElementById('custLockStatus').innerText = lockMsg;
         playChime();
       } else {
         alert("Scanned Code: " + raw);
@@ -1200,7 +1289,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
 
     window.addEventListener('DOMContentLoaded', () => {
       refreshDeviceIp();
-      renderMerchantQr();
+      setAbacusLockAmount(6); // Default to active ₹6 Abacus stand
     });
   </script>
 </body>
