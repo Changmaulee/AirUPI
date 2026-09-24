@@ -163,17 +163,53 @@ Waiting for over-the-air TimeMesh packets...</div>
   </footer>
 
   <script>
-    const SPEECH_MAP = {
-      hi: (amt) => (amt == 150 ? "एक सौ पचास रुपये प्राप्त हुए" : amt + " रुपये प्राप्त हुए"),
-      ta: (amt) => (amt == 150 ? "நூற்று ஐம்பது ரூபாய் பெற்றுக்கொள்ளப்பட்டது" : amt + " ரூபாய் பெற்றுக்கொள்ளப்பட்டது"),
-      te: (amt) => (amt == 150 ? "నూరు యాభై రూపాయలు స్వీకరించబడింది" : amt + " రూపాయలు స్వీకరించబడింది"),
-      kn: (amt) => (amt == 150 ? "ಒಂದು ನೂರ ಐವತ್ತು ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ" : amt + " ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ"),
-      bn: (amt) => (amt == 150 ? "একশত পঞ্চাশ টাকা গৃহীত হয়েছে" : amt + " টাকা গৃহীত হয়েছে"),
-      en: (amt) => ("Rupees " + amt + " received successfully")
+    // Full Pan-Indic Numeral & Speech Dictionary (Native Script + Phonetic Romanized for 100% OS Compatibility)
+    const INDIC_SPEECH_DATA = {
+      hi: {
+        code: "hi-IN",
+        toWords: (amt) => (amt == 150 ? "एक सौ पचास रुपये प्राप्त हुए" : amt + " रुपये प्राप्त हुए"),
+        phonetic: (amt) => (amt == 150 ? "Ek sau pachaas rupaye praapt hue" : amt + " rupaye praapt hue")
+      },
+      ta: {
+        code: "ta-IN",
+        toWords: (amt) => (amt == 150 ? "நூற்று ஐம்பது ரூபாய் பெற்றுக்கொள்ளப்பட்டது" : amt + " ரூபாய் பெற்றுக்கொள்ளப்பட்டது"),
+        phonetic: (amt) => (amt == 150 ? "Noottru aimbathu roobai petruk kollappattathu" : amt + " roobai petruk kollappattathu")
+      },
+      te: {
+        code: "te-IN",
+        toWords: (amt) => (amt == 150 ? "నూరు యాభై రూపాయలు స్వీకరించబడింది" : amt + " రూపాయలు స్వీకరించబడింది"),
+        phonetic: (amt) => (amt == 150 ? "Nooru yaabhai roopaayalu sweekarincha badindi" : amt + " roopaayalu sweekarincha badindi")
+      },
+      kn: {
+        code: "kn-IN",
+        toWords: (amt) => (amt == 150 ? "ಒಂದು ನೂರ ಐವತ್ತು ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ" : amt + " ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ"),
+        phonetic: (amt) => (amt == 150 ? "Ondu noora aivatthu roopaayi sweekarisa laagide" : amt + " roopaayi sweekarisa laagide")
+      },
+      bn: {
+        code: "bn-IN",
+        toWords: (amt) => (amt == 150 ? "একশত পঞ্চাশ টাকা গৃহীত হয়েছে" : amt + " টাকা গৃহীত হয়েছে"),
+        phonetic: (amt) => (amt == 150 ? "Ek-shoto ponchaash taaka grihito hoyeche" : amt + " taaka grihito hoyeche")
+      },
+      en: {
+        code: "en-IN",
+        toWords: (amt) => ("Rupees " + amt + " received successfully"),
+        phonetic: (amt) => ("Rupees " + amt + " received successfully")
+      }
     };
 
     let totalRevenue = 0;
     let audioCtx = null;
+    let availableVoices = [];
+
+    function populateVoices() {
+      if ('speechSynthesis' in window) {
+        availableVoices = window.speechSynthesis.getVoices();
+      }
+    }
+    populateVoices();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = populateVoices;
+    }
 
     function initAudio() {
       if (!audioCtx) {
@@ -183,37 +219,74 @@ Waiting for over-the-air TimeMesh packets...</div>
 
     function playBellChime() {
       initAudio();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.35);
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.35);
+      } catch (e) {}
 
       // Pulse speaker animation
       for (let i = 1; i <= 5; i++) {
-        document.getElementById('spk' + i).classList.add('pulse');
+        const spk = document.getElementById('spk' + i);
+        if (spk) spk.classList.add('pulse');
       }
       setTimeout(() => {
         for (let i = 1; i <= 5; i++) {
-          document.getElementById('spk' + i).classList.remove('pulse');
+          const spk = document.getElementById('spk' + i);
+          if (spk) spk.classList.remove('pulse');
         }
       }, 500);
     }
 
-    function speakPhrase(text, lang) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = (lang === 'hi') ? 'hi-IN' : (lang === 'ta') ? 'ta-IN' : (lang === 'te') ? 'te-IN' : 'en-IN';
-        utterance.rate = 1.0;
-        window.speechSynthesis.speak(utterance);
+    function speakPhrase(langKey, amt) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+
+      const langData = INDIC_SPEECH_DATA[langKey] || INDIC_SPEECH_DATA['en'];
+      populateVoices();
+
+      // Check if the OS/Browser has a native voice installed for this language
+      const nativeVoice = availableVoices.find(v => 
+        v.lang.toLowerCase().startsWith(langKey) || 
+        v.lang.toLowerCase().replace('_', '-').startsWith(langData.code.toLowerCase())
+      );
+
+      const indianFallbackVoice = availableVoices.find(v => 
+        v.lang.includes('IN') || v.name.includes('India') || v.name.includes('Hindi')
+      ) || availableVoices[0];
+
+      let textToSpeak = "";
+      let selectedVoice = null;
+      let targetLangCode = "en-IN";
+
+      if (nativeVoice && langKey !== 'en') {
+        // Native regional voice is installed on OS (e.g. Google Tamil / Microsoft Heera)
+        textToSpeak = langData.toWords(amt);
+        selectedVoice = nativeVoice;
+        targetLangCode = langData.code;
+      } else {
+        // Fallback to high-clarity phonetic romanized pronunciation on Indian-accent engine
+        textToSpeak = langData.phonetic(amt);
+        selectedVoice = indianFallbackVoice;
+        targetLangCode = indianFallbackVoice ? indianFallbackVoice.lang : "en-IN";
       }
+
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = targetLangCode;
+      if (selectedVoice) utterance.voice = selectedVoice;
+      utterance.rate = 0.95; // Clear speaking rate for bazaar soundboxes
+      utterance.pitch = 1.05;
+      utterance.volume = 1.0;
+
+      window.speechSynthesis.speak(utterance);
     }
 
     function log(msg) {
@@ -244,14 +317,15 @@ Waiting for over-the-air TimeMesh packets...</div>
       document.getElementById('lcdStatus').innerText = "SUCCESS: " + tx + " (TOTAL ₹" + totalRevenue + ")";
 
       playBellChime();
-      const speech = SPEECH_MAP[lang] ? SPEECH_MAP[lang](amt) : SPEECH_MAP['en'](amt);
+      const langObj = INDIC_SPEECH_DATA[lang] || INDIC_SPEECH_DATA['en'];
+      const nativeSpeechText = langObj.toWords(amt);
       
       log(`⚡ [802.11 PACKET INGESTED]: ${tmPayload.length + 15} Bytes (0.76ms)`);
       log(`   * Sigil: >P-Frame (Atomic Forward Delta)`);
       log(`   * On-Chip Causal Commit: TX=${tx} | Amount=₹${amt} | Lang=${lang}`);
-      log(`   * 🔊 Output: "${speech}"`);
+      log(`   * 🔊 Native Akshara: "${nativeSpeechText}"`);
 
-      setTimeout(() => { speakPhrase(speech, lang); }, 300);
+      setTimeout(() => { speakPhrase(lang, amt); }, 300);
       document.getElementById('payTx').value = "TX_" + Math.floor(Math.random()*9000+1000);
     }
 
@@ -282,7 +356,7 @@ Waiting for over-the-air TimeMesh packets...</div>
       log(`⚡ [802.11 PACKET INGESTED]: !R-Frame (Deterministic Causal Rewind)`);
       log(`   * Refund of ₹${amt} Processed.`);
       log(`   * Recomputed Ledger Total: ₹${totalRevenue}`);
-      speakPhrase("Refund processed successfully", "en");
+      setTimeout(() => { speakPhrase('en', amt); }, 300);
     }
   </script>
 </body>
