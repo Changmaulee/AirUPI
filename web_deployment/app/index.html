@@ -514,7 +514,7 @@ Zero cellular/internet data required.</div>
       let errorLevel = 'M';
       if (currentQrType === 'html') {
         const rawHtml = getEmbeddedCustomerHtml();
-        payload = "data:text/html;charset=utf-8," + encodeURIComponent(rawHtml);
+        payload = "data:text/html;base64," + btoa(unescape(encodeURIComponent(rawHtml)));
         errorLevel = 'L';
       } else {
         payload = "upi://pay?pa=" + encodeURIComponent(merchantVpa) + "&pn=" + encodeURIComponent(merchantName) + "&cu=INR&tn=AirUPI%20Offline";
