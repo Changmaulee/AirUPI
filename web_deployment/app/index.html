@@ -487,6 +487,10 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
     }
 
     function speakPhrase(phrase, lang) {
+      if (window.AirUPIAndroid && typeof window.AirUPIAndroid.speak === 'function') {
+        window.AirUPIAndroid.speak(phrase, lang);
+        return;
+      }
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(phrase);
