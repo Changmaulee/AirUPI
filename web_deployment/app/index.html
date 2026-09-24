@@ -360,13 +360,13 @@
       </div>
 
       <button class="btn-unlock" id="btnSoundboxActivate" onclick="activatePhoneSoundbox()">
-        🔊 Tap to Activate Phone Soundbox Speaker
+        🔊 Tap to Activate Phone Soundbox Speaker & Mic Sniffer
       </button>
 
       <div class="lcd-screen">
         <div style="font-size: 11px; color: #a7f3d0; font-weight: 700; letter-spacing: 1px;">TOTAL REVENUE RECEIVED</div>
         <div class="lcd-amt" id="merchantTotal">&#8377; 0.00</div>
-        <div class="lcd-status" id="merchantStatus">LISTENING FOR OFFLINE BEACONS...</div>
+        <div class="lcd-status" id="merchantStatus">LISTENING FOR OFFLINE BEACONS & CHIRPS...</div>
         
         <div class="speaker-grille">
           <div class="spk-dot" id="spk1"></div>
@@ -379,7 +379,7 @@
 
       <label>Promiscuous Sniffer Telemetry Log:</label>
       <div class="terminal" id="merchantLog">⚡ Virtual Sovereign Soundbox Daemon Active on Phone.
-Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
+Listening for 45-byte Over-the-Air Sound Chirps & Action Frames • Zero Cloud Calls</div>
     </div>
 
     <!-- 2. CUSTOMER MODE PANEL -->
@@ -403,7 +403,7 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
 
       <div class="field-group">
         <label>PAYMENT AMOUNT (&#8377; INR)</label>
-        <input type="number" id="custAmt" value="250" placeholder="Enter amount">
+        <input type="number" id="custAmt" value="1" placeholder="Enter amount">
         <div class="quick-chips">
           <div class="chip" onclick="setAmt(1)">&#8377;1</div>
           <div class="chip" onclick="setAmt(50)">&#8377;50</div>
@@ -427,10 +427,10 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
       </div>
 
       <button class="btn-main" onclick="beamCustomerPayment()">
-        ⚡ BEAM OFFLINE PAYMENT
+        ⚡ BEAM OFFLINE PAYMENT (SOUND CHIRP + RADIO)
       </button>
 
-      <div class="terminal" id="customerLog">⚡ Radio Payer Transmitter Ready.
+      <div class="terminal" id="customerLog">⚡ Radio & Acoustic Payer Transmitter Ready.
 Zero cellular/internet data required.</div>
     </div>
 
@@ -449,7 +449,7 @@ Zero cellular/internet data required.</div>
     let merchantVpa = "changmaulee@icici";
     let merchantName = "Chandramouli";
 
-    // Cross-tab / Cross-webview radio channel simulation
+    // Cross-tab simulation
     const airupiChannel = new BroadcastChannel('airupi_beam_channel');
 
     // Pan-Indic Number Expander
@@ -500,9 +500,242 @@ Zero cellular/internet data required.</div>
       renderMerchantQr();
     }
 
-    // Ultra-compact embedded Customer UI payload (Base64 data:text/html)
+    // ==========================================
+    // ACOUSTIC SOUND-WAVE FSK MODEM ENGINE
+    // ==========================================
+    const FSK_LEADER = 2100; // Leader Sync Tone (Hz)
+    const FSK_TAIL   = 2450; // Tail Tone (Hz)
+
+    const AMT_FREQS = [
+      { amt: 1, freq: 1100 },
+      { amt: 5, freq: 1180 },
+      { amt: 10, freq: 1260 },
+      { amt: 20, freq: 1340 },
+      { amt: 50, freq: 1420 },
+      { amt: 100, freq: 1500 },
+      { amt: 150, freq: 1580 },
+      { amt: 200, freq: 1660 },
+      { amt: 250, freq: 1740 },
+      { amt: 500, freq: 1820 },
+      { amt: 1000, freq: 1900 },
+      { amt: 2000, freq: 1980 }
+    ];
+
+    const LANG_FREQS = [
+      { lang: 'hi', freq: 1350 },
+      { lang: 'ta', freq: 1470 },
+      { lang: 'te', freq: 1590 },
+      { lang: 'kn', freq: 1710 },
+      { lang: 'bn', freq: 1830 },
+      { lang: 'mr', freq: 1950 },
+      { lang: 'gu', freq: 2070 },
+      { lang: 'en', freq: 2200 }
+    ];
+
+    function getAmountFreq(amt) {
+      let closest = AMT_FREQS[0];
+      let minDiff = Math.abs(amt - closest.amt);
+      for (let item of AMT_FREQS) {
+        let diff = Math.abs(amt - item.amt);
+        if (diff < minDiff) { minDiff = diff; closest = item; }
+      }
+      return closest.freq;
+    }
+
+    function getAmountFromFreq(freq) {
+      let closest = AMT_FREQS[0];
+      let minDiff = Math.abs(freq - closest.freq);
+      for (let item of AMT_FREQS) {
+        let diff = Math.abs(freq - item.freq);
+        if (diff < minDiff) { minDiff = diff; closest = item; }
+      }
+      return closest.amt;
+    }
+
+    function getLangFreq(lang) {
+      const match = LANG_FREQS.find(l => l.lang === lang);
+      return match ? match.freq : 1350;
+    }
+
+    function getLangFromFreq(freq) {
+      let closest = LANG_FREQS[0];
+      let minDiff = Math.abs(freq - closest.freq);
+      for (let item of LANG_FREQS) {
+        let diff = Math.abs(freq - item.freq);
+        if (diff < minDiff) { minDiff = diff; closest = item; }
+      }
+      return closest.lang;
+    }
+
+    // 1. Transmitter: Emits 0.25s FSK Chirp via Speaker
+    function emitAcousticChirp(amount, lang) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+
+        const fAmt = getAmountFreq(amount);
+        const fLang = getLangFreq(lang);
+
+        osc.frequency.setValueAtTime(FSK_LEADER, now);
+        osc.frequency.setValueAtTime(fAmt, now + 0.06);
+        osc.frequency.setValueAtTime(fLang, now + 0.14);
+        osc.frequency.setValueAtTime(FSK_TAIL, now + 0.22);
+
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.7, now + 0.02);
+        gain.gain.setValueAtTime(0.7, now + 0.24);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.29);
+      } catch (e) {
+        console.error("Acoustic Chirp Error:", e);
+      }
+    }
+
+    // 2. Receiver: Sniffs Chirps via Microphone
+    let micStream = null;
+    let analyser = null;
+    let isListening = false;
+    let lastAcousticTxTime = 0;
+    let isDecodingChirp = false;
+
+    function startAcousticListener() {
+      if (isListening) return;
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        logMerchant("[MIC]: WebRTC getUserMedia not supported in this browser.");
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
+        .then(stream => {
+          micStream = stream;
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          const source = audioCtx.createMediaStreamSource(stream);
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 2048;
+          analyser.smoothingTimeConstant = 0.2;
+          source.connect(analyser);
+
+          isListening = true;
+          logMerchant("🎙️ [ACOUSTIC SNIFFER READY]: Microphone Listening for Over-The-Air Sound Chirps.");
+          listenLoop();
+        })
+        .catch(err => {
+          logMerchant("[MIC PERMISSION ERROR]: " + err.message);
+        });
+    }
+
+    function getPeakFrequency(analyser, ctx) {
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+
+      const sampleRate = ctx.sampleRate;
+      const binWidth = sampleRate / analyser.fftSize;
+
+      let maxVal = 0;
+      let maxBin = -1;
+
+      const minBin = Math.floor(1000 / binWidth);
+      const maxScanBin = Math.floor(2600 / binWidth);
+
+      for (let i = minBin; i <= maxScanBin; i++) {
+        if (dataArray[i] > maxVal && dataArray[i] > 130) {
+          maxVal = dataArray[i];
+          maxBin = i;
+        }
+      }
+
+      if (maxBin === -1) return 0;
+      return maxBin * binWidth;
+    }
+
+    function listenLoop() {
+      if (!isListening || !analyser) return;
+
+      const peak = getPeakFrequency(analyser, audioCtx);
+
+      if (!isDecodingChirp && Math.abs(peak - FSK_LEADER) < 55) {
+        const now = Date.now();
+        if (now - lastAcousticTxTime > 1500) {
+          isDecodingChirp = true;
+          lastAcousticTxTime = now;
+
+          setTimeout(() => {
+            const fAmt = getPeakFrequency(analyser, audioCtx);
+            const decodedAmt = getAmountFromFreq(fAmt);
+
+            setTimeout(() => {
+              const fLang = getPeakFrequency(analyser, audioCtx);
+              const decodedLang = getLangFromFreq(fLang);
+
+              isDecodingChirp = false;
+
+              const tx = "AIR_" + Math.floor(Math.random() * 9000 + 1000);
+              const packet = {
+                tx: tx,
+                amount: decodedAmt,
+                lang: decodedLang,
+                merchant: merchantVpa,
+                timestamp: Date.now()
+              };
+
+              logMerchant(`⚡ [OVER-THE-AIR CHIRP DETECTED]: Received acoustic pulse!`);
+              logMerchant(`   * Ingested: ${tx} | +Rs.${decodedAmt} (${decodedLang}) | Zero Internet`);
+              handleIncomingPayment(packet);
+            }, 80);
+          }, 95);
+        }
+      }
+
+      requestAnimationFrame(listenLoop);
+    }
+
+    // ==========================================
+    // EMBEDDED CUSTOMER WEB UI (APP-FREE)
+    // ==========================================
     function getEmbeddedCustomerHtml() {
-      return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>AirUPI Pay</title><style>*{box-sizing:border-box}body{background:#030712;color:#f8fafc;font-family:sans-serif;margin:0;padding:16px;display:flex;flex-direction:column;align-items:center}.c{background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:16px;width:100%;max-width:360px}h2{color:#38bdf8;margin:4px 0}input,select{width:100%;background:#020617;border:1px solid #334155;color:#fff;padding:12px;border-radius:8px;font-size:16px;font-weight:700;margin:6px 0}.r{display:flex;gap:6px;margin:8px 0}.k{flex:1;background:#1e293b;color:#38bdf8;border:1px solid #334155;padding:10px 4px;border-radius:6px;font-weight:700;cursor:pointer;text-align:center}.b{width:100%;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px}.s{margin-top:10px;font-size:12px;color:#10b981;text-align:center;font-weight:700}</style></head><body><div class="c"><h2>⚡ AirUPI Instant Pay</h2><div style="font-size:11px;color:#94a3b8;margin-bottom:12px">${merchantName} &bull; ${merchantVpa}</div><div style="font-size:11px;color:#94a3b8">ENTER AMOUNT (₹)</div><input id="a" type="number" value="1"><div class="r"><div class="k" onclick="document.getElementById('a').value=1">₹1</div><div class="k" onclick="document.getElementById('a').value=50">₹50</div><div class="k" onclick="document.getElementById('a').value=100">₹100</div><div class="k" onclick="document.getElementById('a').value=250">₹250</div></div><div style="font-size:11px;color:#94a3b8">SOUNDBOX LANGUAGE</div><select id="l"><option value="hi">Hindi (हिन्दी)</option><option value="ta">Tamil (தமிழ்)</option><option value="te">Telugu (తెలుగు)</option><option value="kn">Kannada (ಕನ್ನಡ)</option><option value="bn">Bengali (বাংলা)</option><option value="mr">Marathi (मराठी)</option><option value="gu">Gujarati (ગુજરાતી)</option><option value="en">English</option></select><button class="b" onclick="p()">⚡ BEAM PAYMENT</button><div class="s" id="st">Ready • 0 App Download</div></div><script>const ch=new BroadcastChannel('airupi_beam_channel');function p(){const a=parseInt(document.getElementById('a').value)||1;const l=document.getElementById('l').value;const t='TX_'+Math.floor(Math.random()*9000+1000);ch.postMessage({tx:t,amount:a,lang:l,merchant:'${merchantVpa}'});fetch('http://192.168.1.174:8000/api/pay?tx='+t+'&amt='+a+'&lang='+l).catch(()=>{});fetch('/api/pay?tx='+t+'&amt='+a+'&lang='+l).catch(()=>{});document.getElementById('st').innerHTML='⚡ BEAMED '+t+' (+₹'+a+')';document.getElementById('st').style.color='#38bdf8';}<\/script></body></html>`;
+      return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>AirUPI Pay</title><style>*{box-sizing:border-box}body{background:#030712;color:#f8fafc;font-family:sans-serif;margin:0;padding:16px;display:flex;flex-direction:column;align-items:center}.c{background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:16px;width:100%;max-width:360px}h2{color:#38bdf8;margin:4px 0}input,select{width:100%;background:#020617;border:1px solid #334155;color:#fff;padding:12px;border-radius:8px;font-size:16px;font-weight:700;margin:6px 0}.r{display:flex;gap:6px;margin:8px 0}.k{flex:1;background:#1e293b;color:#38bdf8;border:1px solid #334155;padding:10px 4px;border-radius:6px;font-weight:700;cursor:pointer;text-align:center}.b{width:100%;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px}.s{margin-top:10px;font-size:12px;color:#10b981;text-align:center;font-weight:700}</style></head><body><div class="c"><h2>⚡ AirUPI Instant Pay</h2><div style="font-size:11px;color:#94a3b8;margin-bottom:12px">${merchantName} &bull; ${merchantVpa}</div><div style="font-size:11px;color:#94a3b8">ENTER AMOUNT (₹)</div><input id="a" type="number" value="1"><div class="r"><div class="k" onclick="document.getElementById('a').value=1">₹1</div><div class="k" onclick="document.getElementById('a').value=50">₹50</div><div class="k" onclick="document.getElementById('a').value=100">₹100</div><div class="k" onclick="document.getElementById('a').value=250">₹250</div></div><div style="font-size:11px;color:#94a3b8">SOUNDBOX LANGUAGE</div><select id="l"><option value="hi">Hindi (हिन्दी)</option><option value="ta">Tamil (தமிழ்)</option><option value="te">Telugu (తెలుగు)</option><option value="kn">Kannada (ಕನ್ನಡ)</option><option value="bn">Bengali (বাংলা)</option><option value="mr">Marathi (मराठी)</option><option value="gu">Gujarati (ગુજરાતી)</option><option value="en">English</option></select><button class="b" onclick="p()">⚡ BEAM PAYMENT (CHIRP)</button><div class="s" id="st">Ready • 0 App Download</div></div><script>
+const AMT_MAP=[{amt:1,f:1100},{amt:50,f:1420},{amt:100,f:1500},{amt:250,f:1740}];
+const LANG_MAP=[{l:'hi',f:1350},{l:'ta',f:1470},{l:'te',f:1590},{l:'kn',f:1710},{l:'bn',f:1830},{l:'mr',f:1950},{l:'gu',f:2070},{l:'en',f:2200}];
+function getF(a){let c=AMT_MAP[0];for(let x of AMT_MAP)if(Math.abs(a-x.amt)<Math.abs(a-c.amt))c=x;return c.f;}
+function getLF(l){let m=LANG_MAP.find(x=>x.l===l);return m?m.f:1350;}
+function p(){
+  const a=parseInt(document.getElementById('a').value)||1;
+  const l=document.getElementById('l').value||'hi';
+  const t='TX_'+Math.floor(Math.random()*9000+1000);
+  try{
+    const cx=new (window.AudioContext||window.webkitAudioContext)();
+    if(cx.state==='suspended')cx.resume();
+    const nw=cx.currentTime,osc=cx.createOscillator(),gn=cx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(2100,nw);
+    osc.frequency.setValueAtTime(getF(a),nw+0.06);
+    osc.frequency.setValueAtTime(getLF(l),nw+0.14);
+    osc.frequency.setValueAtTime(2450,nw+0.22);
+    gn.gain.setValueAtTime(0.01,nw);
+    gn.gain.linearRampToValueAtTime(0.7,nw+0.02);
+    gn.gain.setValueAtTime(0.7,nw+0.24);
+    gn.gain.exponentialRampToValueAtTime(0.001,nw+0.28);
+    osc.connect(gn);gn.connect(cx.destination);
+    osc.start(nw);osc.stop(nw+0.29);
+  }catch(e){}
+  new BroadcastChannel('airupi_beam_channel').postMessage({tx:t,amount:a,lang:l,merchant:'${merchantVpa}'});
+  document.getElementById('st').innerHTML='⚡ CHIRPED '+t+' (+₹'+a+')';
+  document.getElementById('st').style.color='#38bdf8';
+}
+<\/script></body></html>`;
     }
 
     function renderMerchantQr() {
@@ -548,7 +781,7 @@ Zero cellular/internet data required.</div>
 
     function openEmbeddedAppFreeUi() {
       const rawHtml = getEmbeddedCustomerHtml();
-      const dataUri = "data:text/html;charset=utf-8," + encodeURIComponent(rawHtml);
+      const dataUri = "data:text/html;base64," + btoa(unescape(encodeURIComponent(rawHtml)));
       window.open(dataUri, '_blank');
     }
 
@@ -571,11 +804,11 @@ Zero cellular/internet data required.</div>
       audioCtx.resume();
       isSoundboxUnlocked = true;
       const btn = document.getElementById('btnSoundboxActivate');
-      btn.innerText = "✓ Phone Soundbox Speaker Active & Ready";
+      btn.innerText = "✓ Soundbox Speaker & Mic Sniffer Active";
       btn.style.background = "#059669";
       btn.style.color = "#ffffff";
       playChime();
-      logMerchant("[AUDIO SYSTEM]: Phone Loudspeaker Soundbox Driver Initialized.");
+      startAcousticListener();
     }
 
     function playChime() {
@@ -652,7 +885,7 @@ Zero cellular/internet data required.</div>
       document.getElementById('merchantStatus').innerText = "SUCCESS: " + data.tx + " (+Rs. " + data.amount + ")";
       
       const phrase = buildPhrase(data.amount, data.lang);
-      logMerchant(`⚡ [802.11 INGESTED]: TX=${data.tx} | +Rs.${data.amount} | Total=Rs.${totalRevenue}`);
+      logMerchant(`⚡ [PAYMENT RECEIVED]: TX=${data.tx} | +Rs.${data.amount} | Total=Rs.${totalRevenue}`);
       logMerchant(`   * Spoken: "${phrase}"`);
 
       playChime();
@@ -672,11 +905,15 @@ Zero cellular/internet data required.</div>
         timestamp: Date.now()
       };
 
-      logCustomer(`⚡ [RADIO BEAM]: Broadcast 45-byte frame to ${merchantVpa} | Rs.${amt}`);
+      logCustomer(`⚡ [TRANSMITTING CHIRP]: Emitting over-the-air soundwave + radio pulse | Rs.${amt}`);
+      
+      // 1. Emit acoustic physical sound-wave chirp across the air
+      emitAcousticChirp(amt, lang);
+
+      // 2. BroadcastChannel & loopback fetch
       airupiChannel.postMessage(packet);
       fetch('http://192.168.1.174:8000/api/pay?tx=' + tx + '&amt=' + amt + '&lang=' + lang).catch(()=>{});
       fetch('/api/pay?tx=' + tx + '&amt=' + amt + '&lang=' + lang).catch(()=>{});
-      handleIncomingPayment(packet);
     }
 
     airupiChannel.onmessage = (event) => {
