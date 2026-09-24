@@ -8,6 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>AirUPI - Virtual Sovereign Soundbox</title>
   <link rel="manifest" href="manifest.json">
+  <script src="qrcode.min.js"></script>
   <style>
     :root {
       --bg: #030712;
@@ -100,18 +101,51 @@
     }
     .panel.active { display: block; }
 
-    /* Merchant View Elements */
-    .qr-stand-card {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 12px;
-      align-items: center;
+    /* Merchant QR Stand */
+    .qr-stand-box {
       background: #020617;
       border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: 14px;
+      padding: 14px;
       margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
     }
+    .qr-canvas-container {
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .qr-type-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      width: 100%;
+      margin-top: 4px;
+    }
+    .qr-type-btn {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: var(--text-dim);
+      padding: 8px 4px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+    .qr-type-btn.active {
+      background: #1e293b;
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
     .lcd-screen {
       background: #022c22;
       border: 2px solid #059669;
@@ -161,12 +195,13 @@
       font-size: 16px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
     }
     .btn-main:active { transform: scale(0.98); }
+
     .btn-unlock {
       width: 100%;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+      background: #f59e0b;
       color: #000;
       font-weight: 800;
       border: none;
@@ -248,19 +283,30 @@
       text-align: center;
       font-size: 11px;
       color: var(--text-dim);
-      padding: 10px 0;
+      margin-top: 8px;
+    }
+    .btn-sublink {
+      background: transparent;
+      border: 1px dashed var(--accent);
+      color: var(--accent);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 8px;
     }
   </style>
 </head>
 <body>
-
   <div class="app-container">
     <header>
-      <div class="brand-title">⚡ AirUPI Sovereign Hub</div>
-      <div class="brand-subtitle">Zero-Hardware • Phone-to-Phone Virtual Soundbox • $0.00 Cloud Cost</div>
+      <div class="brand-title">AirUPI Sovereign Soundbox</div>
+      <div class="brand-subtitle">Offline Layer-2 Wireless UPI &bull; Zero-Cloud Audio</div>
     </header>
 
-    <!-- MODE TABS -->
+    <!-- MODE SWITCHER -->
     <div class="mode-tabs">
       <button class="tab-btn active" id="tabMerchant" onclick="switchMode('merchant')">
         🏪 Merchant Soundbox
@@ -270,39 +316,30 @@
       </button>
     </div>
 
-    <!-- 1. MERCHANT MODE PANEL (PHONE-AS-A-SOUNDBOX) -->
+    <!-- 1. MERCHANT SOUNDBOX PANEL -->
     <div class="panel active" id="panelMerchant">
-      <div class="qr-stand-card">
-        <div style="background: #fff; padding: 6px; border-radius: 8px; text-align: center;">
-          <svg width="80" height="80" viewBox="0 0 100 100">
-            <rect width="100" height="100" fill="#ffffff"/>
-            <rect x="5" y="5" width="28" height="28" fill="#000000"/>
-            <rect x="9" y="9" width="20" height="20" fill="#ffffff"/>
-            <rect x="13" y="13" width="12" height="12" fill="#000000"/>
-            <rect x="67" y="5" width="28" height="28" fill="#000000"/>
-            <rect x="71" y="9" width="20" height="20" fill="#ffffff"/>
-            <rect x="75" y="13" width="12" height="12" fill="#000000"/>
-            <rect x="5" y="67" width="28" height="28" fill="#000000"/>
-            <rect x="9" y="71" width="20" height="20" fill="#ffffff"/>
-            <rect x="13" y="75" width="12" height="12" fill="#000000"/>
-            <rect x="40" y="10" width="8" height="8" fill="#000000"/>
-            <rect x="52" y="10" width="8" height="8" fill="#000000"/>
-            <rect x="40" y="24" width="20" height="6" fill="#000000"/>
-            <rect x="10" y="40" width="80" height="6" fill="#000000"/>
-            <rect x="40" y="52" width="16" height="16" fill="#000000"/>
-            <rect x="65" y="52" width="20" height="8" fill="#000000"/>
-            <rect x="65" y="70" width="10" height="20" fill="#000000"/>
-            <rect x="80" y="75" width="12" height="15" fill="#000000"/>
-            <rect x="40" y="75" width="18" height="18" fill="#000000"/>
-          </svg>
-          <div style="color: #000; font-size: 6px; font-weight: 900; margin-top: 2px;">AIRUPI ACCEPTED</div>
+      
+      <!-- DYNAMIC QR STAND -->
+      <div class="qr-stand-box">
+        <div style="display: flex; justify-content: space-between; width: 100%; font-size: 11px;">
+          <span style="color: #fff; font-weight: 700;">🏪 Gupta General Store</span>
+          <span style="color: var(--green); font-weight: 700;">✓ Offline QR Stand</span>
         </div>
-        <div>
-          <div style="font-size: 10px; color: var(--text-dim);">MERCHANT ACCOUNT:</div>
-          <div style="font-size: 14px; font-weight: 700; color: #fff;">Gupta General Store</div>
-          <div style="font-size: 12px; color: var(--accent); font-family: monospace;">guptastore@airupi</div>
-          <div style="font-size: 10px; color: var(--green); margin-top: 4px;">✓ Static Offline QR (Zero Power)</div>
+
+        <div class="qr-canvas-container" id="qrContainer"></div>
+
+        <div class="qr-type-selector">
+          <div class="qr-type-btn active" id="qrTypeHtml" onclick="setQrType('html')">
+            ⚡ App-Free Web UI (data:html)
+          </div>
+          <div class="qr-type-btn" id="qrTypeUpi" onclick="setQrType('upi')">
+            💳 Standard UPI URI
+          </div>
         </div>
+
+        <button class="btn-sublink" onclick="openEmbeddedAppFreeUi()">
+          🔗 Test Open App-Free UI in Browser (Zero Download)
+        </button>
       </div>
 
       <button class="btn-unlock" id="btnSoundboxActivate" onclick="activatePhoneSoundbox()">
@@ -328,7 +365,7 @@
 Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
     </div>
 
-    <!-- 2. CUSTOMER MODE PANEL (PHONE-AS-A-PAYER) -->
+    <!-- 2. CUSTOMER MODE PANEL -->
     <div class="panel" id="panelCustomer">
       <button class="btn-main" onclick="triggerCustomerScan()" style="background: #3b82f6; margin-bottom: 12px; padding: 12px; font-size: 14px;">
         📷 Scan Shop QR Stand
@@ -339,98 +376,139 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
         <div style="font-size: 12px; color: #38bdf8; z-index: 2;">🔍 Scanning Merchant QR Offline...</div>
       </div>
 
-      <div style="background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <div style="font-size: 10px; color: var(--text-dim);">PAYING TO:</div>
-          <div style="font-size: 13px; font-weight: 700; color: #fff;" id="custTargetMerchant">Gupta General Store</div>
-          <div style="font-size: 11px; color: var(--accent); font-family: monospace;">guptastore@airupi</div>
+      <div class="field-group">
+        <label>MERCHANT TARGET</label>
+        <input type="text" id="custMerchant" value="guptastore@airupi" readonly style="color: var(--accent); font-family: monospace;">
+        <div style="font-size: 11px; color: var(--green); margin-top: 4px;" id="custLockStatus">
+          [STAND TARGET VERIFIED OK]
         </div>
-        <div style="font-size: 11px; font-weight: 700; color: var(--green);" id="custLockStatus">[LOCKED]</div>
       </div>
 
       <div class="field-group">
-        <label>Enter Amount (&#8377; INR):</label>
-        <input type="number" id="custAmt" value="250" min="1" step="1">
+        <label>PAYMENT AMOUNT (&#8377; INR)</label>
+        <input type="number" id="custAmt" value="250" placeholder="Enter amount">
         <div class="quick-chips">
-          <div class="chip" onclick="setAmt(50)">₹50</div>
-          <div class="chip" onclick="setAmt(150)">₹150</div>
-          <div class="chip" onclick="setAmt(250)">₹250</div>
-          <div class="chip" onclick="setAmt(500)">₹500</div>
+          <div class="chip" onclick="setAmt(50)">&#8377;50</div>
+          <div class="chip" onclick="setAmt(100)">&#8377;100</div>
+          <div class="chip" onclick="setAmt(250)">&#8377;250</div>
+          <div class="chip" onclick="setAmt(500)">&#8377;500</div>
         </div>
       </div>
 
       <div class="field-group">
-        <label>Select Soundbox Language:</label>
+        <label>SOUNDBOX BROADCAST LANGUAGE</label>
         <select id="custLang">
-          <option value="hi" selected>Hindi (हिन्दी - Do sau pachaas...)</option>
-          <option value="ta">Tamil (தமிழ் - Iru-noottru aymbadhu...)</option>
-          <option value="te">Telugu (తెలుగు - Rendu vandala yaabhai...)</option>
-          <option value="kn">Kannada (ಕನ್ನಡ - Innoora aivatthu...)</option>
-          <option value="bn">Bengali (বাংলা - Disho taka...)</option>
-          <option value="mr">Marathi (मराठी - Don she rupaye...)</option>
-          <option value="gu">Gujarati (ગુજરાતી - Basau rupiya...)</option>
-          <option value="en">English (Rupees received...)</option>
+          <option value="hi" selected>Hindi (हिन्दी)</option>
+          <option value="ta">Tamil (தமிழ்)</option>
+          <option value="te">Telugu (తెలుగు)</option>
+          <option value="kn">Kannada (ಕನ್ನಡ)</option>
+          <option value="bn">Bengali (বাংলা)</option>
+          <option value="mr">Marathi (मराठी)</option>
+          <option value="gu">Gujarati (ગુજરાતી)</option>
+          <option value="en">English</option>
         </select>
       </div>
 
       <button class="btn-main" onclick="beamCustomerPayment()">
-        ⚡ Beam 45-Byte Layer-2 Payment
+        ⚡ BEAM OFFLINE PAYMENT
       </button>
 
-      <div class="terminal" id="customerLog">📱 Customer Offline Wallet Ready.
-✈️ Airplane Mode Compatible • Causal Token Signed On-Device</div>
+      <div class="terminal" id="customerLog">⚡ Radio Payer Transmitter Ready.
+Zero cellular/internet data required.</div>
     </div>
 
     <footer>
-      Project Brahmaand &bull; TimeMesh-over-WiFi &bull; BSL 1.1 License &bull; DOI: 10.5281/zenodo.22800741
+      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v1.0.0
     </footer>
   </div>
 
   <script>
-    // Register PWA Service Worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(()=>{});
-    }
-
-    // Shared Cross-Tab / Cross-Phone Broadcast Channel
-    const airupiChannel = new BroadcastChannel('airupi_mesh_channel');
     let totalRevenue = 0;
     let audioCtx = null;
     let isSoundboxUnlocked = false;
+    let currentQrType = 'html';
+    let qrcodeObj = null;
 
-    // Pan-Indic Number to Words
-    function numToWords(n, lang) {
-      n = parseInt(n) || 0;
-      if (lang === 'hi') {
-        const exact = {10:"Das",20:"Bees",25:"Pachchees",30:"Tees",50:"Pachaas",100:"Ek sau",150:"Ek sau pachaas",200:"Do sau",250:"Do sau pachaas",300:"Teen sau",500:"Paanch sau",1000:"Ek hazaar",2000:"Do hazaar",5000:"Paanch hazaar"};
-        return exact[n] || (n >= 100 ? Math.floor(n/100) + " sau " + (n%100 || "") : n);
-      } else if (lang === 'ta') {
-        const exact = {10:"Patthu",20:"Irubadhu",50:"Aymbadhu",100:"Nooru",150:"Noottru aymbadhu",200:"Iru-nooru",250:"Iru-noottru aymbadhu",500:"Ayn-nooru",1000:"Aayiram"};
-        return exact[n] || n;
-      } else if (lang === 'te') {
-        const exact = {10:"Padhi",20:"Iravai",50:"Yaabhai",100:"Vanda",150:"Noota yaabhai",200:"Rendu vandalu",250:"Rendu vandala yaabhai",500:"Aydu vandalu",1000:"Veyyi"};
-        return exact[n] || n;
-      } else if (lang === 'kn') {
-        const exact = {10:"Hatthu",20:"Ippatthu",50:"Aivatthu",100:"Nooru",150:"Noora aivatthu",200:"Innooru",250:"Innoora aivatthu",500:"Aydu nooru",1000:"Ondhu saavira"};
-        return exact[n] || n;
-      } else {
-        return n;
+    // Cross-tab / Cross-webview radio channel simulation
+    const airupiChannel = new BroadcastChannel('airupi_beam_channel');
+
+    // Pan-Indic Number Expander
+    const NUMS_HI = {
+      0: "shunya", 1: "ek", 2: "do", 3: "teen", 4: "char", 5: "paanch",
+      6: "chhah", 7: "saat", 8: "aath", 9: "nau", 10: "das",
+      11: "gyarah", 12: "barah", 15: "pandrah", 20: "bees", 25: "pachees",
+      30: "tees", 40: "chalis", 50: "pachaas", 60: "saath", 70: "sattar",
+      80: "assi", 90: "nabbe", 100: "ek sau", 150: "ek sau pachaas",
+      200: "do sau", 250: "do sau pachaas", 300: "teen sau", 500: "paanch sau",
+      1000: "ek hazaar", 2000: "do hazaar", 5000: "paanch hazaar"
+    };
+
+    function expandNumberPhonetic(n, lang) {
+      if (NUMS_HI[n]) return NUMS_HI[n];
+      if (n < 100) return n.toString();
+      if (n < 1000) {
+        const hundreds = Math.floor(n / 100);
+        const rem = n % 100;
+        const hStr = (hundreds === 1 ? "ek sau" : (NUMS_HI[hundreds] || hundreds) + " sau");
+        return rem === 0 ? hStr : hStr + " " + (NUMS_HI[rem] || rem);
+      }
+      return n.toString();
+    }
+
+    function buildPhrase(amount, lang) {
+      const numStr = expandNumberPhonetic(amount, lang);
+      switch(lang) {
+        case 'ta': return "Paytm-il " + amount + " Rubaai petrapattadhu";
+        case 'te': return "Paytm lo " + amount + " Rupayalu labhinchayi";
+        case 'kn': return "Paytm nalli " + amount + " Rupayi sweekarisalaagide";
+        case 'bn': return "Paytm e " + amount + " Taka prapto hoyeche";
+        case 'mr': return "Paytm var " + amount + " Rupaye prapt jhale";
+        case 'gu': return "Paytm par " + amount + " Rupiya malya che";
+        case 'en': return "Rupees " + amount + " received on AirUPI";
+        case 'hi':
+        default:
+          return "Paytm par " + numStr + " Rupaye prapt hue";
       }
     }
 
-    function buildPhrase(amt, lang) {
-      const nw = numToWords(amt, lang);
-      const dict = {
-        'hi': `Paytm par ${nw} Rupaye praapt hue`,
-        'ta': `Paytmil ${nw} Roobai petrapattadhu`,
-        'te': `Paytmlonoo ${nw} Roopaayalu andhinavi`,
-        'kn': `Paytmli ${nw} Roopaayi sveekarisalaagidhe`,
-        'bn': `Paytme ${nw} Taka praapto hoyechhe`,
-        'mr': `Paytm var ${nw} Rupaye praapt jhaale`,
-        'gu': `Paytm par ${nw} Rupiya malya`,
-        'en': `Received ${amt} Rupees on Paytm`
-      };
-      return dict[lang] || dict['en'];
+    // Ultra-compact embedded Customer UI payload (Base64 data:text/html)
+    function getEmbeddedCustomerHtml() {
+      return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>AirUPI Pay</title><style>*{box-sizing:border-box}body{background:#030712;color:#f8fafc;font-family:sans-serif;margin:0;padding:16px;display:flex;flex-direction:column;align-items:center}.c{background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:16px;width:100%;max-width:360px}h2{color:#38bdf8;margin:4px 0}input,select{width:100%;background:#020617;border:1px solid #334155;color:#fff;padding:12px;border-radius:8px;font-size:16px;font-weight:700;margin:6px 0}.r{display:flex;gap:6px;margin:8px 0}.k{flex:1;background:#1e293b;color:#38bdf8;border:1px solid #334155;padding:10px 4px;border-radius:6px;font-weight:700;cursor:pointer;text-align:center}.b{width:100%;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px}.s{margin-top:10px;font-size:12px;color:#10b981;text-align:center;font-weight:700}</style></head><body><div class="c"><h2>⚡ AirUPI Instant Pay</h2><div style="font-size:11px;color:#94a3b8;margin-bottom:12px">Gupta General Store &bull; guptastore@airupi</div><div style="font-size:11px;color:#94a3b8">ENTER AMOUNT (₹)</div><input id="a" type="number" value="250"><div class="r"><div class="k" onclick="document.getElementById('a').value=50">₹50</div><div class="k" onclick="document.getElementById('a').value=100">₹100</div><div class="k" onclick="document.getElementById('a').value=250">₹250</div><div class="k" onclick="document.getElementById('a').value=500">₹500</div></div><div style="font-size:11px;color:#94a3b8">SOUNDBOX LANGUAGE</div><select id="l"><option value="hi">Hindi (हिन्दी)</option><option value="ta">Tamil (தமிழ்)</option><option value="te">Telugu (తెలుగు)</option><option value="kn">Kannada (ಕನ್ನಡ)</option><option value="bn">Bengali (বাংলা)</option><option value="mr">Marathi (मराठी)</option><option value="gu">Gujarati (ગુજરાતી)</option><option value="en">English</option></select><button class="b" onclick="p()">⚡ BEAM PAYMENT</button><div class="s" id="st">Ready • 0 App Download</div></div><script>const ch=new BroadcastChannel('airupi_beam_channel');function p(){const a=parseInt(document.getElementById('a').value)||250;const l=document.getElementById('l').value;const t='TX_'+Math.floor(Math.random()*9000+1000);ch.postMessage({tx:t,amount:a,lang:l,merchant:'guptastore@airupi'});fetch('http://192.168.1.174:8000/api/pay?tx='+t+'&amt='+a+'&lang='+l).catch(()=>{});fetch('/api/pay?tx='+t+'&amt='+a+'&lang='+l).catch(()=>{});document.getElementById('st').innerHTML='⚡ BEAMED '+t+' (+₹'+a+')';document.getElementById('st').style.color='#38bdf8';}<\/script></body></html>`;
+    }
+
+    function renderMerchantQr() {
+      const container = document.getElementById('qrContainer');
+      container.innerHTML = '';
+
+      let payload = "";
+      if (currentQrType === 'html') {
+        const rawHtml = getEmbeddedCustomerHtml();
+        payload = "data:text/html;charset=utf-8," + encodeURIComponent(rawHtml);
+      } else {
+        payload = "upi://pay?pa=guptastore@airupi&pn=Gupta%20Store&cu=INR&tn=AirUPI%20Offline";
+      }
+
+      qrcodeObj = new QRCode(container, {
+        text: payload,
+        width: 140,
+        height: 140,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.L
+      });
+    }
+
+    function setQrType(type) {
+      currentQrType = type;
+      document.getElementById('qrTypeHtml').classList.toggle('active', type === 'html');
+      document.getElementById('qrTypeUpi').classList.toggle('active', type === 'upi');
+      renderMerchantQr();
+    }
+
+    function openEmbeddedAppFreeUi() {
+      const rawHtml = getEmbeddedCustomerHtml();
+      const dataUri = "data:text/html;charset=utf-8," + encodeURIComponent(rawHtml);
+      window.open(dataUri, '_blank');
     }
 
     function switchMode(mode) {
@@ -438,6 +516,9 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
       document.getElementById('tabCustomer').classList.toggle('active', mode === 'customer');
       document.getElementById('panelMerchant').classList.toggle('active', mode === 'merchant');
       document.getElementById('panelCustomer').classList.toggle('active', mode === 'customer');
+      if (mode === 'merchant') {
+        setTimeout(renderMerchantQr, 100);
+      }
     }
 
     function setAmt(val) {
@@ -473,7 +554,6 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
         osc.stop(audioCtx.currentTime + 0.35);
       } catch(e){}
 
-      // Animate speaker grille
       for (let i = 1; i <= 5; i++) {
         const dot = document.getElementById('spk' + i);
         if (dot) dot.classList.add('active');
@@ -515,17 +595,16 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
 
     function logMerchant(msg) {
       const term = document.getElementById('merchantLog');
-      term.innerText += "\\n" + msg;
+      term.innerText += "\n" + msg;
       term.scrollTop = term.scrollHeight;
     }
 
     function logCustomer(msg) {
       const term = document.getElementById('customerLog');
-      term.innerText += "\\n" + msg;
+      term.innerText += "\n" + msg;
       term.scrollTop = term.scrollHeight;
     }
 
-    // Ingest Payment on Merchant Soundbox
     function handleIncomingPayment(data) {
       totalRevenue += data.amount;
       document.getElementById('merchantTotal').innerHTML = "&#8377; " + totalRevenue + ".00";
@@ -539,7 +618,6 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
       setTimeout(() => { speakPhrase(phrase, data.lang); }, 300);
     }
 
-    // Beam Payment from Customer Phone
     function beamCustomerPayment() {
       const amt = parseInt(document.getElementById('custAmt').value) || 250;
       const lang = document.getElementById('custLang').value || 'hi';
@@ -554,21 +632,19 @@ Listening for 45-byte Layer-2 Action Frames • Zero Cloud Calls</div>
       };
 
       logCustomer(`⚡ [RADIO BEAM]: Broadcast 45-byte frame to guptastore@airupi | Rs.${amt}`);
-      
-      // 1. Broadcast locally across tabs / webviews
       airupiChannel.postMessage(packet);
-
-      // 2. Also forward to local Pi / network daemon if reachable
+      fetch('http://192.168.1.174:8000/api/pay?tx=' + tx + '&amt=' + amt + '&lang=' + lang).catch(()=>{});
       fetch('/api/pay?tx=' + tx + '&amt=' + amt + '&lang=' + lang).catch(()=>{});
-
-      // 3. Trigger local soundbox if on same device
       handleIncomingPayment(packet);
     }
 
-    // Listen to over-the-air channel messages
     airupiChannel.onmessage = (event) => {
       handleIncomingPayment(event.data);
     };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderMerchantQr();
+    });
   </script>
 </body>
 </html>
