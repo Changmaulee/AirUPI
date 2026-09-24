@@ -43,10 +43,10 @@
     }
     header {
       text-align: center;
-      padding: 6px 0;
+      padding: 4px 0;
     }
     .brand-title {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, #38bdf8, #10b981);
@@ -96,16 +96,16 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 18px;
+      padding: 16px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
       display: none;
     }
     .panel.active { display: block; }
 
-    /* Role Badge */
+    /* Role Banner */
     .role-banner {
       border-radius: 10px;
-      padding: 10px;
+      padding: 10px 12px;
       font-size: 12px;
       font-weight: 700;
       margin-bottom: 12px;
@@ -121,6 +121,17 @@
     .role-banner.customer {
       background: #082f49;
       border: 1px solid #0284c7;
+      color: #38bdf8;
+    }
+
+    /* Net Badge */
+    .net-badge {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-family: monospace;
       color: #38bdf8;
     }
 
@@ -183,12 +194,12 @@
       background: #022c22;
       border: 2px solid #059669;
       border-radius: 12px;
-      padding: 18px;
+      padding: 16px;
       text-align: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .lcd-amt {
-      font-size: 42px;
+      font-size: 38px;
       font-weight: 900;
       color: #34d399;
       font-family: monospace;
@@ -252,149 +263,151 @@
       width: 100%;
       background: #020617;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
       color: #fff;
-      font-size: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
     }
+    input:focus, select:focus { border-color: var(--accent); }
+
     .quick-chips {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 6px;
-      margin-top: 6px;
+      margin-top: 8px;
     }
     .chip {
       background: #020617;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 0;
+      color: #fff;
+      padding: 10px 4px;
       text-align: center;
+      border-radius: 8px;
       font-size: 13px;
       font-weight: 700;
-      color: var(--accent);
       cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .chip:active { background: #1e293b; }
+    .chip:active, .chip.selected {
+      background: #1e293b;
+      color: var(--accent);
+      border-color: var(--accent);
+    }
 
     .carrier-toggle {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 12px;
+      gap: 8px;
+      margin-bottom: 14px;
     }
     .carrier-btn {
       background: #020617;
       border: 1px solid var(--border);
       color: var(--text-dim);
+      padding: 12px;
       border-radius: 8px;
-      padding: 10px 4px;
       font-size: 12px;
       font-weight: 700;
       text-align: center;
       cursor: pointer;
     }
     .carrier-btn.active {
-      background: #082f49;
-      border-color: var(--accent);
-      color: var(--accent);
+      background: #0f172a;
+      color: #fff;
+      border-color: var(--green);
     }
 
     .terminal {
-      background: #020617;
-      border: 1px solid var(--border);
+      background: #000;
+      border: 1px solid #1e293b;
       border-radius: 8px;
       padding: 10px;
       font-family: monospace;
       font-size: 11px;
       color: #38bdf8;
-      height: 120px;
+      height: 110px;
       overflow-y: auto;
       white-space: pre-wrap;
       margin-top: 10px;
     }
-    footer {
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 8px;
-    }
+
     .btn-sublink {
       background: transparent;
-      border: 1px dashed var(--accent);
+      border: 1px dashed #334155;
       color: var(--accent);
+      padding: 8px;
       border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
-      cursor: pointer;
       width: 100%;
-      margin-top: 8px;
+      cursor: pointer;
+      margin-top: 4px;
     }
 
-    /* Fullscreen Real Camera Viewfinder */
+    /* Camera Scanner Overlay */
     .camera-modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: #000;
       z-index: 99999;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
+      padding: 24px 16px;
     }
     .camera-modal.active { display: flex; }
     #cameraVideo {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       object-fit: cover;
+      z-index: 1;
     }
     .camera-ui-layer {
       position: relative;
-      z-index: 10;
+      z-index: 2;
       width: 100%;
-      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
+      height: 100%;
       justify-content: space-between;
-      padding: 40px 20px;
-      background: rgba(0,0,0,0.25);
     }
     .camera-reticle {
       width: 250px;
       height: 250px;
-      border: 3px solid #38bdf8;
-      border-radius: 20px;
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.65);
       position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
     }
     .scan-laser-active {
       position: absolute;
-      width: 100%;
-      height: 3px;
-      background: #38bdf8;
-      box-shadow: 0 0 15px #38bdf8;
-      top: 0;
-      animation: scanSweep 1.5s infinite alternate ease-in-out;
+      top: 0; left: 0; width: 100%; height: 2px;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: scanLaserAnim 1.8s infinite alternate;
     }
-    @keyframes scanSweep { from { top: 5%; } to { top: 92%; } }
+    @keyframes scanLaserAnim { from { top: 5%; } to { top: 95%; } }
+
+    footer {
+      text-align: center;
+      font-size: 10px;
+      color: #475569;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
+
   <div class="app-container">
     <header>
-      <div class="brand-title">AirUPI Sovereign Soundbox</div>
-      <div class="brand-subtitle">Offline Layer-2 Wireless UPI &bull; Zero-Cloud Audio</div>
+      <div class="brand-title">⚡ AirUPI Sovereign Soundbox</div>
+      <div class="brand-subtitle">Dual-Channel: Robust Acoustic Wave + Local Wi-Fi Mesh</div>
     </header>
 
-    <!-- DEDICATED ROLE SWITCHER -->
+    <!-- ROLE SWITCHER TABS -->
     <div class="mode-tabs">
       <button class="tab-btn active" id="tabMerchant" onclick="switchDedicatedRole('merchant')">
         🏪 Merchant (LISTENER ONLY)
@@ -408,8 +421,8 @@
     <div class="panel active" id="panelMerchant">
       
       <div class="role-banner merchant">
-        <span>🎧 ROLE: DEDICATED SOUNDBOX LISTENER</span>
-        <span>✓ ZERO-ECHO MUTE</span>
+        <span>🎧 ROLE: SOUNDBOX LISTENER</span>
+        <span class="net-badge" id="merchantIpBadge">Wi-Fi: Detecting...</span>
       </div>
 
       <!-- DYNAMIC QR STAND -->
@@ -462,7 +475,7 @@
 
       <label>Promiscuous Sniffer Telemetry Log:</label>
       <div class="terminal" id="merchantLog">⚡ Merchant Listener Ready.
-Listening for Digital Base-10 Acoustic Frames & Action Frames • Zero Cloud Calls</div>
+Listening for Dual-Tone Acoustic Waves & Local Wi-Fi P2P Packets.</div>
     </div>
 
     <!-- 2. DEDICATED CUSTOMER SENDER PANEL (TRANSMIT-ONLY) -->
@@ -470,7 +483,7 @@ Listening for Digital Base-10 Acoustic Frames & Action Frames • Zero Cloud Cal
       
       <div class="role-banner customer">
         <span>⚡ ROLE: DEDICATED PAYER SENDER</span>
-        <span>🔇 MIC DISABLED</span>
+        <span class="net-badge" id="customerIpBadge">Wi-Fi: Ready</span>
       </div>
 
       <!-- REAL CAMERA SCANNER BUTTONS -->
@@ -495,11 +508,11 @@ Listening for Digital Base-10 Acoustic Frames & Action Frames • Zero Cloud Cal
         <label>PAYMENT AMOUNT (&#8377; EXACT INR)</label>
         <input type="number" id="custAmt" value="1" placeholder="Enter any amount (e.g. 1, 6, 250)">
         <div class="quick-chips">
-          <div class="chip" onclick="setAmt(1)">&#8377;1</div>
-          <div class="chip" onclick="setAmt(6)">&#8377;6</div>
-          <div class="chip" onclick="setAmt(50)">&#8377;50</div>
-          <div class="chip" onclick="setAmt(100)">&#8377;100</div>
-          <div class="chip" onclick="setAmt(250)">&#8377;250</div>
+          <div class="chip selected" id="chip_1" onclick="selectChipAmt(1)">&#8377;1</div>
+          <div class="chip" id="chip_6" onclick="selectChipAmt(6)">&#8377;6</div>
+          <div class="chip" id="chip_50" onclick="selectChipAmt(50)">&#8377;50</div>
+          <div class="chip" id="chip_100" onclick="selectChipAmt(100)">&#8377;100</div>
+          <div class="chip" id="chip_250" onclick="selectChipAmt(250)">&#8377;250</div>
         </div>
       </div>
 
@@ -520,7 +533,7 @@ Listening for Digital Base-10 Acoustic Frames & Action Frames • Zero Cloud Cal
       <label>PHYSICAL CARRIER MODE</label>
       <div class="carrier-toggle">
         <div class="carrier-btn active" id="carrierAudible" onclick="setCarrier('audible')">
-          🔊 Audible Chirp
+          🔊 Audible Wave
         </div>
         <div class="carrier-btn" id="carrierSilent" onclick="setCarrier('silent')">
           🤫 Silent Ultrasonic
@@ -536,7 +549,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     </div>
 
     <footer>
-      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v1.0.0
+      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v2.1.0
     </footer>
   </div>
 
@@ -561,17 +574,20 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
   </div>
 
   <script>
-    let currentRole = 'merchant'; // 'merchant' (receive-only) or 'customer' (transmit-only)
+    let currentRole = 'merchant';
     let totalRevenue = 0;
     let audioCtx = null;
     let isSoundboxUnlocked = false;
     let currentQrType = 'upi';
-    let carrierMode = 'audible'; // 'audible' or 'silent'
+    let carrierMode = 'audible';
     let qrcodeObj = null;
 
     let merchantVpa = "changmaulee@icici";
     let merchantName = "Chandramouli";
+    let merchantLocalIp = "127.0.0.1";
+    let scannedMerchantIp = null;
     let txCounter = 1;
+    let recentProcessedTxs = new Set();
 
     // Pan-Indic Number Expander
     const NUMS_HI = {
@@ -613,9 +629,7 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       }
     }
 
-    // ==========================================
-    // DEDICATED ROLE SWITCHING (ZERO SELF-LISTEN)
-    // ==========================================
+    // Role switcher
     function switchDedicatedRole(role) {
       currentRole = role;
       document.getElementById('tabMerchant').classList.toggle('active', role === 'merchant');
@@ -624,13 +638,19 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       document.getElementById('panelCustomer').classList.toggle('active', role === 'customer');
 
       if (role === 'customer') {
-        // Stop listening on mic completely
         stopAcousticListener();
-        logCustomer("📱 [CUSTOMER ROLE ACTIVE]: Microphone turned OFF. Sender mode ready.");
+        logCustomer("📱 [CUSTOMER ACTIVE]: Microphone OFF. Zero self-listening.");
       } else {
         setTimeout(renderMerchantQr, 100);
-        logMerchant("🏪 [MERCHANT ROLE ACTIVE]: Receiver mode ready.");
+        logMerchant("🏪 [MERCHANT ACTIVE]: Receiver mode ready.");
       }
+    }
+
+    function selectChipAmt(val) {
+      document.getElementById('custAmt').value = val;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      const chip = document.getElementById('chip_' + val);
+      if (chip) chip.classList.add('selected');
     }
 
     function setCarrier(mode) {
@@ -648,85 +668,146 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       renderMerchantQr();
     }
 
-    // ==========================================
-    // DIGITAL BASE-10 FSK ACOUSTIC MODEM (v2.0)
-    // ==========================================
-    // Audible Band: 1000 - 2500 Hz | Ultrasonic Band: 18000 - 19500 Hz
-    const FSK_SYNC_AUDIBLE = 2200;
-    const FSK_END_AUDIBLE  = 2450;
-    const FSK_SYNC_SILENT  = 18200;
-    const FSK_END_SILENT   = 19400;
+    // Fetch device IP from Android bridge
+    function refreshDeviceIp() {
+      try {
+        if (window.AirUPIAndroid && window.AirUPIAndroid.getDeviceIp) {
+          merchantLocalIp = window.AirUPIAndroid.getDeviceIp();
+          document.getElementById('merchantIpBadge').innerText = "Wi-Fi IP: " + merchantLocalIp;
+          document.getElementById('customerIpBadge').innerText = "Wi-Fi: " + merchantLocalIp;
+        }
+      } catch (e) {}
+    }
 
-    // Digits 0..9 FSK Frequencies (Audible: 1050..1950 Hz, Silent: 18300..19200 Hz)
-    const DIGIT_FREQS_AUDIBLE = [1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950];
-    const DIGIT_FREQS_SILENT  = [18300, 18400, 18500, 18600, 18700, 18800, 18900, 19000, 19100, 19200];
+    // ==========================================
+    // ROBUST DUAL-CARRIER MODEM (v2.1)
+    // ==========================================
+    // Preset Dual-Tones (High Band = 1800 Hz / 2100 Hz, Low Band = 1080..1500 Hz)
+    const DUAL_TONE_MAP = {
+      1:    { fLow: 1080, fHigh: 1800 },
+      2:    { fLow: 1140, fHigh: 1800 },
+      5:    { fLow: 1200, fHigh: 1800 },
+      6:    { fLow: 1260, fHigh: 1800 },
+      10:   { fLow: 1320, fHigh: 1800 },
+      20:   { fLow: 1380, fHigh: 1800 },
+      50:   { fLow: 1440, fHigh: 1800 },
+      100:  { fLow: 1500, fHigh: 1800 },
+      250:  { fLow: 1080, fHigh: 2100 },
+      500:  { fLow: 1200, fHigh: 2100 },
+      1000: { fLow: 1320, fHigh: 2100 },
+      2000: { fLow: 1440, fHigh: 2100 }
+    };
+
+    // Arbitrary Pulse FSK Frequencies
+    const FSK_SYNC_AUDIBLE = 2400;
+    const FSK_END_AUDIBLE  = 2650;
+    const FSK_DIGITS_AUDIBLE = [1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950];
+
+    // Silent Ultrasonic Frequencies
+    const FSK_SYNC_SILENT = 18100;
+    const FSK_END_SILENT  = 19400;
+    const FSK_DIGITS_SILENT = [18300, 18400, 18500, 18600, 18700, 18800, 18900, 19000, 19100, 19200];
 
     const LANG_CODES = { 'hi': 1, 'ta': 2, 'te': 3, 'kn': 4, 'bn': 5, 'mr': 6, 'gu': 7, 'en': 8 };
     const LANG_REVERSE = { 1: 'hi', 2: 'ta', 3: 'te', 4: 'kn', 5: 'bn', 6: 'mr', 7: 'gu', 8: 'en' };
 
-    // 1. TRANSMITTER: Encodes exact decimal amount + lang digits
+    // 1. TRANSMITTER: Emits either Instant Dual-Tone (350ms) or Pulse FSK
     function emitAcousticChirp(amount, lang) {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         if (ctx.state === 'suspended') ctx.resume();
 
         const isSilent = (carrierMode === 'silent');
+        const now = ctx.currentTime;
+
+        // If preset amount in Audible mode, use Instant Dual-Tone
+        if (!isSilent && DUAL_TONE_MAP[amount]) {
+          const pair = DUAL_TONE_MAP[amount];
+          const duration = 0.35; // 350ms sustained tone
+
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain1 = ctx.createGain();
+          const gain2 = ctx.createGain();
+
+          osc1.type = 'sine';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(pair.fLow, now);
+          osc2.frequency.setValueAtTime(pair.fHigh, now);
+
+          gain1.gain.setValueAtTime(0.01, now);
+          gain1.gain.linearRampToValueAtTime(0.45, now + 0.03);
+          gain1.gain.setValueAtTime(0.45, now + duration - 0.03);
+          gain1.gain.linearRampToValueAtTime(0.001, now + duration);
+
+          gain2.gain.setValueAtTime(0.01, now);
+          gain2.gain.linearRampToValueAtTime(0.45, now + 0.03);
+          gain2.gain.setValueAtTime(0.45, now + duration - 0.03);
+          gain2.gain.linearRampToValueAtTime(0.001, now + duration);
+
+          osc1.connect(gain1);
+          osc2.connect(gain2);
+          gain1.connect(ctx.destination);
+          gain2.connect(ctx.destination);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + duration + 0.01);
+          osc2.stop(now + duration + 0.01);
+          return;
+        }
+
+        // Otherwise, emit Robust 180ms Pulse Stream
         const syncFreq = isSilent ? FSK_SYNC_SILENT : FSK_SYNC_AUDIBLE;
         const endFreq  = isSilent ? FSK_END_SILENT  : FSK_END_AUDIBLE;
-        const digitTable = isSilent ? DIGIT_FREQS_SILENT : DIGIT_FREQS_AUDIBLE;
-
+        const digitTable = isSilent ? FSK_DIGITS_SILENT : FSK_DIGITS_AUDIBLE;
         const amtDigits = amount.toString().split('').map(d => parseInt(d));
         const langDigit = LANG_CODES[lang] || 1;
 
-        // Sequence: [SYNC 70ms] -> [DIGIT_1 60ms] -> [DIGIT_2 60ms]... -> [LANG 60ms] -> [END 50ms]
-        const symbolDuration = 0.055;
-        const now = ctx.currentTime;
         let t = now;
+        const symbolTime = 0.18; // 180ms per symbol
+        const gapTime = 0.03;    // 30ms guard gap
 
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
+        const playTone = (freq, duration) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.01, t);
+          gain.gain.linearRampToValueAtTime(0.7, t + 0.02);
+          gain.gain.setValueAtTime(0.7, t + duration - 0.02);
+          gain.gain.linearRampToValueAtTime(0.001, t + duration);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + duration + 0.005);
+          t += duration + gapTime;
+        };
 
-        // 1. Sync Leader
-        osc.frequency.setValueAtTime(syncFreq, t);
-        t += 0.07;
-
+        // 1. Sync Header
+        playTone(syncFreq, 0.22);
         // 2. Amount Digits
         for (let d of amtDigits) {
-          osc.frequency.setValueAtTime(digitTable[d], t);
-          t += symbolDuration;
+          playTone(digitTable[d], symbolTime);
         }
+        // 3. Language Code
+        playTone(digitTable[langDigit], symbolTime);
+        // 4. End Frame
+        playTone(endFreq, 0.12);
 
-        // 3. Lang code
-        osc.frequency.setValueAtTime(digitTable[langDigit], t);
-        t += symbolDuration;
-
-        // 4. End frame delimiter
-        osc.frequency.setValueAtTime(endFreq, t);
-        t += 0.04;
-
-        // Smooth volume envelope
-        gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.7, now + 0.02);
-        gain.gain.setValueAtTime(0.7, t - 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, t);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(now);
-        osc.stop(t + 0.01);
       } catch (e) {
-        console.error("Chirp emit error:", e);
+        console.error("Audio emit error:", e);
       }
     }
 
-    // 2. RECEIVER: Sniffs via microphone with Echo-Mute protection
+    // 2. RECEIVER: Adaptive Dynamic Noise Floor Demodulator
     let micStream = null;
     let analyser = null;
     let isListening = false;
     let isMutedForSpeech = false;
-    let isDecodingChirp = false;
+    let animFrameId = null;
+    let dualToneDebounceCount = 0;
+    let lastDetectedCandidate = null;
 
     function activatePhoneSoundbox() {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -738,190 +819,273 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       btn.style.color = "#ffffff";
       playChime();
       startAcousticListener();
+      refreshDeviceIp();
     }
 
     function startAcousticListener() {
       if (currentRole !== 'merchant') return;
       if (isListening) return;
 
-      navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
-        .then(stream => {
-          micStream = stream;
-          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          if (audioCtx.state === 'suspended') audioCtx.resume();
+      navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+      })
+      .then(stream => {
+        micStream = stream;
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
 
-          const source = audioCtx.createMediaStreamSource(stream);
-          analyser = audioCtx.createAnalyser();
-          analyser.fftSize = 2048;
-          analyser.smoothingTimeConstant = 0.1;
-          source.connect(analyser);
+        const source = audioCtx.createMediaStreamSource(stream);
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.2;
+        source.connect(analyser);
 
-          isListening = true;
-          isMutedForSpeech = false;
-          logMerchant("🎙️ [LISTENER ACTIVE]: Sniffing physical soundwaves. Zero self-feedback.");
-          listenLoop();
-        })
-        .catch(err => {
-          logMerchant("[MIC ERROR]: " + err.message);
-        });
+        isListening = true;
+        isMutedForSpeech = false;
+        logMerchant("🎙️ [LISTENER ACTIVE]: Adaptive noise floor + Wi-Fi sniffer live.");
+        listenLoop();
+      })
+      .catch(err => {
+        logMerchant("[MIC ERROR]: " + err.message);
+      });
     }
 
     function stopAcousticListener() {
       isListening = false;
+      if (animFrameId) cancelAnimationFrame(animFrameId);
       if (micStream) {
         micStream.getTracks().forEach(t => t.stop());
         micStream = null;
       }
     }
 
-    function getDominantFreq(analyser, ctx) {
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      analyser.getByteFrequencyData(dataArray);
-
-      const sampleRate = ctx.sampleRate;
-      const binWidth = sampleRate / analyser.fftSize;
-
+    // Measure spectrum energy at frequency +/- bandwidth
+    function getMagnitudeAtFreq(freq, dataArray, binWidth) {
+      const centerBin = Math.round(freq / binWidth);
       let maxVal = 0;
-      let maxBin = -1;
-
-      // Scan full target range: 900 Hz to 20000 Hz
-      const minBin = Math.floor(900 / binWidth);
-      const maxScanBin = Math.min(bufferLength - 1, Math.floor(20000 / binWidth));
-
-      for (let i = minBin; i <= maxScanBin; i++) {
-        if (dataArray[i] > maxVal && dataArray[i] > 140) {
-          maxVal = dataArray[i];
-          maxBin = i;
+      for (let b = centerBin - 2; b <= centerBin + 2; b++) {
+        if (b >= 0 && b < dataArray.length) {
+          if (dataArray[b] > maxVal) maxVal = dataArray[b];
         }
       }
-
-      if (maxBin === -1) return 0;
-      return maxBin * binWidth;
-    }
-
-    function mapFreqToDigit(freq, isSilent) {
-      const table = isSilent ? DIGIT_FREQS_SILENT : DIGIT_FREQS_AUDIBLE;
-      let bestDigit = 0;
-      let minDiff = 99999;
-      for (let d = 0; d <= 9; d++) {
-        const diff = Math.abs(freq - table[d]);
-        if (diff < minDiff) {
-          minDiff = diff;
-          bestDigit = d;
-        }
-      }
-      return (minDiff < 60) ? bestDigit : null;
+      return maxVal;
     }
 
     function listenLoop() {
-      if (!isListening || !analyser || isMutedForSpeech) return;
+      if (!isListening || !analyser) return;
 
-      const peak = getDominantFreq(analyser, audioCtx);
+      if (!isMutedForSpeech) {
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyser.getByteFrequencyData(dataArray);
 
-      const isAudibleSync = Math.abs(peak - FSK_SYNC_AUDIBLE) < 45;
-      const isSilentSync  = Math.abs(peak - FSK_SYNC_SILENT) < 60;
+        const sampleRate = audioCtx.sampleRate;
+        const binWidth = sampleRate / analyser.fftSize;
 
-      if (!isDecodingChirp && (isAudibleSync || isSilentSync)) {
-        isDecodingChirp = true;
-        const isSilent = isSilentSync;
+        // Calculate ambient noise floor in 900 - 2500 Hz
+        const minBin = Math.floor(900 / binWidth);
+        const maxBin = Math.floor(2500 / binWidth);
+        let totalEnergy = 0;
+        let count = 0;
+        for (let i = minBin; i <= maxBin; i++) {
+          totalEnergy += dataArray[i];
+          count++;
+        }
+        const noiseFloor = count > 0 ? (totalEnergy / count) : 10;
+        const dynamicThreshold = Math.max(noiseFloor * 2.0, 45);
 
-        // Sample stream of symbols
-        const capturedDigits = [];
-        let sampleCount = 0;
-        const maxSamples = 8;
+        // 1. Check for Instant Dual-Tone Presets
+        let detectedPreset = null;
+        for (let amt in DUAL_TONE_MAP) {
+          const pair = DUAL_TONE_MAP[amt];
+          const magLow = getMagnitudeAtFreq(pair.fLow, dataArray, binWidth);
+          const magHigh = getMagnitudeAtFreq(pair.fHigh, dataArray, binWidth);
 
-        const sampleInterval = setInterval(() => {
-          sampleCount++;
-          const curPeak = getDominantFreq(analyser, audioCtx);
+          if (magLow > dynamicThreshold && magHigh > dynamicThreshold) {
+            detectedPreset = parseInt(amt);
+            break;
+          }
+        }
 
-          const isEnd = isSilent ? (Math.abs(curPeak - FSK_END_SILENT) < 70) : (Math.abs(curPeak - FSK_END_AUDIBLE) < 60);
+        if (detectedPreset !== null) {
+          if (detectedPreset === lastDetectedCandidate) {
+            dualToneDebounceCount++;
+            if (dualToneDebounceCount >= 3) { // Confirmed over 3 consecutive frames (~60ms)
+              dualToneDebounceCount = 0;
+              lastDetectedCandidate = null;
 
-          if (isEnd || sampleCount >= maxSamples) {
-            clearInterval(sampleInterval);
-            isDecodingChirp = false;
-
-            if (capturedDigits.length >= 2) {
-              const langCode = capturedDigits.pop();
-              const amountStr = capturedDigits.join('');
-              const parsedAmt = parseInt(amountStr) || 1;
-              const decodedLang = LANG_REVERSE[langCode] || 'hi';
-
-              const tx = "AIR_" + (txCounter++) + "_" + Math.floor(Math.random()*900+100);
-              const packet = {
+              const tx = "AIR_WAVE_" + Math.floor(Math.random()*9000+1000);
+              logMerchant(`⚡ [ACOUSTIC DUAL-TONE LOCKED]: Received Rs.${detectedPreset}`);
+              handleIncomingPayment({
                 tx: tx,
-                amount: parsedAmt,
-                lang: decodedLang,
-                merchant: merchantVpa,
-                timestamp: Date.now()
-              };
-
-              logMerchant(`⚡ [OVER-THE-AIR CHIRP DECODED]:`);
-              logMerchant(`   * Exact Amount: +Rs.${parsedAmt} | Lang: ${decodedLang} | Carrier: ${isSilent ? 'Silent' : 'Audible'}`);
-              handleIncomingPayment(packet);
+                amount: detectedPreset,
+                lang: 'hi',
+                source: 'Acoustic Wave'
+              });
             }
           } else {
-            const digit = mapFreqToDigit(curPeak, isSilent);
-            if (digit !== null) {
-              // Avoid back-to-back duplicate sample within same symbol window
-              if (capturedDigits.length === 0 || capturedDigits[capturedDigits.length - 1] !== digit) {
-                capturedDigits.push(digit);
-              }
-            }
+            lastDetectedCandidate = detectedPreset;
+            dualToneDebounceCount = 1;
           }
-        }, 45);
+        } else {
+          dualToneDebounceCount = 0;
+          lastDetectedCandidate = null;
+        }
       }
 
-      if (isListening && !isMutedForSpeech) {
-        requestAnimationFrame(listenLoop);
+      if (isListening) {
+        animFrameId = requestAnimationFrame(listenLoop);
       }
     }
 
-    // Ingest Payment on Merchant Soundbox (WITH AUTO ECHO-MUTE)
-    function handleIncomingPayment(data) {
-      if (currentRole !== 'merchant') return; // Only merchant speaks
+    // Ingest Payment on Merchant Soundbox (Deduplicated & Echo-Isolated)
+    window.handleIncomingPayment = function(data) {
+      if (currentRole !== 'merchant') return;
+
+      // Deduplication: prevent double processing within 3 seconds
+      const dedupKey = data.amount + "_" + (data.tx ? data.tx.substring(0, 10) : "");
+      if (recentProcessedTxs.has(dedupKey)) return;
+      recentProcessedTxs.add(dedupKey);
+      setTimeout(() => recentProcessedTxs.delete(dedupKey), 3500);
 
       totalRevenue += data.amount;
       document.getElementById('merchantTotal').innerHTML = "&#8377; " + totalRevenue + ".00";
       document.getElementById('merchantStatus').innerText = "SUCCESS: " + data.tx + " (+Rs. " + data.amount + ")";
       
-      const phrase = buildPhrase(data.amount, data.lang);
-      logMerchant(`⚡ [INGESTED]: TX=${data.tx} | +Rs.${data.amount} | Total=Rs.${totalRevenue}`);
+      const phrase = buildPhrase(data.amount, data.lang || 'hi');
+      logMerchant(`⚡ [PAYMENT RECEIVED]: +Rs.${data.amount} via [${data.source || 'Acoustic/LAN'}]`);
+      logMerchant(`   * Total Revenue: Rs.${totalRevenue}.00`);
       logMerchant(`   * Loudspeaker: "${phrase}"`);
 
-      // 1. AUTO ECHO-MUTE: Temporarily stop mic while speaking so Soundbox NEVER hears itself
+      // AUTO ECHO-MUTE: Mic stops while Soundbox is speaking
       isMutedForSpeech = true;
       playChime();
 
       setTimeout(() => {
-        speakPhrase(phrase, data.lang, () => {
-          // 2. Unmute mic 800ms after speech completely finishes
+        speakPhrase(phrase, data.lang || 'hi', () => {
           setTimeout(() => {
             isMutedForSpeech = false;
-            isDecodingChirp = false;
-            if (isListening) requestAnimationFrame(listenLoop);
-          }, 800);
+          }, 600);
         });
       }, 350);
-    }
+    };
 
-    // 3. Beam Payment from Customer Phone (TRANSMIT-ONLY)
+    // Callback when Native Android TTS finishes speaking
+    window.onTtsFinished = function() {
+      setTimeout(() => {
+        isMutedForSpeech = false;
+      }, 400);
+    };
+
+    // 3. Beam Payment from Customer Phone (DUAL-CHANNEL: Wi-Fi P2P + Sound Wave)
     function beamCustomerPayment() {
       const amt = parseInt(document.getElementById('custAmt').value) || 1;
       const lang = document.getElementById('custLang').value || 'hi';
       const targetVpa = document.getElementById('custMerchant').value || merchantVpa;
       const tx = "TX_" + Math.floor(Math.random()*9000+1000);
 
-      logCustomer(`⚡ [TRANSMITTING]: Beaming Rs.${amt} to ${targetVpa} (${carrierMode})`);
-      
-      // Emit acoustic soundwave (Audible or Silent)
+      logCustomer(`⚡ [TRANSMITTING DUAL-CHANNEL]: Rs.${amt} to ${targetVpa}`);
+
+      // Channel 1: Over-the-Air Sound Wave
       emitAcousticChirp(amt, lang);
 
-      // Loopback post
-      fetch('http://192.168.1.174:8000/api/pay?tx=' + tx + '&amt=' + amt + '&lang=' + lang).catch(()=>{});
+      // Channel 2: Local Wi-Fi P2P HTTP / LAN Socket
+      const targetIps = [];
+      if (scannedMerchantIp) targetIps.push(scannedMerchantIp);
+      targetIps.push("192.168.43.1"); // Android Hotspot default gateway
+      targetIps.push("192.168.1.174"); // Local subnet
+
+      for (let ip of targetIps) {
+        if (window.AirUPIAndroid && window.AirUPIAndroid.sendLocalHttpPayment) {
+          window.AirUPIAndroid.sendLocalHttpPayment(ip, amt, lang, tx);
+        }
+        fetch(`http://${ip}:8080/pay?amt=${amt}&lang=${lang}&tx=${tx}`, { mode: 'no-cors' }).catch(()=>{});
+      }
     }
 
-    // Real Camera Scanner implementation
+    // Native & Web Speech Synthesis
+    function speakPhrase(phrase, lang, onDone) {
+      try {
+        if (window.AirUPIAndroid && window.AirUPIAndroid.speak) {
+          window.AirUPIAndroid.speak(phrase, lang);
+          if (onDone) setTimeout(onDone, 2200);
+          return;
+        }
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(phrase);
+          u.lang = lang === 'hi' ? 'hi-IN' : 'en-IN';
+          u.rate = 1.0;
+          u.pitch = 1.0;
+          u.onend = () => { if (onDone) onDone(); };
+          u.onerror = () => { if (onDone) onDone(); };
+          window.speechSynthesis.speak(u);
+          return;
+        }
+      } catch (e) {}
+      if (onDone) setTimeout(onDone, 2000);
+    }
+
+    function playChime() {
+      try {
+        const ctx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        const freqs = [587.33, 880.00, 1174.66]; // D5, A5, D6
+        freqs.forEach((f, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, now + i * 0.08);
+          gain.gain.setValueAtTime(0.01, now + i * 0.08);
+          gain.gain.linearRampToValueAtTime(0.4, now + i * 0.08 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.35);
+        });
+      } catch (e) {}
+    }
+
+    // Dynamic QR Generator (Embeds VPA + Local IP)
+    function renderMerchantQr() {
+      const container = document.getElementById('qrContainer');
+      if (!container) return;
+      container.innerHTML = "";
+
+      refreshDeviceIp();
+      let payload = "";
+      if (currentQrType === 'upi') {
+        payload = `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=${encodeURIComponent(merchantName)}&cu=INR&ip=${merchantLocalIp}`;
+      } else {
+        payload = window.location.href.split('?')[0];
+      }
+
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(container, {
+          text: payload,
+          width: 170,
+          height: 170,
+          colorDark: "#020617",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+    }
+
+    function setQrType(type) {
+      currentQrType = type;
+      document.getElementById('qrTypeUpi').classList.toggle('active', type === 'upi');
+      document.getElementById('qrTypeHtml').classList.toggle('active', type === 'html');
+      renderMerchantQr();
+    }
+
+    function openEmbeddedAppFreeUi() {
+      window.open(window.location.href, '_blank');
+    }
+
+    // Real Camera Barcode Scanner
     let cameraStream = null;
     let isCameraRunning = false;
 
@@ -948,73 +1112,61 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
     }
 
     function stopRealCameraScanner() {
-      const modal = document.getElementById('cameraModal');
-      modal.classList.remove('active');
       isCameraRunning = false;
       if (cameraStream) {
         cameraStream.getTracks().forEach(t => t.stop());
         cameraStream = null;
       }
-    }
-
-    function parseScannedPayload(text) {
-      if (!text) return "changmaulee@icici";
-      const matchUpi = text.match(/pa=([^&]+)/i);
-      if (matchUpi && matchUpi[1]) return decodeURIComponent(matchUpi[1]);
-      const matchVpa = text.match(/([a-zA-Z0-9.\-_]+@[a-zA-Z0-9]+)/);
-      if (matchVpa && matchVpa[1]) return matchVpa[1];
-      return text.substring(0, 40);
-    }
-
-    function onQrSuccessfullyScanned(decodedText) {
-      stopRealCameraScanner();
-      playChime();
-      const extractedVpa = parseScannedPayload(decodedText);
-      document.getElementById('custMerchant').value = extractedVpa;
-      document.getElementById('custLockStatus').innerText = "✓ [LIVE SCANNED: " + extractedVpa + "]";
-      document.getElementById('custLockStatus').style.color = "#10b981";
-      logCustomer(`📷 [SCANNED TARGET]: ${extractedVpa}`);
+      document.getElementById('cameraModal').classList.remove('active');
     }
 
     function scanCameraFrame() {
       if (!isCameraRunning) return;
       const video = document.getElementById('cameraVideo');
       const canvas = document.getElementById('cameraCanvas');
-      const ctx = canvas.getContext('2d');
 
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
         if (typeof jsQR !== 'undefined') {
-          const code = jsQR(imageData.data, imageData.width, imageData.height);
+          const code = jsQR(imgData.data, imgData.width, imgData.height, {
+            inversionAttempts: "dontInvert"
+          });
+
           if (code && code.data) {
-            onQrSuccessfullyScanned(code.data);
+            parseAndLockQrPayload(code.data);
+            stopRealCameraScanner();
             return;
           }
         }
       }
-      if (isCameraRunning) requestAnimationFrame(scanCameraFrame);
+      requestAnimationFrame(scanCameraFrame);
     }
 
     function handleQrImageUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = e => {
         const img = new Image();
-        img.onload = function() {
+        img.onload = () => {
           const canvas = document.getElementById('cameraCanvas');
-          const ctx = canvas.getContext('2d');
           canvas.width = img.width;
           canvas.height = img.height;
-          ctx.drawImage(img, 0, 0, img.width, img.height);
-          const imageData = ctx.getImageData(0, 0, img.width, img.height);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           if (typeof jsQR !== 'undefined') {
-            const code = jsQR(imageData.data, imageData.width, imageData.height);
-            if (code && code.data) onQrSuccessfullyScanned(code.data);
-            else alert("No QR code found in image.");
+            const code = jsQR(imgData.data, imgData.width, imgData.height);
+            if (code && code.data) {
+              parseAndLockQrPayload(code.data);
+            } else {
+              alert("No valid UPI QR found in uploaded image.");
+            }
           }
         };
         img.src = e.target.result;
@@ -1022,116 +1174,50 @@ Microphone is OFF. Zero self-listening. Zero internet required.</div>
       reader.readAsDataURL(file);
     }
 
-    function setAmt(val) { document.getElementById('custAmt').value = val; }
+    function parseAndLockQrPayload(raw) {
+      logCustomer("📷 [QR SCANNED]: " + raw.substring(0, 45) + "...");
+      let extractedVpa = "";
+      let extractedIp = null;
 
-    function playChime() {
-      try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.15);
-        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.35);
-      } catch(e){}
-
-      for (let i = 1; i <= 5; i++) {
-        const dot = document.getElementById('spk' + i);
-        if (dot) dot.classList.add('active');
+      if (raw.startsWith("upi://pay")) {
+        const url = new URL(raw);
+        extractedVpa = url.searchParams.get("pa") || "";
+        extractedIp = url.searchParams.get("ip");
+      } else {
+        const match = raw.match(/([a-zA-Z0-9.\-_]+@[a-zA-Z0-9]+)/);
+        if (match) extractedVpa = match[1];
       }
-      setTimeout(() => {
-        for (let i = 1; i <= 5; i++) {
-          const dot = document.getElementById('spk' + i);
-          if (dot) dot.classList.remove('active');
-        }
-      }, 500);
+
+      if (extractedVpa) {
+        document.getElementById('custMerchant').value = extractedVpa;
+        document.getElementById('custLockStatus').innerText = "[TARGET LOCKED: " + extractedVpa + (extractedIp ? (" | IP: " + extractedIp) : "") + "]";
+        if (extractedIp) scannedMerchantIp = extractedIp;
+        playChime();
+      } else {
+        alert("Scanned Code: " + raw);
+      }
     }
 
-    function speakPhrase(phrase, lang, onEndCallback) {
-      if (window.AirUPIAndroid && typeof window.AirUPIAndroid.speak === 'function') {
-        window.AirUPIAndroid.speak(phrase, lang);
-        if (onEndCallback) setTimeout(onEndCallback, 2800);
-        return;
+    function logMerchant(msg) {
+      const el = document.getElementById('merchantLog');
+      if (el) {
+        el.innerText += "\n" + msg;
+        el.scrollTop = el.scrollHeight;
       }
-      if (!('speechSynthesis' in window)) {
-        if (onEndCallback) onEndCallback();
-        return;
-      }
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(phrase);
-      u.rate = 0.88;
-      u.pitch = 1.04;
-      u.onend = () => { if (onEndCallback) onEndCallback(); };
-      u.onerror = () => { if (onEndCallback) onEndCallback(); };
-      window.speechSynthesis.speak(u);
     }
 
-    function renderMerchantQr() {
-      const container = document.getElementById('qrContainer');
-      if (!container) return;
-      container.innerHTML = '';
-      let payload = (currentQrType === 'html')
-        ? ("data:text/html;base64," + btoa(unescape(encodeURIComponent(getEmbeddedCustomerHtml()))))
-        : ("upi://pay?pa=" + encodeURIComponent(merchantVpa) + "&pn=" + encodeURIComponent(merchantName) + "&cu=INR&tn=AirUPI%20Offline");
-      const qr = qrcode(0, currentQrType === 'html' ? 'L' : 'M');
-      qr.addData(payload);
-      qr.make();
-      container.innerHTML = qr.createSvgTag({ cellSize: currentQrType === 'html' ? 2 : 4, margin: 2, scalable: true });
-      const svg = container.querySelector('svg');
-      if (svg) { svg.setAttribute('width', '140'); svg.setAttribute('height', '140'); }
+    function logCustomer(msg) {
+      const el = document.getElementById('customerLog');
+      if (el) {
+        el.innerText += "\n" + msg;
+        el.scrollTop = el.scrollHeight;
+      }
     }
 
-    function setQrType(t) {
-      currentQrType = t;
-      document.getElementById('qrTypeHtml').classList.toggle('active', t === 'html');
-      document.getElementById('qrTypeUpi').classList.toggle('active', t === 'upi');
+    window.addEventListener('DOMContentLoaded', () => {
+      refreshDeviceIp();
       renderMerchantQr();
-    }
-
-    function openEmbeddedAppFreeUi() {
-      window.open("data:text/html;base64," + btoa(unescape(encodeURIComponent(getEmbeddedCustomerHtml()))), '_blank');
-    }
-
-    function getEmbeddedCustomerHtml() {
-      return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>AirUPI Pay</title><style>*{box-sizing:border-box}body{background:#030712;color:#fff;font-family:sans-serif;padding:16px;text-align:center}.c{background:#0f172a;border-radius:14px;padding:16px;max-width:360px;margin:auto}input,select,button{width:100%;padding:12px;margin:6px 0;border-radius:8px;font-size:16px;border:none}button{background:#10b981;color:#fff;font-weight:700;cursor:pointer}</style></head><body><div class="c"><h3>⚡ AirUPI Instant Pay</h3><p style="color:#94a3b8">${merchantName} (${merchantVpa})</p><input id="a" type="number" value="1"><select id="l"><option value="hi">Hindi</option><option value="ta">Tamil</option><option value="en">English</option></select><button onclick="p()">⚡ BEAM PAYMENT</button><div id="st" style="margin-top:10px;font-size:12px;color:#38bdf8">Sender Ready • Zero Download</div></div><script>
-const D_TAB=[1050,1150,1250,1350,1450,1550,1650,1750,1850,1950];
-const L_CODES={'hi':1,'ta':2,'en':8};
-function p(){
-  const a=parseInt(document.getElementById('a').value)||1;
-  const l=document.getElementById('l').value||'hi';
-  const digits=a.toString().split('').map(d=>parseInt(d));
-  try{
-    const cx=new (window.AudioContext||window.webkitAudioContext)();
-    if(cx.state==='suspended')cx.resume();
-    let t=cx.currentTime;
-    const osc=cx.createOscillator(),gn=cx.createGain();
-    osc.type='sine';
-    osc.frequency.setValueAtTime(2200,t); t+=0.07;
-    for(let d of digits){ osc.frequency.setValueAtTime(D_TAB[d],t); t+=0.055; }
-    osc.frequency.setValueAtTime(D_TAB[L_CODES[l]||1],t); t+=0.055;
-    osc.frequency.setValueAtTime(2450,t); t+=0.04;
-    gn.gain.setValueAtTime(0.01,cx.currentTime);
-    gn.gain.linearRampToValueAtTime(0.7,cx.currentTime+0.02);
-    gn.gain.setValueAtTime(0.7,t-0.02);
-    gn.gain.exponentialRampToValueAtTime(0.001,t);
-    osc.connect(gn);gn.connect(cx.destination);
-    osc.start(cx.currentTime);osc.stop(t+0.01);
-  }catch(e){}
-  document.getElementById('st').innerText='⚡ BEAMED Rs.'+a;
-}
-<\/script></body></html>`;
-    }
-
-    function logMerchant(m) { const t = document.getElementById('merchantLog'); t.innerText += "\n" + m; t.scrollTop = t.scrollHeight; }
-    function logCustomer(m) { const t = document.getElementById('customerLog'); t.innerText += "\n" + m; t.scrollTop = t.scrollHeight; }
-
-    window.addEventListener('DOMContentLoaded', () => { renderMerchantQr(); });
+    });
   </script>
 </body>
 </html>
