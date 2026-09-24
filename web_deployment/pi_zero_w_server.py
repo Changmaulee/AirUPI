@@ -16,8 +16,6 @@ TOTAL_AMOUNT = 0
 
 def num_to_words(n, lang):
     n = int(n)
-    
-    # 1. HINDI
     if lang == 'hi':
         exact = {
             10: "Das", 20: "Bees", 25: "Pachchees", 30: "Tees", 40: "Chaalees", 50: "Pachaas",
@@ -28,76 +26,37 @@ def num_to_words(n, lang):
         if n >= 1000: return f"{n//1000} hazaar " + exact.get(n%1000, str(n%1000) if n%1000 else "")
         if n >= 100: return f"{n//100} sau " + exact.get(n%100, str(n%100) if n%100 else "")
         return str(n)
-
-    # 2. TAMIL
     elif lang == 'ta':
         exact = {
-            10: "Patthu", 20: "Irubadhu", 25: "Irubathi aindhu", 30: "Muppadhu", 50: "Aymbadhu",
+            10: "Patthu", 20: "Irubadhu", 50: "Aymbadhu",
             100: "Nooru", 150: "Noottru aymbadhu", 200: "Iru-nooru", 250: "Iru-noottru aymbadhu",
-            300: "Mun-nooru", 400: "Naan-nooru", 500: "Ayn-nooru", 1000: "Aayiram", 2000: "Irandu aayiram", 5000: "Aindhu aayiram"
+            300: "Mun-nooru", 500: "Ayn-nooru", 1000: "Aayiram", 2000: "Irandu aayiram", 5000: "Aindhu aayiram"
         }
         return exact.get(n, str(n))
-
-    # 3. TELUGU
     elif lang == 'te':
         exact = {
-            10: "Padhi", 20: "Iravai", 25: "Iravai aydu", 30: "Muppai", 50: "Yaabhai",
+            10: "Padhi", 20: "Iravai", 50: "Yaabhai",
             100: "Vanda", 150: "Noota yaabhai", 200: "Rendu vandalu", 250: "Rendu vandala yaabhai",
-            300: "Moodu vandalu", 400: "Naalugu vandalu", 500: "Aydu vandalu", 1000: "Veyyi", 2000: "Rendu veelu", 5000: "Aydu veelu"
+            300: "Moodu vandalu", 500: "Aydu vandalu", 1000: "Veyyi"
         }
         return exact.get(n, str(n))
-
-    # 4. KANNADA
     elif lang == 'kn':
         exact = {
-            10: "Hatthu", 20: "Ippatthu", 25: "Ippatthaydu", 30: "Moovatthu", 50: "Aivatthu",
+            10: "Hatthu", 20: "Ippatthu", 50: "Aivatthu",
             100: "Nooru", 150: "Noora aivatthu", 200: "Innooru", 250: "Innoora aivatthu",
-            300: "Munnooru", 400: "Naanooru", 500: "Aydu nooru", 1000: "Ondhu saavira", 2000: "Eradu saavira", 5000: "Aydu saavira"
+            300: "Munnooru", 500: "Aydu nooru", 1000: "Ondhu saavira"
         }
         return exact.get(n, str(n))
-
-    # 5. BENGALI
-    elif lang == 'bn':
-        exact = {
-            10: "Dosh", 20: "Kuri", 25: "Pochish", 30: "Trish", 50: "Ponchaash",
-            100: "Eksho", 150: "Deyrsho", 200: "Disho", 250: "Aaraisho",
-            300: "Teensho", 400: "Chaarsho", 500: "Paanchsho", 1000: "Ek hajaar", 2000: "Dui hajaar", 5000: "Paanch hajaar"
-        }
-        return exact.get(n, str(n))
-
-    # 6. MARATHI
-    elif lang == 'mr':
-        exact = {
-            10: "Dahaa", 20: "Vees", 25: "Panchvees", 30: "Tees", 50: "Pannaas",
-            100: "Ek she", 150: "Dedshe", 200: "Don she", 250: "Adiche",
-            300: "Teen she", 400: "Chaar she", 500: "Paach she", 1000: "Ek hajaar", 2000: "Don hajaar", 5000: "Paach hajaar"
-        }
-        return exact.get(n, str(n))
-
-    # 7. GUJARATI
-    elif lang == 'gu':
-        exact = {
-            10: "Das", 20: "Vees", 25: "Pachchees", 30: "Tees", 50: "Pachaas",
-            100: "Ek sau", 150: "Dodsau", 200: "Basau", 250: "Adhisau",
-            300: "Tronsau", 400: "Chaarsau", 500: "Paanchsau", 1000: "Ek hajaar", 2000: "Be hajaar", 5000: "Paanch hajaar"
-        }
-        return exact.get(n, str(n))
-
-    # 8. ENGLISH
     else:
         return str(n)
 
 def get_phrase_and_lang(amt, lang):
     num_str = num_to_words(amt, lang)
-    
     templates = {
         'hi': ('hi', f"Paytm par {num_str} Rupaye prapt hue"),
         'ta': ('ta', f"Paytmil {num_str} Roobai petrapattadhu"),
         'te': ('te', f"Paytmlonoo {num_str} Roopaayalu andhinavi"),
         'kn': ('kn', f"Paytmli {num_str} Roopaayi sveekarisalaagidhe"),
-        'bn': ('bn', f"Paytme {num_str} Taka praapto hoyechhe"),
-        'mr': ('mr', f"Paytm var {num_str} Rupaye praapt jhaale"),
-        'gu': ('gu', f"Paytm par {num_str} Rupiya malya"),
         'en': ('en', f"Received {amt} Rupees on Paytm")
     }
     return templates.get(lang, templates['en'])
@@ -114,6 +73,10 @@ CUSTOMER_HTML = """<!DOCTYPE html>
     .card { width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
     h2 { font-size: 18px; margin-top: 0; color: var(--accent); display: flex; align-items: center; justify-content: space-between; }
     .airplane-badge { font-size: 11px; background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid #ef4444; padding: 3px 8px; border-radius: 999px; }
+    .scan-btn { width: 100%; background: #3b82f6; color: #fff; border: none; border-radius: 8px; padding: 12px; font-weight: 700; cursor: pointer; font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .scanner-box { display: none; height: 90px; background: #000; border: 2px dashed #38bdf8; border-radius: 8px; position: relative; overflow: hidden; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .scan-line { position: absolute; width: 100%; height: 3px; background: #38bdf8; box-shadow: 0 0 10px #38bdf8; top: 0; animation: scanLine 1.2s infinite alternate; }
+    @keyframes scanLine { from { top: 5%; } to { top: 90%; } }
     .field { margin-bottom: 14px; }
     label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
     input, select { width: 100%; box-sizing: border-box; background: #020617; border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: #fff; font-size: 16px; }
@@ -126,13 +89,20 @@ CUSTOMER_HTML = """<!DOCTYPE html>
   <div class="card">
     <h2>Phone Terminal <span class="airplane-badge">AIRPLANE MODE</span></h2>
     
+    <button class="scan-btn" onclick="startQrScan()">Scan Shop QR Code</button>
+
+    <div class="scanner-box" id="scannerView">
+      <div class="scan-line"></div>
+      <div style="font-size: 12px; color: #38bdf8; z-index: 2;">Scanning Merchant QR Stand Offline...</div>
+    </div>
+
     <div style="background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
       <div>
-        <div style="font-size: 10px; color: #94a3b8;">MERCHANT:</div>
-        <div style="font-size: 14px; font-weight: 700; color: #fff;">Gupta General Store</div>
-        <div style="font-size: 12px; color: var(--accent); font-family: monospace;">guptastore@airupi</div>
+        <div style="font-size: 10px; color: #94a3b8;">SCANNED MERCHANT:</div>
+        <div style="font-size: 14px; font-weight: 700; color: #fff;" id="mName">Gupta General Store</div>
+        <div style="font-size: 12px; color: var(--accent); font-family: monospace;" id="mVpa">guptastore@airupi</div>
       </div>
-      <div style="font-size: 14px; font-weight: 700; color: var(--green);">[OFFLINE]</div>
+      <div style="font-size: 12px; font-weight: 700; color: var(--green);" id="mLock">[LOCKED]</div>
     </div>
 
     <div class="field">
@@ -147,9 +117,6 @@ CUSTOMER_HTML = """<!DOCTYPE html>
         <option value="ta">Tamil (Iru-noottru aymbadhu...)</option>
         <option value="te">Telugu (Rendu vandala yaabhai...)</option>
         <option value="kn">Kannada (Innoora aivatthu...)</option>
-        <option value="bn">Bengali (Aaraisho taka...)</option>
-        <option value="mr">Marathi (Adiche rupaye...)</option>
-        <option value="gu">Gujarati (Adhisau rupiya...)</option>
         <option value="en">English (Rupees received...)</option>
       </select>
     </div>
@@ -159,6 +126,20 @@ CUSTOMER_HTML = """<!DOCTYPE html>
   </div>
 
   <script>
+    function startQrScan() {
+      const box = document.getElementById('scannerView');
+      const lock = document.getElementById('mLock');
+      box.style.display = 'flex';
+      lock.innerText = "[SCANNING...]";
+      lock.style.color = "#f59e0b";
+      setTimeout(() => {
+        box.style.display = 'none';
+        lock.innerText = "[VERIFIED OK]";
+        lock.style.color = "#10b981";
+        document.getElementById('statusMsg').innerText = "Target Locked: guptastore@airupi";
+      }, 1000);
+    }
+
     function beamPayment() {
       const amt = document.getElementById('payAmt').value || 250;
       const lang = document.getElementById('payLang').value || 'hi';
@@ -194,12 +175,10 @@ MERCHANT_HTML = """<!DOCTYPE html>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
     .card { width: 100%; max-width: 580px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
     .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 16px; }
+    .qr-stand { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; background: #020617; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 16px; }
     .lcd { background: #022c22; border: 2px solid #059669; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 16px; }
     .lcd-amt { font-size: 46px; font-weight: 900; color: #34d399; font-family: monospace; }
     .lcd-status { font-size: 13px; color: #6ee7b7; margin-top: 6px; font-family: monospace; }
-    .quick-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-    .lang-btn { flex: 1 1 22%; background: #1e293b; color: #94a3b8; border: 1px solid #334155; border-radius: 6px; padding: 8px 4px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; }
-    .lang-btn:hover { background: #334155; color: #fff; }
     .unlock-btn { width: 100%; background: #10b981; color: #fff; font-weight: 800; border: none; border-radius: 8px; padding: 14px; cursor: pointer; font-size: 14px; margin-bottom: 12px; }
     .terminal { background: #020617; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #38bdf8; height: 160px; overflow-y: auto; white-space: pre-wrap; }
   </style>
@@ -216,21 +195,44 @@ MERCHANT_HTML = """<!DOCTYPE html>
       </div>
     </div>
 
+    <!-- MERCHANT QR CODE STAND -->
+    <div class="qr-stand">
+      <div style="background: #fff; padding: 6px; border-radius: 8px; text-align: center;">
+        <svg width="90" height="90" viewBox="0 0 100 100" style="display: block; margin: 0 auto;">
+          <rect width="100" height="100" fill="#ffffff"/>
+          <rect x="5" y="5" width="28" height="28" fill="#000000"/>
+          <rect x="9" y="9" width="20" height="20" fill="#ffffff"/>
+          <rect x="13" y="13" width="12" height="12" fill="#000000"/>
+          <rect x="67" y="5" width="28" height="28" fill="#000000"/>
+          <rect x="71" y="9" width="20" height="20" fill="#ffffff"/>
+          <rect x="75" y="13" width="12" height="12" fill="#000000"/>
+          <rect x="5" y="67" width="28" height="28" fill="#000000"/>
+          <rect x="9" y="71" width="20" height="20" fill="#ffffff"/>
+          <rect x="13" y="75" width="12" height="12" fill="#000000"/>
+          <rect x="40" y="10" width="8" height="8" fill="#000000"/>
+          <rect x="52" y="10" width="8" height="8" fill="#000000"/>
+          <rect x="40" y="24" width="20" height="6" fill="#000000"/>
+          <rect x="10" y="40" width="80" height="6" fill="#000000"/>
+          <rect x="40" y="52" width="16" height="16" fill="#000000"/>
+          <rect x="65" y="52" width="20" height="8" fill="#000000"/>
+          <rect x="65" y="70" width="10" height="20" fill="#000000"/>
+          <rect x="80" y="75" width="12" height="15" fill="#000000"/>
+          <rect x="40" y="75" width="18" height="18" fill="#000000"/>
+        </svg>
+        <div style="color: #000; font-size: 7px; font-weight: 800; margin-top: 2px;">AIRUPI ACCEPTED</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; color: #94a3b8;">SHOP QR STAND:</div>
+        <div style="font-size: 15px; font-weight: 700; color: #fff;">Gupta General Store</div>
+        <div style="font-size: 12px; color: var(--accent); font-family: monospace;">guptastore@airupi</div>
+        <div style="font-size: 11px; color: var(--green); margin-top: 4px;">Static Offline QR (Zero Power/Internet)</div>
+      </div>
+    </div>
+
     <!-- EMBEDDED HTML5 AUDIO PLAYER -->
     <audio id="soundboxAudio" preload="auto"></audio>
 
     <button class="unlock-btn" id="audioUnlockBtn" onclick="activateSpeaker()">Soundbox Active & Ready</button>
-
-    <div class="quick-bar">
-      <div class="lang-btn" onclick="testQuick(150, 'hi')">Hindi (150)</div>
-      <div class="lang-btn" onclick="testQuick(250, 'ta')">Tamil (250)</div>
-      <div class="lang-btn" onclick="testQuick(500, 'te')">Telugu (500)</div>
-      <div class="lang-btn" onclick="testQuick(100, 'kn')">Kannada (100)</div>
-      <div class="lang-btn" onclick="testQuick(200, 'bn')">Bengali (200)</div>
-      <div class="lang-btn" onclick="testQuick(150, 'mr')">Marathi (150)</div>
-      <div class="lang-btn" onclick="testQuick(250, 'gu')">Gujarati (250)</div>
-      <div class="lang-btn" onclick="testQuick(1000, 'en')">English (1000)</div>
-    </div>
 
     <div class="lcd">
       <div style="font-size: 12px; color: #a7f3d0; font-weight: 700; letter-spacing: 1px;">TOTAL REVENUE RECEIVED</div>
@@ -240,7 +242,7 @@ MERCHANT_HTML = """<!DOCTYPE html>
 
     <label style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px;">Promiscuous Sniffer Telemetry Log:</label>
     <div class="terminal" id="termLog">AirUPI Sovereign Sniffer Active on Raspberry Pi Zero W (192.168.1.174)...
-Zero Cloud Calls &bull; Pan-Indic Voice Engine (Hindi, Tamil, Telugu, Kannada, Bengali, Marathi, Gujarati, English)</div>
+Zero Cloud Calls &bull; Offline QR Stand & Promiscuous Sniffer Active</div>
   </div>
 
   <script>
@@ -252,15 +254,7 @@ Zero Cloud Calls &bull; Pan-Indic Voice Engine (Hindi, Tamil, Telugu, Kannada, B
       const btn = document.getElementById('audioUnlockBtn');
       btn.innerText = "Speaker Driver Active";
       btn.style.background = "#059669";
-      logMsg("[AUDIO SYSTEM]: Multi-Lingual Audio Driver Ready.");
-    }
-
-    function testQuick(a, l) {
-      fetch('/api/pay?amt=' + a + '&lang=' + l)
-        .then(r => r.json())
-        .then(d => {
-          logMsg("[TEST BEAM (" + l.toUpperCase() + ")]: " + d.spoken);
-        });
+      logMsg("[AUDIO SYSTEM]: Soundbox Audio Driver Ready.");
     }
 
     function logMsg(txt) {
