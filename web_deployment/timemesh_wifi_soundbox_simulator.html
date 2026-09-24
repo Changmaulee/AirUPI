@@ -163,37 +163,46 @@ Waiting for over-the-air TimeMesh packets...</div>
   </footer>
 
   <script>
-    // Full Pan-Indic Numeral & Speech Dictionary (Native Script + Phonetic Romanized for 100% OS Compatibility)
+    // Authentic Dravidian & Pan-Indic Phonetic Cadence Dictionary
     const INDIC_SPEECH_DATA = {
       hi: {
         code: "hi-IN",
         toWords: (amt) => (amt == 150 ? "एक सौ पचास रुपये प्राप्त हुए" : amt + " रुपये प्राप्त हुए"),
-        phonetic: (amt) => (amt == 150 ? "Ek sau pachaas rupaye praapt hue" : amt + " rupaye praapt hue")
+        phonetic: (amt) => (amt == 150 ? "Ek sau pachaas rupaye praapt hue" : amt + " rupaye praapt hue"),
+        voiceMatch: ["hindi", "hi-in", "hi_in", "hemant", "kalpana", "swara", "madhur"]
       },
       ta: {
         code: "ta-IN",
         toWords: (amt) => (amt == 150 ? "நூற்று ஐம்பது ரூபாய் பெற்றுக்கொள்ளப்பட்டது" : amt + " ரூபாய் பெற்றுக்கொள்ளப்பட்டது"),
-        phonetic: (amt) => (amt == 150 ? "Noottru aimbathu roobai petruk kollappattathu" : amt + " roobai petruk kollappattathu")
+        // Tuned for authentic Tamil retail soundbox cadence (retroflex + vowel elongation)
+        phonetic: (amt) => (amt == 150 ? "Noottru aym-badhu roobaai, petruk-kolla-pattadhu" : amt + " roobaai, petruk-kolla-pattadhu"),
+        voiceMatch: ["tamil", "ta-in", "ta_in", "valluvar", "iniya", "google தமிழ்"]
       },
       te: {
         code: "te-IN",
         toWords: (amt) => (amt == 150 ? "నూరు యాభై రూపాయలు స్వీకరించబడింది" : amt + " రూపాయలు స్వీకరించబడింది"),
-        phonetic: (amt) => (amt == 150 ? "Nooru yaabhai roopaayalu sweekarincha badindi" : amt + " roopaayalu sweekarincha badindi")
+        // Tuned for authentic Telugu retail cadence
+        phonetic: (amt) => (amt == 150 ? "Nooru yaa-bhay roopaayalu, sweekarincha-badindhi" : amt + " roopaayalu, sweekarincha-badindhi"),
+        voiceMatch: ["telugu", "te-in", "te_in", "mohan", "shruti", "google తెలుగు"]
       },
       kn: {
         code: "kn-IN",
         toWords: (amt) => (amt == 150 ? "ಒಂದು ನೂರ ಐವತ್ತು ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ" : amt + " ರೂಪಾಯಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ"),
-        phonetic: (amt) => (amt == 150 ? "Ondu noora aivatthu roopaayi sweekarisa laagide" : amt + " roopaayi sweekarisa laagide")
+        // Tuned for authentic Kannada Namma Bengaluru soundbox cadence
+        phonetic: (amt) => (amt == 150 ? "Ondhu noora ai-vatthu roopaayi, sweekarisa-laagidhe" : amt + " roopaayi, sweekarisa-laagidhe"),
+        voiceMatch: ["kannada", "kn-in", "kn_in", "sapna", "gagan", "google ಕನ್ನಡ"]
       },
       bn: {
         code: "bn-IN",
         toWords: (amt) => (amt == 150 ? "একশত পঞ্চাশ টাকা গৃহীত হয়েছে" : amt + " টাকা গৃহীত হয়েছে"),
-        phonetic: (amt) => (amt == 150 ? "Ek-shoto ponchaash taaka grihito hoyeche" : amt + " taaka grihito hoyeche")
+        phonetic: (amt) => (amt == 150 ? "Ek-shoto ponchaash taaka, grohon kora hoyeche" : amt + " taaka, grohon kora hoyeche"),
+        voiceMatch: ["bengali", "bn-in", "bn_in", "bashkar", "tanisha", "google বাংলা"]
       },
       en: {
         code: "en-IN",
         toWords: (amt) => ("Rupees " + amt + " received successfully"),
-        phonetic: (amt) => ("Rupees " + amt + " received successfully")
+        phonetic: (amt) => ("Rupees " + amt + " received successfully"),
+        voiceMatch: ["en-in", "en_in", "india", "ravi", "heera", "neerja", "prabhat"]
       }
     };
 
@@ -203,7 +212,7 @@ Waiting for over-the-air TimeMesh packets...</div>
 
     function populateVoices() {
       if ('speechSynthesis' in window) {
-        availableVoices = window.speechSynthesis.getVoices();
+        availableVoices = window.speechSynthesis.getVoices() || [];
       }
     }
     populateVoices();
@@ -253,37 +262,40 @@ Waiting for over-the-air TimeMesh packets...</div>
       const langData = INDIC_SPEECH_DATA[langKey] || INDIC_SPEECH_DATA['en'];
       populateVoices();
 
-      // Check if the OS/Browser has a native voice installed for this language
-      const nativeVoice = availableVoices.find(v => 
-        v.lang.toLowerCase().startsWith(langKey) || 
-        v.lang.toLowerCase().replace('_', '-').startsWith(langData.code.toLowerCase())
-      );
+      // Look for a native regional voice matching the language keywords
+      let selectedVoice = availableVoices.find(v => {
+        const name = (v.name || '').toLowerCase();
+        const lang = (v.lang || '').toLowerCase().replace('_', '-');
+        return langData.voiceMatch.some(k => name.includes(k) || lang.includes(k));
+      });
 
-      const indianFallbackVoice = availableVoices.find(v => 
-        v.lang.includes('IN') || v.name.includes('India') || v.name.includes('Hindi')
-      ) || availableVoices[0];
+      // Secondary fallback: Any Indian English / Indian voice
+      if (!selectedVoice) {
+        selectedVoice = availableVoices.find(v => 
+          (v.lang || '').includes('IN') || 
+          (v.name || '').toLowerCase().includes('india') ||
+          (v.name || '').toLowerCase().includes('hindi')
+        ) || availableVoices[0];
+      }
 
       let textToSpeak = "";
-      let selectedVoice = null;
       let targetLangCode = "en-IN";
 
-      if (nativeVoice && langKey !== 'en') {
-        // Native regional voice is installed on OS (e.g. Google Tamil / Microsoft Heera)
+      if (selectedVoice && langData.voiceMatch.some(k => (selectedVoice.name || '').toLowerCase().includes(k) || (selectedVoice.lang || '').toLowerCase().includes(k)) && langKey !== 'en') {
+        // Native regional voice is installed on OS
         textToSpeak = langData.toWords(amt);
-        selectedVoice = nativeVoice;
         targetLangCode = langData.code;
       } else {
-        // Fallback to high-clarity phonetic romanized pronunciation on Indian-accent engine
+        // Use authentic Dravidian prosody-tuned phonetic string with South Indian inflection
         textToSpeak = langData.phonetic(amt);
-        selectedVoice = indianFallbackVoice;
-        targetLangCode = indianFallbackVoice ? indianFallbackVoice.lang : "en-IN";
+        targetLangCode = (selectedVoice && selectedVoice.lang) ? selectedVoice.lang : "en-IN";
       }
 
       const utterance = new SpeechSynthesisUtterance(textToSpeak);
       utterance.lang = targetLangCode;
       if (selectedVoice) utterance.voice = selectedVoice;
-      utterance.rate = 0.95; // Clear speaking rate for bazaar soundboxes
-      utterance.pitch = 1.05;
+      utterance.rate = 0.90;  // Slightly paced for authentic bazaar soundbox clarity
+      utterance.pitch = 1.04; // Natural cadence
       utterance.volume = 1.0;
 
       window.speechSynthesis.speak(utterance);
