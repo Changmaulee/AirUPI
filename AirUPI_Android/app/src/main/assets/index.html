@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#10b981">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>AirUPI - Sovereign Virtual Soundbox</title>
+  <title>AirRupee (Air₹) - Sovereign Soundbox</title>
   <link rel="manifest" href="manifest.json">
   <script src="qrcode.min.js"></script>
   <script src="jsqr.min.js"></script>
@@ -544,8 +544,8 @@
 
   <div class="app-container">
     <header>
-      <div class="brand-title">📂 AirUPI Sovereign Soundbox</div>
-      <div class="brand-subtitle">Melodic 10-Pitch Modem &bull; Bluetooth Mesh &bull; 🔌 Type-C Hardwired Vault</div>
+      <div class="brand-title">📂 AirRupee Sovereign Soundbox (Air₹)</div>
+      <div class="brand-subtitle">Sovereign Digital Cash &bull; Zero-Knowledge Nonce Handshake &bull; Offline Mesh</div>
     </header>
 
     <!-- ROLE SWITCHER TABS -->
@@ -834,7 +834,7 @@ Sensors listening for Magnetic Spikes, Table Seismic Taps & Optical Strobes.</di
     </div>
 
     <footer>
-      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirUPI v7.0 (Sovereign Multi-Sensor Physics Edition)
+      Dr. Changmaulee Labs &bull; Project Brahmaand &bull; AirRupee™ (Air₹) v8.0
     </footer>
   </div>
 
@@ -919,16 +919,16 @@ Sensors listening for Magnetic Spikes, Table Seismic Taps & Optical Strobes.</di
     function buildPhrase(amount, lang) {
       const numStr = expandNumberPhonetic(amount, lang);
       switch(lang) {
-        case 'ta': return "Paytm-il " + amount + " Rubaai petrapattadhu";
-        case 'te': return "Paytm lo " + amount + " Rupayalu labhinchayi";
-        case 'kn': return "Paytm nalli " + amount + " Rupayi sweekarisalaagide";
-        case 'bn': return "Paytm e " + amount + " Taka prapto hoyeche";
-        case 'mr': return "Paytm var " + amount + " Rupaye prapt jhale";
-        case 'gu': return "Paytm par " + amount + " Rupiya malya che";
-        case 'en': return "Rupees " + amount + " received on AirUPI";
+        case 'ta': return "AirRupee-il " + amount + " Rubaai petrapattadhu";
+        case 'te': return "AirRupee lo " + amount + " Rupayalu labhinchayi";
+        case 'kn': return "AirRupee nalli " + amount + " Rupayi sweekarisalaagide";
+        case 'bn': return "AirRupee e " + amount + " Taka prapto hoyeche";
+        case 'mr': return "AirRupee var " + amount + " Rupaye prapt jhale";
+        case 'gu': return "AirRupee par " + amount + " Rupiya malya che";
+        case 'en': return "Rupees " + amount + " received on AirRupee";
         case 'hi':
         default:
-          return "Paytm par " + numStr + " Rupaye prapt hue";
+          return "AirRupee par " + numStr + " Rupaye prapt hue";
       }
     }
 
@@ -1327,8 +1327,9 @@ Sensors listening for Magnetic Spikes, Table Seismic Taps & Optical Strobes.</di
     function downloadDailyKhataCsv() {
       try {
         let csv = "";
-        if (window.AirUPIAndroid && window.AirUPIAndroid.getLocalLedgerCsv) {
-          csv = window.AirUPIAndroid.getLocalLedgerCsv();
+        const bridge = window.AirRupeeAndroid || window.AirUPIAndroid;
+        if (bridge && bridge.getLocalLedgerCsv) {
+          csv = bridge.getLocalLedgerCsv();
         } else {
           csv = "Timestamp,Transaction_ID,Amount_INR,Language,TOTP_Token,Channel_Source,Status\n" +
                 new Date().toISOString() + ",AIR_TX_001," + totalRevenue + ",hi,742,Local_Ledger,VERIFIED_OFFLINE\n";
@@ -1337,7 +1338,7 @@ Sensors listening for Magnetic Spikes, Table Seismic Taps & Optical Strobes.</di
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.setAttribute("href", url);
-        link.setAttribute("download", "AirUPI_Daily_Khata_" + new Date().toISOString().slice(0,10) + ".csv");
+        link.setAttribute("download", "AirRupee_Daily_Khata_" + new Date().toISOString().slice(0,10) + ".csv");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

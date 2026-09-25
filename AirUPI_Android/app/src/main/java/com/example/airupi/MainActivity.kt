@@ -227,6 +227,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, SensorEve
                             loadWithOverviewMode = true
                         }
 
+                        addJavascriptInterface(SoundboxBridge(), "AirRupeeAndroid")
                         addJavascriptInterface(SoundboxBridge(), "AirUPIAndroid")
 
                         webViewClient = object : WebViewClient() {}
@@ -282,7 +283,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, SensorEve
                 val btManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                 val btAdapter = btManager?.adapter ?: BluetoothAdapter.getDefaultAdapter()
                 if (btAdapter != null && btAdapter.isEnabled) {
-                    bluetoothServerSocket = btAdapter.listenUsingRfcommWithServiceRecord("AirUPISoundbox", AIR_UPI_BT_UUID)
+                    bluetoothServerSocket = btAdapter.listenUsingRfcommWithServiceRecord("AirRupeeSoundbox", AIR_UPI_BT_UUID)
                     while (isMeshRunning && bluetoothServerSocket != null) {
                         val btSocket = bluetoothServerSocket?.accept()
                         if (btSocket != null) {
@@ -379,7 +380,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, SensorEve
                         val out: OutputStream = socket.getOutputStream()
                         val response = "HTTP/1.1 200 OK\r\n" +
                                 "Content-Type: text/csv\r\n" +
-                                "Content-Disposition: attachment; filename=\"AirUPI_Daily_Ledger.csv\"\r\n" +
+                                "Content-Disposition: attachment; filename=\"AirRupee_Daily_Ledger.csv\"\r\n" +
                                 "Access-Control-Allow-Origin: *\r\n" +
                                 "Content-Length: ${csvContent.toByteArray().size}\r\n" +
                                 "Connection: close\r\n\r\n" +
@@ -430,7 +431,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, SensorEve
                     }
                     // Route 3: Web Portal Root
                     else {
-                        val responseBody = "<!DOCTYPE html><html><head><title>AirUPI Local File Portal</title><style>body{font-family:sans-serif;background:#030712;color:#f8fafc;padding:20px;}a{color:#38bdf8;text-decoration:none;font-weight:bold;}.card{background:#0f172a;padding:15px;border-radius:10px;border:1px solid #1e293b;}</style></head><body><h2>📁 AirUPI Sovereign File Portal</h2><div class='card'><p>Local Soundbox Server is LIVE.</p><p><a href='/ledger.csv'>📥 Download Today's Ledger CSV</a></p></div></body></html>"
+                        val responseBody = "<!DOCTYPE html><html><head><title>AirRupee Local File Portal</title><style>body{font-family:sans-serif;background:#030712;color:#f8fafc;padding:20px;}a{color:#38bdf8;text-decoration:none;font-weight:bold;}.card{background:#0f172a;padding:15px;border-radius:10px;border:1px solid #1e293b;}</style></head><body><h2>📁 AirRupee Sovereign File Portal</h2><div class='card'><p>Local Soundbox Server is LIVE.</p><p><a href='/ledger.csv'>📥 Download Today's Ledger CSV</a></p></div></body></html>"
                         val out: OutputStream = socket.getOutputStream()
                         val response = "HTTP/1.1 200 OK\r\n" +
                                 "Content-Type: text/html\r\n" +
@@ -455,7 +456,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, SensorEve
             val ledgerDir = File(filesDir, "ledger")
             if (!ledgerDir.exists()) ledgerDir.mkdirs()
             
-            val csvFile = File(ledgerDir, "AirUPI_Daily_Ledger.csv")
+            val csvFile = File(ledgerDir, "AirRupee_Daily_Ledger.csv")
             val isNew = !csvFile.exists()
             val writer = FileWriter(csvFile, true)
             if (isNew) {
@@ -469,7 +470,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, SensorEve
 
     private fun getLedgerCsvContent(): String {
         try {
-            val csvFile = File(File(filesDir, "ledger"), "AirUPI_Daily_Ledger.csv")
+            val csvFile = File(File(filesDir, "ledger"), "AirRupee_Daily_Ledger.csv")
             if (csvFile.exists()) {
                 return csvFile.readText()
             }
